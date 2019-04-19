@@ -20,7 +20,7 @@ Tahir Rhoda **20175086**
 - [x] Create Project Repository for Version	control.
 - [x] Create Trello board for issue management or Project	Management [follw this link to the Trello board](https://trello.com/b/EU293DyA/bootleg-twitter)
 
-- [x] Create Login Page ***Frontend***
+- [x] Create Signin Form ***Frontend***
 - [x] Create Signup form ***Frontend***
 - [x] Create Forgot-Password Form ***Frontend*** Still needs to be changed.
 - [ ] Registration page for first time users.
