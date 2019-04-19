@@ -5,13 +5,16 @@ from flask import Flask, request, session, redirect, url_for, render_template, f
 
 import passlib
 
-
 app = Flask(__name__)
 
 @app.route('/')
 @app.route('/home')
 def home():
     return render_template('index.html')
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
 
 @app.route('/login')
 def login():
@@ -33,13 +36,8 @@ def changeUserPassword():
 def viewUserBio():
     return help(passlib.hash)
 
-@app.route('/about')
-def about():
-    return render_template('about.html')
-
 if __name__ == '__main__':
     app.run(debug=True)
-
 else:
     from sys import exit
     exit('usage: python2 run.py')
