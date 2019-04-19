@@ -13,33 +13,52 @@ Tahir Rhoda (20175086)
 
 ## Setup
 
-To get up and running as soon as possible
+To get up and running follow the following steps. If I get time I will probably write a python script
+for this. However, for now this is what we have to do to get the development enviroment working.
 
-### First time Setup
-
-Clone the repository to your machine  
-Everything will be install inside virtualenv, using pip  
-To install on your local/narga machine.
+#### First time Setup
 
 ```bash
-git clone https://github.com/BhekimpiloNdhlela/405-Found.git
-cd 405-Found
-pip install -r requirements.txt
-python run.py
+$ git clone https://github.com/BhekimpiloNdhlela/405-Found.git
+$ virtualenv 405-Found
+$ cd 405-Found
+$ source bin/activate
+$ pip install -r requirements.txt
 ```
 
-### Running app on Local Server
+#### Running app on Local Server
 
 For first running first check the _first time setup_ above
 
 ```bash
-python run.py
+$ python app/run.py
 ```
+visit: [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
+
+#### Deactivating The Virtual Enviroment
+Assuming you in the Virtual enviroment folder
+```
+$ deactivate
+```
+
+#### Activating The Virtual Enviroment
+
+```
+$ cd 405-Found
+$ source bin/activate
+```
+
+
+
 
 ## Style guide
 
 **Camel case** will be use for _variable_ names and _functions_ names.  
 _Filenames_ and _url links_ will be using **dashes** to separate the words.
+
+
+
+
 
 ## Project Structure
 
