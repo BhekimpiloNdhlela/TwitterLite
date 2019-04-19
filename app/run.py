@@ -1,13 +1,17 @@
 #!usr/bin/python
-from flask import Flask, render_template
+from flask import Flask
 from utils import *
+from flask import Flask, request, session, redirect, url_for, render_template, flash
+
+import passlib
+
 
 app = Flask(__name__)
 
 @app.route('/')
 @app.route('/home')
 def home():
-    return '<h1>Hello World!</h1>'
+    return render_template('index.html')
 
 @app.route('/login')
 def login():
@@ -27,14 +31,15 @@ def changeUserPassword():
 
 @app.route('/viewprofile')
 def viewUserBio():
-    pass
+    return help(passlib.hash)
 
 @app.route('/about')
 def about():
-
+    return render_template('about.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
 
 else:
-    pass
+    from sys import exit
+    exit('usage: python2 run.py')

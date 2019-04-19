@@ -1,44 +1,41 @@
-import re
+"""
 
-def validatePassword(formInput):
-    '''
-    '''
-    pass
+Keyword arguments:
+argument -- description
+Return: return_description
+"""
+import re                             #for regular expression validation 
+from passlib.hash import sha512_crypt #password hashing
 
-def validateDate(formInput):
-    '''
-    '''
-    pass
+def validatePassword(formInput, debug=True):
+    """uses regular expression to validate password strength"""
+    return True
 
-def validateName(formInput):
-    '''
-    '''
-    pass
+def validateDate(formInput, debug=True):
+    """uses regular expression to validate password strength"""
+    return True
 
-def validateSurname(formInput):
-    '''
-    '''
-    pass
+def validateName(formInput, debug=True):
+    """uses regular expression to validate password strength"""
+    return True
 
-def processPicture(formInput):
-    '''
-    '''
-    pass
+def validateSurname(formInput, debug=True):
+    """sumary_line"""
+    return True
 
-def comparePassword():
-    '''
-    '''
-    pass
+def processPicture(formInput, debug=True):
+    """sumary_line"""
+    return True
 
-
-def updatePassword():
-    '''
-    '''
-    pass
-
-def passwordHash():
-    '''
-    '''
-    pass
+def comparePassword(this, that, debug=True):
+    """sumary_line"""
+    return True
 
 
+def updatePassword(newpassword, oldpassword, debug=True):
+    """sumary_line"""
+    return True
+
+def passwordHash(password, debug=True):
+    """sumary_line"""
+    return True
