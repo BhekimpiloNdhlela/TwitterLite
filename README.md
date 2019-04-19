@@ -17,6 +17,8 @@ Nishaat Laher **21183635**
 Tahir Rhoda **20175086**
 
 ## TODOS:
+- [x] Create Project Repository.
+- [x] Create Trello board for issue management [follw this link to the Trello board](https://trello.com/b/EU293DyA/bootleg-twitter)
 - [ ] Registration page for first time users.
 - [ ] Login with username and	password.
 - [ ] Validate the password strength with an appropriate	regular	expression.
