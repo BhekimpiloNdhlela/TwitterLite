@@ -28,15 +28,16 @@ $ pip install -r requirements.txt
 
 #### Running app on Local Server
 
-For first running first check the _first time setup_ above
+Make sure you successfully completed the _First Time Setup_ steps before rennuning the application.
 
 ```bash
 $ python app/run.py
 ```
-visit: [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
+visit: [http://127.0.0.1:5000/](http://127.0.0.1:5000/) 
 
 #### Deactivating The Virtual Enviroment
-Assuming you in the Virtual enviroment folder
+
+Assuming you in the Virtual enviroment(405-Found/) folder
 ```
 $ deactivate
 ```
