@@ -5,11 +5,17 @@ Repository for Web Development RW334 Project 2.
 ## Members
 
 Bhekimpilo Ndhlela **18998712**  
+
 David Williams **19869355**  
+
 Keanu Damons **19791615**
-Klensch Lucas **19908687**  
+
+Klensch Lucas **19908687**
+
 Nishaat Laher **21183635**
+
 Tahir Rhoda **20175086**
+
 
 ## Setup
 
