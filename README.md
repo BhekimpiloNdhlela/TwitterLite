@@ -37,7 +37,7 @@ it and be brought to a page featuring the feed of all the	most recent tweets tha
 - [ ] Be able to view tweets of people you are following, ordered by time of tweet and likes that a tweet received.
 - [ ] Add a tab that can be used to see a	**D3.js** visualization	of the network of users, with follow relationships
 indicated, and each user also labelled by username and total number of likes of tweets. [See	for	example](https://medium.com/statuscode/rethinking-twitters-who-to-follow-using-node-jsand-d3-js-d8875d112bc8)
-- [ ] . For	extra	credit,	use [NLTK](https://www.nltk.org/) for **natural language analysis/processing** on tweets – [see for	example](https://towardsdatascience.com/topic-modelling-in-python-with-nltk-and-gensim4ef03213cd21)
+- [ ] For	extra	credit,	use [NLTK](https://www.nltk.org/) for **natural language analysis/processing** on tweets – [see for	example](https://towardsdatascience.com/topic-modelling-in-python-with-nltk-and-gensim4ef03213cd21)
 
 
 
