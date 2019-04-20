@@ -71,6 +71,14 @@ $ python app/run.py
 ```
 visit: [http://127.0.0.1:5000/](http://127.0.0.1:5000/) 
 
+### Setting Up Sendgrid API_KEY:
+Assuming you in the Virtual enviroment **405-Found/** folder
+```bash
+$ echo "export SENDGRID_API_KEY='YOUR_API_KEY'" > sendgrid.env
+$ source ./sendgrid.env
+```
+Get your Api Key from creating a Sendgrid account [here](https://signup.sendgrid.com/)
+
 #### Deactivating The Virtual Enviroment
 
 Assuming you in the Virtual enviroment **405-Found/** folder
