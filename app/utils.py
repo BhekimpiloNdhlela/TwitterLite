@@ -6,6 +6,7 @@ import re
 from passlib.hash import sha512_crypt
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
+from itsdangerous import URLSafeTimedSerializer
 
 def validatePassword(formInput, debug=True):
     """
@@ -66,9 +67,10 @@ def sendAccountVerificationEmail(to_email, token, from_email='verifyaccount@boot
     """ sumary_line """
     return None
 
-def sendEmailTest(to_email='18998712@sun.ac.za', from_email='verifyaccount@bootlegtwitter.com'):
+def sendEmailTest(to_email='0000000@sun.ac.za', from_email='verifyaccount@bootlegtwitter.com'):
     """ sumary_line """
-    # set this in config.cnf file
+    #TODO: change the to_email it the signature to you email adress to test if your configuration is successful
+    #TODO: set this in config.cnf file
     salt = URLSafeTimedSerializer("ThisIsASecretSaltString")
     message = Mail(     from_email=from_email,
                         to_emails=to_email,
@@ -77,10 +79,11 @@ def sendEmailTest(to_email='18998712@sun.ac.za', from_email='verifyaccount@bootl
     )
 
     try:
+        # TODO: check the readme to configure the send grid API_KEY in the README.md file
         sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
         response = sg.send(message)
         if response.status_code == 202:
-            pass
+            pass #success
         else:
             pass #error
     except Exception as e:

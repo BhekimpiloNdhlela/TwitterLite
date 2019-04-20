@@ -85,6 +85,8 @@ def register():
 @app.route('/verify-email/<token>')
 @app.route('/confirm-email/<token>')
 def confirmEmail(token):
+
+    #TODO: this logic should go to the backend
     try:
         email = salt.loads(token, salt='email-confirm', max_age=30)
     except SignatureExpired:
