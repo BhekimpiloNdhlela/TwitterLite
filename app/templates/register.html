@@ -39,7 +39,7 @@
         <div class="container" style="padding-top: 150px;">
             <div class="card-deck card">
                 <div class="card-body text-center">
-                    <form action="POST">
+                    <form method="POST" action="/register">
                         <h2> Signup </h2>
                         <div class="row">
                             <div class="col">
@@ -47,7 +47,7 @@
                                     <input type="text" class="form-control" placeholder="User Name" required>
                                 </div>
                                 <div class="form-group">
-                                    <input type="email" class="form-control" placeholder="Email" required>
+                                    <input type="email" class="form-control" placeholder="Email" value='email' name="email"required>
                                 </div>
                                 <div class="form-group">
                                     <select class="custom-select custom-select-md mb-0">
