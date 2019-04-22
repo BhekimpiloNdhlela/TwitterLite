@@ -25,15 +25,18 @@ def home():
     """ sumary_line """
     return render_template('index.html')
 
+
 @app.route('/about')
 def about():
     """ sumary_line """
     return render_template('about.html')
 
+
 @app.route('/password')
 def forgot_password():
     """ sumary_line """
     return render_template('forgot-password.html')
+
 
 @app.route('/login')
 @app.route('/signin')
@@ -41,26 +44,31 @@ def login():
     """ sumary_line """
     return render_template('login.html')
 
+
 @app.route('/editprofile')
-def editUserProfile():
+def edit_user_profile():
     """ sumary_line """
     pass
+
 
 @app.route('/changepassword')
-def changeUserPassword():
+def change_user_password():
     """ sumary_line """
     pass
 
+
 @app.route('/viewprofile')
-def viewUserBio():
+def view_user_bio():
     """ sumary_line """
     template = env.get_template("index.html")
     return template.render(name="John")
+
 
 @app.route('/logout')
 def logout():
     """ sumary_line """
     return '<h1>Loging Out</h1>'
+
 
 @app.route('/signup', methods=['GET', 'POST'])
 @app.route('/register', methods=['GET', 'POST'])
@@ -71,12 +79,13 @@ def register():
     else:
         email = request.form['email']
         token = salt.dumps(email, salt='email-confirm')
-        sendAccountVerificationEmail(email, token)
+        send_account_verification_email(email, token)
         return '<h2>The verification Email Has been sent please check you email inbox<h2>'
+
 
 @app.route('/verify-email/<token>')
 @app.route('/confirm-email/<token>')
-def confirmEmail(token):
+def confirm_email(token):
     """ sumary_line """
     #TODO: this logic should go to the backend
     try:
@@ -84,6 +93,14 @@ def confirmEmail(token):
     except SignatureExpired:
         return '<h1> the token has expired</h1>'
     return '<h1>Email: {} has been verified</h1>'.format(email)
+
+
+
+@app.route('/set-new-password/<token>', methods=['GET', 'POST'])
+def set_new_password(token):
+    pass
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
