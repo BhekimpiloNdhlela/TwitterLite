@@ -50,8 +50,13 @@ def set_time_stamp():
     return None
 
 def send_resset_password_email(to_email, from_email='resetpassword@bootlegtwitter.com'):
-    """ sumary_line """
-    return None
+    """
+    """
+    subject = 'Password Changed'
+    html_content = '<h2>BootlegTwitter Password changed Notification<h2><br>'
+    html_content += '<strong>The password for the following account has been changed</strong><br>'
+    html_content += '<p>Account: {}</p>'.format(to_email)
+    __send_email(from_email, to_email, subject, html_content)
 
 def send_forgot_password_email(to_email, token, from_email='forgotpassword@bootlegtwitter.com'):
     """
