@@ -1,29 +1,33 @@
 #!usr/bin/python3
-#TODO: All the sectret keys, salts should be placed in a config
+# TODO: All the sectret keys, salts should be placed in a config
 
 from utils import *
 from flask import Flask, request, session, redirect, url_for, render_template, flash
 from itsdangerous import URLSafeTimedSerializer
 from itsdangerous.exc import SignatureExpired
-from jinja2 import Environment, PackageLoader, select_autoescape, FileSystemLoader, Template
+from jinja2 import Environment, select_autoescape, FileSystemLoader
 
-#TODO: remains in the run.py when moving goes down
+from mock_data import *
+# TODO: remains in the run.py when moving goes down
 app = Flask(__name__)
 
 
-#TODO: this has to be changed. the salt should be set in a config file
-salt = URLSafeTimedSerializer("ThisIsASecretSaltStringURLSafeTimedSerializerURLSafeTimedSerializer")
+# TODO: this has to be changed. the salt should be set in a config file
+salt = URLSafeTimedSerializer(
+    "ThisIsASecretSaltStringURLSafeTimedSerializerURLSafeTimedSerializer")
 
 env = Environment(
     loader=FileSystemLoader('templates'),
     autoescape=select_autoescape(['html'])
 )
 
+
 @app.route('/')
 @app.route('/home')
 def home():
     """ sumary_line """
-    return render_template('index.html')
+    template = env.get_template("index.html")
+    return template.render(user=john_doe, tweets=mock_tweets, treading=mock_treading)
 
 
 @app.route('/about')
@@ -60,8 +64,7 @@ def change_user_password():
 @app.route('/viewprofile')
 def view_user_bio():
     """ sumary_line """
-    template = env.get_template("index.html")
-    return template.render(name="John")
+    return render_template('login.html')
 
 
 @app.route('/logout')
@@ -87,7 +90,7 @@ def register():
 @app.route('/confirm-email/<token>')
 def confirm_email(token):
     """ sumary_line """
-    #TODO: this logic should go to the backend
+    # TODO: this logic should go to the backend
     try:
         email = salt.loads(token, salt='email-confirm', max_age=3600)
     except SignatureExpired:
@@ -95,11 +98,9 @@ def confirm_email(token):
     return '<h1>Email: {} has been verified</h1>'.format(email)
 
 
-
 @app.route('/set-new-password/<token>', methods=['GET', 'POST'])
 def set_new_password(token):
     pass
-
 
 
 if __name__ == '__main__':

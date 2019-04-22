@@ -1,54 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
+{% include 'partials/header.html' %}
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<body class="w3-theme-l5">
 
-    <title>{% block title %}{% endblock %}</title>
+    <!-- Navbar -->
+    {% include '/partials/navbar.html' %}
 
-</head>
+    <!-- Page Container -->
+    <div class="w3-container w3-content" style="max-width:1400px;margin-top:80px">
+        <!-- The Grid -->
+        <div class="w3-row">
+            <!-- Left Column -->
+            <div class="w3-col m3">
+                <!-- Profile -->
+                {% include 'partials/profile_info.html' %}
 
-<body>
-    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-        <ul class="navbar-nav">
-            <li class="nav-item active">
-                <a class="nav-link" href="#">BootlegTwitter</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">About</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Trending</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Signin</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Signup</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Whatever</a>
-            </li>
-        </ul>
-    </nav>
+                <!-- Accordion -->
+                {% include 'partials/accordion.html' %}
+            </div>
 
-    {% block content%}
+            <!-- Middle Column -->
+            <div class="w3-col m7">
+                {% block content %}{% endblock %}
+            </div>
 
-    {% endblock %}
+            <!-- Right Column -->
+            <div class="w3-col m2">
+                {% include 'partials/friend_requests.html' %}
+
+                {% include 'partials/treading.html' %}
+
+            </div>
+
+            <!-- End Grid -->
+        </div>
+    </div>
+    <!-- Footer -->
+    {% include 'partials/footer.html' %}
+
+    <script src="/static/js/main.js">
+    </script>
+
 </body>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
-    integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous">
-</script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
-    integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous">
-</script>
 
 </html>

@@ -2,7 +2,8 @@ class User:
     """
     doc-string
     """
-    def __init__(self, user_name, user_email, user_dob, user_hash, user_gender, user_bio=None, user_avatar=None):
+
+    def __init__(self, user_name, user_email, user_dob, user_hash, user_gender, user_bio=None, user_avatar="/static/img/default.png"):
         """
         doc-string
         """
@@ -89,6 +90,7 @@ class User:
         """
         return None
 
+
 class Post:
     """
     doc-string
@@ -171,4 +173,3 @@ class Post:
         doc-string
         """
         pass
-

@@ -1,69 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!--bootstrap-->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-        <title>BootlegTwitter</title>
-    </head>
+{% extends 'base.html' %}
 
-    <body>
-        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-            <a class="navbar-brand" href="/">BootlegTwitter</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+{% block content %}
 
-            <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/signin">Signin</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/signup">Signup</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/about">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Tahir</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Trending</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-        <h1>Home Page</h1>
-    </body>
-
-    <footer class="bg-dark fixed-bottom" style="padding-top: 15px;">
-        <div class="row text-center text-white">
-            <div class="col">
-                <p>footer 1</p>
-                <p>footer 2</p>
-                <p>footer 3</p>
-            </div>
-            <div class="col">
-                <p>footer 1</p>
-                <p>footer 2</p>
-                <p>footer 3</p>
-            </div>
-            <div class="col">
-                <p>footer 1</p>
-                <p>footer 2</p>
-                <p>footer 3</p>
+<div class="w3-row-padding">
+    <div class="w3-col m12">
+        <div class="w3-card w3-round w3-white">
+            <div class="w3-container w3-padding">
+                <h6 class="w3-opacity">Social Media template by w3.css</h6>
+                <p contenteditable="true" class="w3-border w3-padding">Status: Feeling Blue</p>
+                <button type="button" class="w3-button w3-theme"><i class="fa fa-pencil"></i>
+                    Post</button>
             </div>
         </div>
-        <div class="row text-center">
-            <div class="col">
-                    <p class="text-xs-center text-white">&copy; Copyright 2016 - BootlegTwitter.  All rights reserved.</p>
-            </div>
+    </div>
+</div>
+
+{% for tweet in tweets %}
+<div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+    <img src="{{ tweet['avatar'] }}" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
+    <span class="w3-right w3-opacity">1 min</span>
+    <h4>{{ tweet['username'] }}</h4><br>
+    <hr class="w3-clear">
+    <p>{{ tweet['content'] }}</p>
+    <div class="w3-row-padding" style="margin:0 -16px">
+        {% for photo in tweet['photos'] %}
+        <div class="w3-half">
+            <img src="/static/img/photos/{{ photo }}" style="width:100%" alt="Northern Lights" class="w3-margin-bottom">
         </div>
-    </footer>
-    
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-</html>
+        {% endfor %}
+    </div>
+    <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i class="fa fa-thumbs-up"></i>
+        Like</button>
+    <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-comment"></i>
+        Comment</button>
+</div>
+{% endfor %}
+
+{% endblock %}
