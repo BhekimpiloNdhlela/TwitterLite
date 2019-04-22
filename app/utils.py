@@ -9,6 +9,34 @@ from sendgrid.helpers.mail import Mail
 from itsdangerous import URLSafeTimedSerializer
 from datetime import date, datetime
 
+
+def get_date():
+    """
+    used to get todays date, this is done when a user is creating a post or when the user is creating
+    an account. Essentially this function is used for anything that needs today's date.
+    """
+    todays_date = date.today().strftime("%Y-%m-%d")
+    return todays_date
+
+
+def get_time_stamp():
+    """
+    used to get the now's time stamp, this is done when a user is creating a post or when the user is
+    creating an account. Essentially this function is used for anything that needs a now's timestamp.
+    """
+    time_stamp = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")
+    return time_stamp
+
+
+def get_password_hash(password, salt='THESALTISsaltyLi', rounds=99999):
+    """
+    used to obtain a users password hash, since password should not be stored in the database explicitly
+    this function makes use of the sha512_crypt algorithm to make hashes with the default rounds.
+    """
+    hash = sha512_crypt.encrypt(password, salt=salt, rounds=rounds)
+    return hash
+
+
 def send_resset_password_email(to_email, from_email='resetpassword@bootlegtwitter.com'):
     """
     """
@@ -57,30 +85,6 @@ def __send_email(from_email, to_email, subject, html_content):
         response = sg.send(msg)
     except Exception as e:
         print(e.message)
-
-
-def get_date():
-    """
-    used to get todays date, this is done when a user is creating a post or when the user is creating
-    an account. Essentially this function is used for anything that needs today's date.
-    """
-    todays_date = date.today().strftime("%Y-%m-%d")
-    return todays_date
-
-
-def get_time_stamp():
-    """
-    used to get the now's time stamp, this is done when a user is creating a post or when the user is
-    creating an account. Essentially this function is used for anything that needs a now's timestamp.
-    """
-    time_stamp = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")
-    return time_stamp
-
-
-def get_password_hash(password, salt='THESALTISsaltyLi', rounds=99999):
-    """ sumary_line """
-    hash = sha512_crypt.encrypt(password, salt=salt, rounds=rounds)
-    return hash
 
 
 def validate_password(formInput, debug=True):
