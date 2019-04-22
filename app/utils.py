@@ -65,30 +65,21 @@ def sendForgotPasswordEmail(to_email, token, from_email='forgotpassword@bootlegt
 
 def sendAccountVerificationEmail(to_email, token, from_email='verifyaccount@bootlegtwitter.com'):
     """ sumary_line """
-    return None
-
-def sendEmailTest(to_email='0000000@sun.ac.za', from_email='verifyaccount@bootlegtwitter.com'):
-    """ sumary_line """
-    #TODO: change the to_email it the signature to you email adress to test if your configuration is successful
     #TODO: set this in config.cnf file
+    verrification_link = 'http://localhost:5000/confirm-email/'+token
     salt = URLSafeTimedSerializer("ThisIsASecretSaltString")
-    message = Mail(     from_email=from_email,
-                        to_emails=to_email,
-                        subject='Verify Account',
-                        html_content='<strong>and easy to do anywhere, even with Python</strong>'
-    )
+    html_content = '<h2>The Following is your account verification link From BootlegTwitter:<h2><br>'
+    html_content += '<strong>Please follow the following link to verify your account</strong><br>'
 
+    html_content += '<a href=\"{}\">Click to verify your email address</a>'.format(verrification_link)
+
+    msg = Mail(from_email=from_email, to_emails=to_email, subject='Verify Account', html_content=html_content)
     try:
-        # TODO: check the readme to configure the send grid API_KEY in the README.md file
         sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
-        response = sg.send(message)
+        response = sg.send(msg)
         if response.status_code == 202:
             pass #success
         else:
             pass #error
     except Exception as e:
         print(e.message)
-
-DEBUG = False
-if DEBUG:
-    sendEmailTest()

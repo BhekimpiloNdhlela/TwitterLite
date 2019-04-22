@@ -80,7 +80,8 @@ def register():
         #TODO:  make use of the send account verification email using the utils function.
         sendAccountVerificationEmail(email, token)
         #TODO: the following line should be a bootstrap alert notifying the user that an email has been sent
-        return '<h1>Please verify email: {}. with the following token: {}</h1>'.format(email, token)
+        sendAccountVerificationEmail(email, token)
+        return '<h2>The verification Email Has been sent please check you email inbox<h2>'
 
 @app.route('/verify-email/<token>')
 @app.route('/confirm-email/<token>')
@@ -88,7 +89,7 @@ def confirmEmail(token):
 
     #TODO: this logic should go to the backend
     try:
-        email = salt.loads(token, salt='email-confirm', max_age=30)
+        email = salt.loads(token, salt='email-confirm', max_age=3600)
     except SignatureExpired:
         return '<h1> the token has expired</h1>'
     return '<h1>Email: {} has been verified</h1>'.format(email)
