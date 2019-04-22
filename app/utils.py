@@ -9,21 +9,15 @@ from sendgrid.helpers.mail import Mail
 from itsdangerous import URLSafeTimedSerializer
 
 def validatePassword(formInput, debug=True):
-    """
-    uses regular expression to validate password strength
-    """
+    """ uses regular expression to validate password strength """
     return True
 
 def validateDate(formInput, debug=True):
-    """
-    uses regular expression to validate password strength
-    """
+    """ uses regular expression to validate password strength """
     return True
-
+5
 def validateName(formInput, debug=True):
-    """
-    uses regular expression to validate password strength
-    """
+    """ uses regular expression to validate password strength """
     return True
 
 def validateSurname(formInput, debug=True):

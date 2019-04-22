@@ -17,6 +17,11 @@ Nishaat Laher **21183635**
 Tahir Rhoda **20175086**
 
 ## TODOS:
+- [ ] Make the **run.py** script specific for handling the running of the application. Move  
+nessary code (views) in the run.py script to **views.py** and also move the necessary code in the 
+**views.py** to **utils.py**
+
+- [ ] create a config.cnfg (i think, I am not sure about the extension or if it matters) for storing API_KEYs and hashes accossiated to the application.
 - [x] Create Project Repository for Version	control.
 - [x] Create Trello board for issue management or Project	Management [follw this link to the Trello board](https://trello.com/b/EU293DyA/bootleg-twitter)
 
@@ -47,54 +52,49 @@ indicated, and each user also labelled by username and total number of likes of 
 
 
 
-## Setup
-
-To get up and running follow the following steps. If I get time I will probably write a python script
-for this. However, for now this is what we have to do to get the development enviroment working.
+## Setup Instructions
+To get up and running follow the following steps. If I get time I will probably write a python
+script for this. However, for now this is what we have to do to get the development enviroment working.
 
 #### First time Setup
 
 ```bash
 $ git clone https://github.com/BhekimpiloNdhlela/405-Found.git
-$ virtualenv 405-Found
+$ virtualenv -p python3 405-Found
 $ cd 405-Found
 $ source bin/activate
 $ pip install -r requirements.txt
 ```
 
-#### Running app on Local Server
-
-Make sure you successfully completed the **First Time Setup** steps before rennuning the application.
-
-```bash
-$ python app/run.py
-```
-visit: [http://127.0.0.1:5000/](http://127.0.0.1:5000/) 
-
-### Setting Up Sendgrid API_KEY:
+#### Setting Up Sendgrid API_KEY:
 Assuming you in the Virtual enviroment **405-Found/** folder
+Get your Api Key from creating a Sendgrid account [here](https://signup.sendgrid.com/)
+And then copy your API KEY in to the following **'YOUR_API_KEY'**
 ```bash
 $ echo "export SENDGRID_API_KEY='YOUR_API_KEY'" > sendgrid.env
 $ source ./sendgrid.env
 ```
-Get your Api Key from creating a Sendgrid account [here](https://signup.sendgrid.com/)
+
+#### Running The Application on Local Server
+Make sure you successfully completed the **First Time Setup**  and **Setting Up Sendgrid API_KEY**
+steps before rennuning the application.
+```
+$ python3 app/run.py
+```
+visit: [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
+
 
 #### Deactivating The Virtual Enviroment
-
 Assuming you in the Virtual enviroment **405-Found/** folder
 ```
 $ deactivate
 ```
 
 #### Activating The Virtual Enviroment
-
-```
+```bash
 $ cd 405-Found
-$ source bin/activate
+$ source bin/activate ./sendgrid.env
 ```
-
-
-
 
 ## Style guide
 
