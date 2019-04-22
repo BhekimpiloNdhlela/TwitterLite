@@ -397,3 +397,4 @@ pip-selfcheck.json
 
 # End of https://www.gitignore.io/api/virtualenv
 sendgrid.env
+app/.vscode/settings.json
