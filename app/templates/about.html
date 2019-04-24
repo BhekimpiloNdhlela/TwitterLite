@@ -1,66 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-        <title>About</title>
-    </head>
+{% extends 'base-2.html' %}
 
-    <body>
-        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-            <a class="navbar-brand" href="/">BootlegTwitter</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+{% block title%}About{% endblock %}
 
-            <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/signin">Signin</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/signup">Signup</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/about">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Tahir</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Trending</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+{% block content %}
+<br>
 
-        <footer class="bg-dark fixed-bottom" style="padding-top: 15px;">
-            <div class="row text-center text-white">
-                <div class="col">
-                    <p>footer 1</p>
-                    <p>footer 2</p>
-                    <p>footer 3</p>
-                </div>
-                <div class="col">
-                    <p>footer 1</p>
-                    <p>footer 2</p>
-                    <p>footer 3</p>
-                </div>
-                <div class="col">
-                    <p>footer 1</p>
-                    <p>footer 2</p>
-                    <p>footer 3</p>
-                </div>
-            </div>
-            <div class="row text-center">
-                <div class="col">
-                        <p class="text-xs-center text-white">&copy; Copyright 2016 - BootlegTwitter.  All rights reserved.</p>
-                </div>
-            </div>
-        </footer>
-    </body>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-</html>
+<!-- Insert Content Here -->
+
+<br>
+{% endblock %}

@@ -18,6 +18,11 @@ john_doe = {
     ],
     "friends": [
 
+    ],
+    "notification": 2,
+    "notifications": [
+        "John Doe posted on your wall",
+        "Jane likes your post"
     ]
 }
 # "username": "jan_doe"

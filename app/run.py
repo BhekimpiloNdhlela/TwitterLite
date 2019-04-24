@@ -27,32 +27,50 @@ env = Environment(
 def home():
     """ sumary_line """
     template = env.get_template("index.html")
+    return template.render(user=john_doe, tweets=mock_tweets, treading=mock_treading, account=True)
+
+
+@app.route('/friends')
+def friends():
+    """ sumary_line """
+    template = env.get_template("friends.html")
     return template.render(user=john_doe, tweets=mock_tweets, treading=mock_treading)
 
 
 @app.route('/about')
 def about():
     """ sumary_line """
-    return render_template('about.html')
+    template = env.get_template("about.html")
+    return template.render()
 
 
 @app.route('/password')
 def forgot_password():
     """ sumary_line """
-    return render_template('forgot-password.html')
+    template = env.get_template("forgot-password.html")
+    return template.render()
 
 
 @app.route('/login')
 @app.route('/signin')
 def login():
     """ sumary_line """
-    return render_template('login.html')
+    template = env.get_template("login.html")
+    return template.render()
 
 
-@app.route('/editprofile')
-def edit_user_profile():
+@app.route('/account')
+def account():
     """ sumary_line """
-    pass
+    template = env.get_template("account.html")
+    return template.render(user=john_doe, tweets=mock_tweets, treading=mock_treading)
+
+
+@app.route('/messages')
+def messages():
+    """ sumary_line """
+    template = env.get_template("messages.html")
+    return template.render(user=john_doe, tweets=mock_tweets, treading=mock_treading)
 
 
 @app.route('/changepassword')
@@ -60,11 +78,12 @@ def change_user_password():
     """ sumary_line """
     pass
 
-
-@app.route('/viewprofile')
+# TODO Must implement - Get user data from db
+@app.route('/profile/<username>')
 def view_user_bio():
     """ sumary_line """
-    return render_template('login.html')
+    template = env.get_template("index.html")
+    return template.render(user=john_doe, tweets=mock_tweets, treading=mock_treading, account=False)
 
 
 @app.route('/logout')
@@ -78,7 +97,8 @@ def logout():
 def register():
     """ sumary_line """
     if request.method == 'GET':
-        return render_template('register.html')
+        template = env.get_template("register.html")
+        return template.render()
     else:
         email = request.form['email']
         token = salt.dumps(email, salt='email-confirm')
