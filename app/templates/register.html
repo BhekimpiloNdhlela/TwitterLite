@@ -1,115 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!--bootstrap-->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-        <title>Register</title>
-    </head>
+{% extends 'base-2.html' %}
 
-    <body>
-        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-            <a class="navbar-brand" href="/">BootlegTwitter</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+{% block title%}Signin{% endblock %}
 
-            <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/signin">Signin</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/signup">Signup</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/about">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Tahir</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Trending</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+{% block content %}
+<br>
 
-        <div class="container" style="padding-top: 150px;">
-            <div class="card-deck card">
-                <div class="card-body text-center">
-                    <form method="POST" action="/register">
-                        <h2> Signup </h2>
-                        <div class="row">
-                            <div class="col">
-                                <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="User Name" required>
-                                </div>
-                                <div class="form-group">
-                                    <input type="email" class="form-control" placeholder="Email" value='email' name="email"required>
-                                </div>
-                                <div class="form-group">
-                                    <select class="custom-select custom-select-md mb-0">
-                                        <option value="1">Female</option>
-                                        <option value="2">Male</option>
-                                        <option value="3">Other</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col">
-                                <div class="form-group">
-                                    <input type="date" class="form-control" placeholder="Cellphone Number" required>
-                                </div>
-                                <div class="form-group">
-                                    <input type="password" class="form-control" placeholder="Password">
-                                </div>
-                                <div class="form-group">
-                                    <input type="password" class="form-control" placeholder="Confirm Password">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <input type="submit" class="btn btn-dark form-control" placeholder="Signup" value="Signup">
-                        </div>
-                        <div class="form-group">
-                            <a href="/signin" class="btn btn-dark form-control">Have Account</a>
-                        </div>
-                    </form>
-                </div>
-            </div>
+<form method="POST" action="/register">
+    <h1 class="w3-center">Signup</h1>
+    <br>
+    <div class="w3-row">
+        <div class="w3-col w3-half">
+            <input type="text" class="w3-animate-input w3-input w3-large" placeholder="User Name" required>
+            <input type="email" class="w3-animate-input w3-input w3-large" placeholder="Email" name="email" required>
+            <select class="custom-select custom-select-md mb-0 w3-animate-input w3-input w3-large">
+                <option value="1">Female</option>
+                <option value="2">Male</option>
+                <option value="3">Other</option>
+            </select>
         </div>
-
-
-        <footer class="bg-dark fixed-bottom" style="padding-top: 15px;">
-            <div class="row text-center text-white">
-                <div class="col">
-                    <p>footer 1</p>
-                    <p>footer 2</p>
-                    <p>footer 3</p>
-                </div>
-                <div class="col">
-                    <p>footer 1</p>
-                    <p>footer 2</p>
-                    <p>footer 3</p>
-                </div>
-                <div class="col">
-                    <p>footer 1</p>
-                    <p>footer 2</p>
-                    <p>footer 3</p>
-                </div>
-            </div>
-            <div class="row text-center">
-                <div class="col">
-                        <p class="text-xs-center text-white">&copy; Copyright 2016 - BootlegTwitter.  All rights reserved.</p>
-                </div>
-            </div>
-        </footer>
-
-    </body>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-</html>
+        <div class="w3-col w3-half">
+            <input type="date" class="w3-animate-input w3-input w3-large" placeholder="Cellphone Number" required>
+            <input type="password" class="w3-animate-input w3-input w3-large" placeholder="Password" required>
+            <input type="password" class="w3-animate-input w3-input w3-large" placeholder="Confirm Password" required>
+        </div>
+    </div>
+    <br>
+    <input type="submit" class="w3-animate-input w3-input w3-large w3-center w3-blue" placeholder="Signup"
+        value="Signup">
+    <a href="/signin" class="w3-animate-input w3-input w3-large w3-center w3-blue">Have Account</a>
+</form>
+<br>
+{% endblock %}

@@ -1,95 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!--bootstrap-->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-        <title>Signin</title>
-    </head>
+{% extends 'base-2.html' %}
 
-    <body>
-        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-            <a class="navbar-brand" href="/">BootlegTwitter</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+{% block title%}Signin{% endblock %}
 
-            <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/signin">Signin</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/signup">Signup</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/about">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Tahir</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Trending</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-
-        <div class="container" style="padding-top: 50px;">
-            <div class="card-deck">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <h2> Signin </h2>
-                        <form action="POST">
-                            <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Email" required>
-                            </div>
-                            <div class="form-group">
-                                <input type="password" class="form-control" placeholder="password" required>
-                            </div>
-                            <div class="form-group">
-                                <input type="submit" class="btn btn-dark form-control" value="Signin">
-                            </div>
-                            <div class="form-group">
-                                <a href="/signup" class="btn btn-dark form-control">Signup</a>
-                            </div>
-                            <div class="form-group">
-                                <a href="/password" class="btn btn-dark form-control">Forgot Password</a>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </body>
-
-    <footer class="bg-dark fixed-bottom" style="padding-top: 15px;">
-        <div class="row text-center text-white">
-            <div class="col">
-                <p>footer 1</p>
-                <p>footer 2</p>
-                <p>footer 3</p>
-            </div>
-            <div class="col">
-                <p>footer 1</p>
-                <p>footer 2</p>
-                <p>footer 3</p>
-            </div>
-            <div class="col">
-                <p>footer 1</p>
-                <p>footer 2</p>
-                <p>footer 3</p>
-            </div>
-        </div>
-        <div class="row text-center">
-            <div class="col">
-                    <p class="text-xs-center text-white">&copy; Copyright 2016 - BootlegTwitter.  All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-</html>
+{% block content %}
+<h1 class="w3-center">Signin</h1>
+<br>
+<form action="POST">
+    <input type="text" class="w3-input w3-large w3-animate-input" placeholder="Email" required>
+    <input type="password" class="w3-input w3-large w3-animate-input" placeholder="password" required>
+    <br>
+    <input type="submit" class="w3-btn w3-blue w3-input w3-large w3-animate-input" value="Signin">
+    <a href="/signup" class="w3-btn w3-blue w3-input w3-large w3-animate-input">Signup</a>
+    <a href="/password" class="w3-btn w3-blue w3-input w3-large w3-animate-input">Forgot Password</a>
+</form>
+<br>
+{% endblock %}

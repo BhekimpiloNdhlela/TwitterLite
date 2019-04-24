@@ -1,0 +1,26 @@
+{% include 'partials/header.html' %}
+
+<body class="w3-theme-l5">
+
+    <!-- Navbar -->
+    {% include '/partials/navbar-2.html' %}
+
+    <!-- Page Container -->
+    <div class="w3-container w3-content" style="max-width:1400px;padding-bottom: 80px;">
+        <!-- The Grid -->
+        <div class="w3-row ">
+            <!-- Middle Column -->
+            <div class="w3-container w3-card w3-display-middle" style="width:60%;">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+    <!-- Footer -->
+    {% include 'partials/footer-2.html' %}
+
+    <script src="/static/js/main.js">
+    </script>
+
+</body>
+
+</html>
