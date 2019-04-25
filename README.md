@@ -8,7 +8,7 @@ Bhekimpilo Ndhlela **18998712**
 
 David Williams **19869355**
 
-Keanu Damons **19791615**
+Keanu Damon **19791615**
 
 Klensch Lucas **19908687**
 
