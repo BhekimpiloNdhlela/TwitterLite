@@ -71,8 +71,9 @@ Assuming you in the Virtual enviroment **405-Found/** folder
 Get your Api Key from creating a Sendgrid account [here](https://signup.sendgrid.com/)
 And then copy your API KEY in to the following **'YOUR_API_KEY'**
 ```bash
-$ echo "export SENDGRID_API_KEY='YOUR_API_KEY'" > sendgrid.env
-$ source ./sendgrid.env
+# make sure you append while pipping, hence the: >>
+$ echo "export SENDGRID_API_KEY='YOUR_API_KEY'" >> venv/bin/activate
+$ source venv/bin/activate
 ```
 
 #### Running The Application on Local Server
@@ -93,7 +94,7 @@ $ deactivate
 #### Activating The Virtual Enviroment
 ```bash
 $ cd 405-Found
-$ source bin/activate ./sendgrid.env
+$ source venv/bin/activate
 ```
 
 ## Style guide
