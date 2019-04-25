@@ -57,12 +57,12 @@ To get up and running follow the following steps. If I get time I will probably 
 script for this. However, for now this is what we have to do to get the development enviroment working.
 
 #### First time Setup
-
 ```bash
 $ git clone https://github.com/BhekimpiloNdhlela/405-Found.git
-$ virtualenv -p python3 405-Found
 $ cd 405-Found
-$ source bin/activate
+$ virtualenv -p python3 venv
+$ virtualenv venv
+$ source venv/bin/activate
 $ pip install -r requirements.txt
 ```
 
