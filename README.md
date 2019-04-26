@@ -79,7 +79,8 @@ $ source venv/bin/activate
 #### Running The Application on Local Server
 Make sure you successfully completed the **First Time Setup**  and **Setting Up Sendgrid API_KEY**
 steps before rennuning the application.
-```
+```bash
+$ cd app/
 $ python3 run.py
 ```
 visit: [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
