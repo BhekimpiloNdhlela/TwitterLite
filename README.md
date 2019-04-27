@@ -4,14 +4,14 @@ Repository for Web Development RW334 Project 2.
 
 ## Members
 
-| Student Numbers  | Names      | Surname  |
-| ---------------- | ---------- | -------- |
-| **18998712**     | Bhekimpilo | Ndhlela  |
-| **19869355**     | David      | Williams |
-| **19791615**     | Keanu      | Damon    |
-| **19908687**     | Klensch    | Lucas    |
-| **21183635**     | Nishaat    | Laher    |
-| **20175086**     | Tahir      | Rhoda    |
+| Student Numbers    | Names         | Surname      |
+| ------------------ | ------------- | ------------ |
+| **18998712**       | Bhekimpilo    | Ndhlela      |
+| **19869355**       | David         | Williams     |
+| **19791615**       | Keanu         | Damon        |
+| **19908687**       | Klensch       | Lucas        |
+| **21183635**       | Nishaat       | Laher        |
+| **20175086**       | Tahir         | Rhoda        |
 
 ## TODOS:
 [follow this link to view the todos](https://github.com/BhekimpiloNdhlela/405-Found/blob/master/TODO.md)
@@ -36,7 +36,6 @@ Assuming you in the Virtual enviroment **405-Found/** folder
 Get your Api Key from creating a Sendgrid account [here](https://signup.sendgrid.com/)
 And then copy your API KEY in to the following **'YOUR_API_KEY'**
 ```bash
-# make sure you append while pipping, hence the: >>
 $ echo "export SENDGRID_API_KEY='YOUR_API_KEY'" >> venv/bin/activate
 $ source venv/bin/activate
 ```
@@ -64,24 +63,34 @@ $ source venv/bin/activate
 ```
 
 ## Style guide
+* **Function & Method Names**:
+  function names should be separated by underscores
 
-**Camel case** will be use for _variable_ names and _functions_ names.  
-_Filenames_ and _url links_ will be using **dashes** to separate the words.
+* **Variable Names**:
+  variable names should not be separated by underscores, all characters are in small caps
 
+* **Class Names**:
+  class names begin with a capital case character.
 
+* **HTML, CSS and JS File Names**
+  these file names should be separated by dashes if the name has more than one word.
 
-
+* **Python File Names**
+  python file names should be all small caps.
+ 
+* **More On Style**
+  **Please leave two extra(free) lines after every function or method block.**
+  _Also it is important to make use of the [PEP style guide.](https://www.python.org/dev/peps/pep-0008/) for anything style  related that was not mentioned above_
 
 ## Project Structure
-
 ```
 .
 ├── app                      # Folder containing all the application logic
-│   ├── static               #
-│   ├── templates            #
-│   ├── run.py               #
-│   └── utils.py             #
+│   ├── static               
+│   ├── templates            
+│   ├── run.py               
+│   └── utils.py             
 ├── .gitignore
 ├── README.md
-└── requirements.txt         # pip requirements
+└── requirements.txt
 ```
