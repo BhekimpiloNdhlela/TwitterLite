@@ -14,7 +14,7 @@ Repository for Web Development RW334 Project 2.
 | **20175086**     | Tahir      | Rhoda    |
 
 ## TODOS:
-[follow this link to view the todos](https://trello.com/b/EU293DyA/bootleg-twitter)
+[follow this link to view the todos](https://github.com/BhekimpiloNdhlela/405-Found/blob/master/TODO.md)
 
 
 ## Setup Instructions
