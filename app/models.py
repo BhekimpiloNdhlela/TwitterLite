@@ -1,5 +1,5 @@
-from py2neo import Graph, Node, Relationship
 from utils import get_date, get_password_hash, get_time_stamp, get_password_verification
+from py2neo import Graph, Node, Relationship
 import uuid
 
 # global variables
@@ -109,6 +109,19 @@ class User:
             return -1
 
 
+    def get_location_coorl(self, user_name):
+        """ doc-string """
+        this = get_this()
+        return this['location']
+
+    def update_location_coords(self, latitude, longtitude):
+        this = get_this()
+        this['location'] = {
+            'latitude': latitude,
+            'longtitude': longtitude
+        }
+
+
     def add_user(self, username, firstname, lastname, dob, gender, passwordhash):
         """
         this is a function used only once, that is if the user is creating
@@ -119,21 +132,23 @@ class User:
         # check if user is in the db return if False
         if graph.find_one('User', 'useremail', self.useremail):
             return False
-
         # else add the user to the db
         usernode = Node(
             'User',
             username=username,
             firstname=firstname,
             lastname=lastname
+            bio=''
             dob=dob,
             gender=gender,
             passwordhash=passwordhash,
             createdat=get_time_stamp(),
             useavatar=DEFAULT_AVATAR,
-            bio=''
             accountverrified=False,
-            location=(),
+            location = {
+                'latitude':None,
+                'latitude':None
+            },
             posts=[],
             friends=[],
             firendrequest=[],
