@@ -15,8 +15,8 @@ def get_date():
     used to get todays date, this is done when a user is creating a post or when the user is creating
     an account. Essentially this function is used for anything that needs today's date.
     """
-    todays_date = date.today().strftime("%Y-%m-%d")
-    return todays_date
+    todaysdate = date.today().strftime("%Y-%m-%d")
+    return todaysdate
 
 
 def get_time_stamp():
@@ -24,8 +24,8 @@ def get_time_stamp():
     used to get the now's time stamp, this is done when a user is creating a post or when the user is
     creating an account. Essentially this function is used for anything that needs a now's timestamp.
     """
-    time_stamp = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")
-    return time_stamp
+    timestamp = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")
+    return timestamp
 
 
 def get_password_hash(password, salt='THESALTISsaltyLi', rounds=99999):
@@ -36,28 +36,37 @@ def get_password_hash(password, salt='THESALTISsaltyLi', rounds=99999):
     hash = sha512_crypt.encrypt(password, salt=salt, rounds=rounds)
     return hash
 
-
-def send_resset_password_email(to_email, from_email='resetpassword@bootlegtwitter.com'):
+def get_password_verification(passwordhash, password):
     """
+    used when the user is loging in or when the user is attemping to change the password. this function 
+    should be used by any function that wants to verify a user password given a user password hash
+    """
+    verificationstatus = sha512_crypt.verify(password, passwordhash)
+    return verificationstatus
+
+def send_resset_password_email(toemail, fromemail='resetpassword@bootlegtwitter.com'):
+    """
+    used when the user is loging in or when the user is attemping to change the password. this function 
+    should be used by any function that wants to verify a user password given a user password hash
     """
     subject = 'Password Changed'
-    html_content = '<h2>BootlegTwitter Password changed Notification<h2><br>'
-    html_content += '<strong>The password for the following account has been changed</strong><br>'
-    html_content += '<p>Account: {}</p>'.format(to_email)
-    __send_email(from_email, to_email, subject, html_content)
+    htmlcontent = '<h2>BootlegTwitter Password changed Notification<h2><br>'
+    htmlcontent += '<strong>The password for the following account has been changed</strong><br>'
+    htmlcontent += '<p>Account: {}</p>'.format(toemail)
+    __send_email(fromemail, toemail, subject, htmlcontent)
 
 
-def send_forgot_password_email(to_email, token, from_email='forgotpassword@bootlegtwitter.com'):
+def send_forgot_password_email(toemail, token, fromemail='forgotpassword@bootlegtwitter.com'):
     """
     used to send account verification email to the user. This function is call only when the user
     needs to reset his/her password after loosing it.
     """
     verrification_link = 'http://localhost:5000/set-new-password/'+token
     subject = 'Forgot Password'
-    html_content = '<h2>The Following is your Password Reset link From BootlegTwitter:<h2><br>'
-    html_content += '<strong>Please Click the following link to Change Your Password</strong><br>'
-    html_content += '<a href=\"{}\">Click to Reset password</a>'.format(verrification_link)
-    __send_email(from_email, to_email, subject, html_content)
+    htmlcontent = '<h2>The Following is your Password Reset link From BootlegTwitter:<h2><br>'
+    htmlcontent += '<strong>Please Click the following link to Change Your Password</strong><br>'
+    htmlcontent += '<a href=\"{}\">Click to Reset password</a>'.format(verrification_link)
+    __send_email(fromemail, toemail, subject, htmlcontent)
 
 
 def send_account_verification_email(to_email, token, from_email='verifyaccount@bootlegtwitter.com'):
@@ -67,19 +76,19 @@ def send_account_verification_email(to_email, token, from_email='verifyaccount@b
     """
     verrification_link = 'http://localhost:5000/confirm-email/'+token
     subject = 'Account Verification'
-    html_content = '<h2>The Following is your account verification link From BootlegTwitter:<h2><br>'
-    html_content += '<strong>Please Click the following link to verify your account</strong><br>'
-    html_content += '<a href=\"{}\">Click to verify your email address</a>'.format(verrification_link)
-    __send_message(from_email, to_email, subject, html_content)
+    htmlcontent = '<h2>The Following is your account verification link From BootlegTwitter:<h2><br>'
+    htmlcontent += '<strong>Please Click the following link to verify your account</strong><br>'
+    htmlcontent += '<a href=\"{}\">Click to verify your email address</a>'.format(verrification_link)
+    __send_message(fromemail, toemail, subject, htmlcontent)
 
 
-def __send_email(from_email, to_email, subject, html_content):
+def __send_email(fromemail, toemail, subject, htmlcontent):
     """
     [private/ helper] function to send emails, to the user at hand. This helper function can be used
     to send account verrification, password reset and forgot password emails.
     NOTE: this function is never called directly hence the {__send_email} notation.
     """
-    msg = Mail(from_email=from_email, to_emails=to_email, subject=subject, html_content=html_content)
+    msg = Mail(from_email=fromemail, to_emails=toemail, subject=subject, html_content=htmlcontent)
     try:
         sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
         response = sg.send(msg)
@@ -107,16 +116,16 @@ def validate_surname(formInput, debug=True):
     return True
 
 
-def process_picture(form_input, debug=True):
+def validate_string(string, debug=True):
+    """ sumary_line """
+    return True
+
+
+def process_picture(forminput, status, debug=True):
     """ sumary_line """
     return True
 
 
 def compare_password(this, that, debug=True):
-    """ sumary_line """
-    return True
-
-
-def update_password(newpassword, oldpassword, debug=True):
     """ sumary_line """
     return True
