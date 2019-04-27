@@ -4,17 +4,14 @@ Repository for Web Development RW334 Project 2.
 
 ## Members
 
-Bhekimpilo Ndhlela **18998712**
-
-David Williams **19869355**
-
-Keanu Damon **19791615**
-
-Klensch Lucas **19908687**
-
-Nishaat Laher **21183635**
-
-Tahir Rhoda **20175086**
+| Student Numbers  | Names      | Surname  |
+| ---------------- | ---------- | -------- |
+| **18998712**     | Bhekimpilo | Ndhlela  |
+| **19869355**     | David      | Williams |
+| **19791615**     | Keanu      | Damon    |
+| **19908687**     | Klensch    | Lucas    |
+| **21183635**     | Nishaat    | Laher    |
+| **20175086**     | Tahir      | Rhoda    |
 
 ## TODOS:
 [follow this link to view the todos](https://trello.com/b/EU293DyA/bootleg-twitter)
