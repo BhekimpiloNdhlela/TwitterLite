@@ -8,6 +8,8 @@ from itsdangerous.exc import SignatureExpired
 from jinja2 import Environment, select_autoescape, FileSystemLoader
 
 from mock_data import *
+from models import *
+
 # TODO: remains in the run.py when moving goes down
 app = Flask(__name__)
 
@@ -27,7 +29,8 @@ env = Environment(
 def home():
     """ sumary_line """
     template = env.get_template("index.html")
-    return template.render(user=john_doe, tweets=mock_tweets, treading=mock_treading, account=True)
+    user = User("john_doe")
+    return template.render(user=user, tweets=mock_tweets, treading=mock_treading, account=True)
 
 
 @app.route('/friends')

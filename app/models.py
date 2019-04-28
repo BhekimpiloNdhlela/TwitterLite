@@ -3,7 +3,7 @@ from py2neo import Graph, Node, Relationship
 import uuid
 
 # global variables
-graph = Graph('http://hobby-jieinjmgjfpbgbkecpnglccl.dbs.graphenedb.com:24780' + '/db/data/',
+graph = Graph('https://hobby-jieinjmgjfpbgbkecpnglccl.dbs.graphenedb.com:24780' + '/db/data/',
               username='405-found', password='b.W3k0rCRmt6Cm.dxDei5UcxeeS6aTP')
 
 DEFAULT_AVATAR = "/static/img/default.png"
