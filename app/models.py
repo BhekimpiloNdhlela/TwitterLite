@@ -2,9 +2,29 @@ from utils import get_date, get_password_hash, get_time_stamp, get_password_veri
 from py2neo import Graph, Node, Relationship
 import uuid
 
-# global variables
-graph = Graph('https://hobby-jieinjmgjfpbgbkecpnglccl.dbs.graphenedb.com:24780' + '/db/data/',
-              username='405-found', password='b.W3k0rCRmt6Cm.dxDei5UcxeeS6aTP')
+"""
+THANK YOU KLENSCH FOR CREATING THE CLOUD CONTAINER or VIRTUAL MACHINE :-)
+
+TODO: db credentials(username, password, http_port, https_port, http_port and host_port)
+should be made enviroment variables or should be stored in the config file. for good
+practice and safety reasons.
+"""
+
+user = '405-found'
+password = 'b.W3k0rCRmt6Cm.dxDei5UcxeeS6aTP'
+host_port = 'hobby-jieinjmgjfpbgbkecpnglccl.dbs.graphenedb.com:24780'
+DB_HTTP_PORT, DB_HTTPS_PORT = 24789, 24780
+
+# authenticate before creating the Graph instance
+authenticate(host_port, username, password)
+# if authenticated create a Graph instance
+graph = Graph(
+    'https://'+host_port+'/db/data/',
+    bolt=False,
+    secure=True,
+    http_port=DB_HTTP_PORT,
+    https_port=DB_HTTPS_PORT
+)
 
 DEFAULT_AVATAR = "/static/img/default.png"
 
