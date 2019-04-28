@@ -36,17 +36,19 @@ def get_password_hash(password, salt='THESALTISsaltyLi', rounds=99999):
     hash = sha512_crypt.encrypt(password, salt=salt, rounds=rounds)
     return hash
 
+
 def get_password_verification(passwordhash, password):
     """
-    used when the user is loging in or when the user is attemping to change the password. this function 
+    used when the user is loging in or when the user is attemping to change the password. this function
     should be used by any function that wants to verify a user password given a user password hash
     """
     verificationstatus = sha512_crypt.verify(password, passwordhash)
     return verificationstatus
 
+
 def send_resset_password_email(toemail, fromemail='resetpassword@bootlegtwitter.com'):
     """
-    used when the user is loging in or when the user is attemping to change the password. this function 
+    used when the user is loging in or when the user is attemping to change the password. this function
     should be used by any function that wants to verify a user password given a user password hash
     """
     subject = 'Password Changed'
@@ -61,11 +63,12 @@ def send_forgot_password_email(toemail, token, fromemail='forgotpassword@bootleg
     used to send account verification email to the user. This function is call only when the user
     needs to reset his/her password after loosing it.
     """
-    verrification_link = 'http://localhost:5000/set-new-password/'+token
+    verification_link = 'http://localhost:5000/set-new-password/'+token
     subject = 'Forgot Password'
     htmlcontent = '<h2>The Following is your Password Reset link From BootlegTwitter:<h2><br>'
     htmlcontent += '<strong>Please Click the following link to Change Your Password</strong><br>'
-    htmlcontent += '<a href=\"{}\">Click to Reset password</a>'.format(verrification_link)
+    htmlcontent += '<a href=\"{}\">Click to Reset password</a>'.format(
+        verification_link)
     __send_email(fromemail, toemail, subject, htmlcontent)
 
 
@@ -74,26 +77,28 @@ def send_account_verification_email(to_email, token, from_email='verifyaccount@b
     used to send account verification email to the user. this function is used only once,
     this is when a user is creating an account at BootlegTwitter for the first time.
     """
-    verrification_link = 'http://localhost:5000/confirm-email/'+token
+    verification_link = 'http://localhost:5000/confirm-email/'+token
     subject = 'Account Verification'
     htmlcontent = '<h2>The Following is your account verification link From BootlegTwitter:<h2><br>'
     htmlcontent += '<strong>Please Click the following link to verify your account</strong><br>'
-    htmlcontent += '<a href=\"{}\">Click to verify your email address</a>'.format(verrification_link)
-    __send_message(fromemail, toemail, subject, htmlcontent)
+    htmlcontent += '<a href=\"{}\">Click to verify your email address</a>'.format(
+        verification_link)
+    __send_email(from_email, to_email, subject, htmlcontent)
 
 
 def __send_email(fromemail, toemail, subject, htmlcontent):
     """
     [private/ helper] function to send emails, to the user at hand. This helper function can be used
-    to send account verrification, password reset and forgot password emails.
+    to send account verification, password reset and forgot password emails.
     NOTE: this function is never called directly hence the {__send_email} notation.
     """
-    msg = Mail(from_email=fromemail, to_emails=toemail, subject=subject, html_content=htmlcontent)
+    msg = Mail(from_email=fromemail, to_emails=toemail,
+               subject=subject, html_content=htmlcontent)
     try:
         sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
         response = sg.send(msg)
     except Exception as e:
-        print(e.message)
+        print(e)
 
 
 def validate_password(formInput, debug=True):
