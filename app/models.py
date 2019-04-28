@@ -3,45 +3,43 @@ from py2neo import Graph, Node, Relationship
 import uuid
 
 # global variables
-graph = Graph('http://localhost:7474' + '/db/data/', username='neo4j', password='helloworld')
+graph = Graph('http://hobby-jieinjmgjfpbgbkecpnglccl.dbs.graphenedb.com:24780' + '/db/data/',
+              username='405-found', password='b.W3k0rCRmt6Cm.dxDei5UcxeeS6aTP')
+
 DEFAULT_AVATAR = "/static/img/default.png"
+
 
 class User:
     """ doc-string """
+
     def __init__(self, user_email):
         """ constructor of the user object or instance """
         self.useremail = useremail
-
 
     def is_account_verified(self):
         """ doc-string """
         this = get_this()
         return this['']
 
-
     def update_verification_account(self):
         """ doc-string """
         me = get_this()
         me['accountverrified'] = True
-
 
     def update_user_bio(self, newbio):
         """ doc-string """
         this = get_this()
         this['bio'] = newbio
 
-
     def update_user_avatar(self, new_avatar):
         """ doc-string """
         this = get_this()
         this['useravatar'] = new_avatar
 
-
     def update_password_hash(self, newhash):
         """ used to update the users password hash """
         this = get_this()
         this['passwordhash'] = newhash
-
 
     def get_this(self):
         """
@@ -53,41 +51,44 @@ class User:
         this = graph.find_one('User', 'useremail', self.useremail)
         return this
 
-
     def get_password_hash(self):
         """ doc-string """
         this = get_this()
         return this['passwordhash']
-
 
     def get_user_name(self):
         """ doc-string """
         this = get_this()
         return this['username']
 
+    def get_user_firstname(self):
+        """ docs """
+        this = get_this()
+        return this['firstname']
+
+    def get_user_lastname(self):
+        """ docs """
+        this = get_this()
+        return this['lastname']
 
     def get_user_email(self):
         """ doc-string """
         this = get_this()
         return this['useremail']
 
-
     def get_user_DOB(self):
         this = get_this()
         return this['dob']
-
 
     def get_user_bio(self):
         """ doc-string """
         this = get_this()
         return this['bio']
 
-
     def get_user_avatar(self, user_name):
         """ doc-string """
         this = get_this()
         return this['avatar']
-
 
     def user_login(self, password):
         """
@@ -103,11 +104,11 @@ class User:
 
         this = get_this_user()
         if this['accountverrified']:
-            is_correct = get_password_verification(this['passwordhash'], password)
+            is_correct = get_password_verification(
+                this['passwordhash'], password)
             return 0 if is_correct else 1
         else:
             return -1
-
 
     def get_location_coorl(self, user_name):
         """ doc-string """
@@ -120,7 +121,6 @@ class User:
             'latitude': latitude,
             'longtitude': longtitude
         }
-
 
     def add_user(self, username, firstname, lastname, dob, gender, passwordhash):
         """
@@ -137,17 +137,17 @@ class User:
             'User',
             username=username,
             firstname=firstname,
-            lastname=lastname
-            bio=''
+            lastname=lastname,
+            bio='',
             dob=dob,
             gender=gender,
             passwordhash=passwordhash,
             createdat=get_time_stamp(),
             useavatar=DEFAULT_AVATAR,
             accountverrified=False,
-            location = {
-                'latitude':None,
-                'latitude':None
+            location={
+                'latitude': None,
+                'latitude': None
             },
             posts=[],
             friends=[],
@@ -161,11 +161,9 @@ class User:
         """ doc-string """
         pass
 
-
     def get_user_posts(self):
         """ doc-string """
         pass
-
 
     def add_post(self):
         pass
@@ -174,12 +172,44 @@ class User:
         """ doc-string """
         return None
 
+    def overwrite_email_verification():
+        """ Must Overwrite the verification process """
+        return null
 
+    def get_json_user():
+        """ Json data """
+        return {
+            "name": get_user_firstname(),
+            "surname": get_user_lastname(),
+            "username": get_user_name(),
+            "picture": get_user_avatar,
+            "dob": get_user_DOB(),
+            "title": "Web dev Specialist",
+            "location": "Your mom's house",
+            "photos": [
+                "1.jpg",
+                "2.jpg",
+                "3.jpg",
+                "4.jpg",
+                "5.jpg",
+                "6.jpg",
+                "8.jpg",
+                "9.jpg"
+            ],
+            "friends": [
 
-
+            ],
+            "notification": 2,
+            "notifications": [
+                "John Doe posted on your wall",
+                "Jane likes your post"
+            ]
+        }
 
 
 """----------------------------------------------------------------------------"""
+
+
 class Post:
     """
     doc-string
