@@ -1,6 +1,6 @@
-from utils import get_date, get_password_hash, get_time_stamp, get_password_verification
-from py2neo import Graph, Node, Relationship, authenticate
 import uuid
+from py2neo import authenticate, Graph, Node, Relationship
+from utils import get_date, get_password_hash, get_time_stamp, get_password_verification
 
 """
 THANK YOU KLENSCH FOR CREATING THE CLOUD CONTAINER or VIRTUAL MACHINE :-)
