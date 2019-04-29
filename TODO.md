@@ -13,7 +13,7 @@ nessary code (views) in the run.py script to **views.py** and also move the nece
 - [x] Create Signin Form ***Frontend***
 - [x] Create Signup form ***Frontend***
 - [x] Create Forgot-Password Form ***Frontend*** Still needs to be changed.
-- [] Registration page for first time users.
+- [ ] Registration page for first time users.
 - [ ] Login with username and password.
 - [ ] Validate the password strength with an appropriate	regular	expression.
 - [ ] Profile	page where you can add your photo, write a short bio about yourself that people
