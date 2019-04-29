@@ -10,105 +10,34 @@ should be made enviroment variables or should be stored in the config file. for 
 practice and safety reasons.
 """
 
-user = '405-found'
-password = 'b.W3k0rCRmt6Cm.dxDei5UcxeeS6aTP'
-host_port = 'hobby-jieinjmgjfpbgbkecpnglccl.dbs.graphenedb.com:24780'
+DB_USERNAME = '405-found'
+DB_PASSWORD = 'b.W3k0rCRmt6Cm.dxDei5UcxeeS6aTP'
+DB_HOST_PORT = 'hobby-jieinjmgjfpbgbkecpnglccl.dbs.graphenedb.com:24780'
 DB_HTTP_PORT, DB_HTTPS_PORT = 24789, 24780
 
 # authenticate before creating the Graph instance
-authenticate(host_port, user, password)
+authenticate(DB_HOST_PORT, DB_USERNAME, DB_PASSWORD)
 # if authenticated create a Graph instance
 graph = Graph(
-    'https://'+host_port+'/db/data/',
+    'https://'+DB_HOST_PORT+'/db/data/',
     bolt=False,
     secure=True,
     http_port=DB_HTTP_PORT,
     https_port=DB_HTTPS_PORT
 )
-
 DEFAULT_AVATAR = "/static/img/default.png"
 
 
 class User:
     """ doc-string """
-
-    def __init__(self, user_email):
-        """ constructor of the user object or instance """
-        self.useremail = useremail
-
-    def is_account_verified(self):
-        """ doc-string """
-        this = get_this()
-        return this['']
-
-    def update_verification_account(self):
-        """ doc-string """
-        me = get_this()
-        me['accountverrified'] = True
-
-    def update_user_bio(self, newbio):
-        """ doc-string """
-        this = get_this()
-        this['bio'] = newbio
-
-    def update_user_avatar(self, new_avatar):
-        """ doc-string """
-        this = get_this()
-        this['useravatar'] = new_avatar
-
-    def update_password_hash(self, newhash):
-        """ used to update the users password hash """
-        this = get_this()
-        this['passwordhash'] = newhash
-
-    def get_this(self):
+    def __init__(self, username):
         """
-        used to get me, the user that was created with the constructor of
-        this instance.
-
-        Returns -> me: if found else None
+        constructor of the user object or instance, used to create an instance
+        of a user object and then operations can hence be made on that instance
+        of the user created by the client.
         """
-        this = graph.find_one('User', 'useremail', self.useremail)
-        return this
+        self.username = username
 
-    def get_password_hash(self):
-        """ doc-string """
-        this = get_this()
-        return this['passwordhash']
-
-    def get_user_name(self):
-        """ doc-string """
-        this = get_this()
-        return this['username']
-
-    def get_user_firstname(self):
-        """ docs """
-        this = get_this()
-        return this['firstname']
-
-    def get_user_lastname(self):
-        """ docs """
-        this = get_this()
-        return this['lastname']
-
-    def get_user_email(self):
-        """ doc-string """
-        this = get_this()
-        return this['useremail']
-
-    def get_user_DOB(self):
-        this = get_this()
-        return this['dob']
-
-    def get_user_bio(self):
-        """ doc-string """
-        this = get_this()
-        return this['bio']
-
-    def get_user_avatar(self, user_name):
-        """ doc-string """
-        this = get_this()
-        return this['avatar']
 
     def user_login(self, password):
         """
@@ -122,27 +51,16 @@ class User:
                     1  : Wrong Password
         """
 
-        this = get_this_user()
+        this = self.get_this_user_data()
         if this['accountverrified']:
-            is_correct = get_password_verification(
+            iscorrect = get_password_verification(
                 this['passwordhash'], password)
-            return 0 if is_correct else 1
+            return 0 if iscorrect else 1
         else:
             return -1
 
-    def get_location_coorl(self, user_name):
-        """ doc-string """
-        this = get_this()
-        return this['location']
 
-    def update_location_coords(self, latitude, longtitude):
-        this = get_this()
-        this['location'] = {
-            'latitude': latitude,
-            'longtitude': longtitude
-        }
-
-    def add_user(self, username, firstname, lastname, dob, gender, passwordhash):
+    def add_user(self, firstname, lastname, email, dob, gender, passwordhash):
         """
         this is a function used only once, that is if the user is creating
         a user profile with the application.
@@ -150,54 +68,178 @@ class User:
         Returns -> False if the user exists else a new user is created
         """
         # check if user is in the db return if False
-        if graph.find_one('User', 'useremail', self.useremail):
+        if graph.find_one('User', 'username', self.username):
             return False
         # else add the user to the db
         usernode = Node(
             'User',
-            username=username,
-            firstname=firstname,
-            lastname=lastname,
-            bio='',
-            dob=dob,
-            gender=gender,
-            passwordhash=passwordhash,
-            createdat=get_time_stamp(),
-            useavatar=DEFAULT_AVATAR,
-            accountverrified=False,
-            location={
-                'latitude': None,
-                'latitude': None
-            },
-            posts=[],
-            friends=[],
-            firendrequest=[],
-            notifications=[]
+            username         = self.username,
+            useremail        = email,
+            firstname        = firstname,
+            lastname         = lastname,
+            dob              = 'None',
+            gender           = gender,
+            passwordhash     = passwordhash,
+            createdate       = 'None',
+            useravatar       = DEFAULT_AVATAR,
+            usertitle        = 'Not Set',
+            accountverrified = False,
+            bio              = 'Hi I just started using Bootleg Twitter!',
+            location         = '[None, None]',
+            posts            = '[None]',
+            friends          = '[None]',
+            firendrequest    = '[None]',
+            notifications    = '[None]'
         )
         graph.create(usernode)
         return True
+
+
+    def get_this_user_data(self):
+        """
+        used to get me, the user that was created with the constructor of
+        this instance.
+
+        Returns -> me: if found else None
+        """
+        this = graph.find_one('User', 'username', self.username)
+        return this
+
+
+    def get_account_veriffication_status(self):
+        """ doc-string """
+        this = self.get_this_user_data(self)
+        return this['']
+
+
+    def verify_user_account(self):
+        """ doc-string """
+        me = self.get_this_user_data()
+        me['accountverrified'] = True
+
+
+    def update_user_bio(self, newbio):
+        """ doc-string """
+        this = self.get_this_user_data()
+        this['bio'] = newbio
+
+
+    def update_user_avatar(self, newavatar):
+        """ doc-string """
+        this = self.get_this_user_data()
+        this['useravatar'] = newavatar
+
+
+    def update_password_hash(self, newhash):
+        """ used to update the users password hash """
+        this = self.get_this_user_data()
+        this['passwordhash'] = newhash
+
+
+    def get_password_hash(self):
+        """ doc-string """
+        this = self.get_this_user_data()
+        return this['passwordhash']
+
+
+    def get_user_name(self):
+        """
+        gets the user name of the user that this object's instance was created
+        for
+        """
+        this = self.get_this_user_data()
+        return this['username']
+
+
+    def get_user_firstname(self):
+        """
+        gets the user first name of the user that this object's instance
+        was created for
+        """
+        this = self.get_this_user_data()
+        return this['firstname']
+
+
+    def get_user_lastname(self):
+        """
+        gets the user last name of the user that this object's instance was
+        created for
+        """
+        this = self.get_this_user_data()
+        return this['lastname']
+
+
+    def get_user_email(self):
+        """
+        gets the user email of the user that this object's instance was
+        created for
+        """
+        this = self.get_this_user_data()
+        return this['useremail']
+
+
+    def get_user_DOB(self):
+        """
+        gets the user date of birth of the user that this object's
+        instance was created for
+        """
+        this = self.get_this_user_data()
+        return this['dob']
+
+
+    def get_user_bio(self):
+        """
+        gets the user biography or status of the user that this object's
+        instance was created for
+        """
+        this = self.get_this_user_data()
+        return this['bio']
+
+
+    def get_user_avatar(self):
+        """
+        gets the user avatar/ profile picture  of the user that this object's
+        instance was created for
+        """
+        this = self.get_this_user_data()
+        return this['avatar']
+
+
+    def get_location_coordinates(self, user_name):
+        """ doc-string """
+        this = self.get_this_user_data()
+        return this['location']
+
+
+    def update_location_coords(self, latitude, longtitude):
+        this = get_this_user_data()
+        this['location'] = {
+            'latitude': latitude,
+            'longtitude': longtitude
+        }
+
 
     def get_user_friends(self):
         """ doc-string """
         pass
 
+
     def get_user_posts(self):
         """ doc-string """
         pass
 
+
     def add_post(self):
         pass
+
 
     def __str__(self):
         """ doc-string """
         return None
 
-    def overwrite_email_verification():
-        """ Must Overwrite the verification process """
-        return null
 
     def get_json_user(self):
-        user = get_this()
+        user = self.get_this_user_data()
         """ Json data """
         return {
             "name": user['firstname'],
@@ -221,8 +263,6 @@ class User:
 
 
 """----------------------------------------------------------------------------"""
-
-
 class Post:
     """
     doc-string

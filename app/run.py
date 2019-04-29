@@ -99,14 +99,23 @@ def logout():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     """ sumary_line """
-    if request.method == 'GET':
-        template = env.get_template("register.html")
-        return template.render()
-    else:
+    if request.method == 'POST':
+        # user form input should be processed and verified
         email = request.form['email']
-        token = salt.dumps(email, salt='email-confirm')
+        username = request.form['username']
+        firstname = request.form['firstname']
+        lastname = request.form['lastname']
+        dob = get_date_string(request.form['dob'])
+        gender = request.form['gender']
+        password0 = request.form['password']
+        password1 = request.form['password1']
+        user = User(username)
+        user.add_user(firstname, lastname, email, dob, gender, get_password_hash(password0))
+        token = salt.dumps(username, salt='email-confirm')
         send_account_verification_email(email, token)
         return '<h2>The verification Email Has been sent please check you email inbox<h2>'
+    template = env.get_template("register.html")
+    return template.render()
 
 
 @app.route('/verify-email/<token>')
@@ -115,10 +124,13 @@ def confirm_email(token):
     """ sumary_line """
     # TODO: this logic should go to the backend
     try:
-        email = salt.loads(token, salt='email-confirm', max_age=3600)
+        username = salt.loads(token, salt='email-confirm', max_age=3600)
+            user = User(username)
+        user.verify_user_account()
+        email = user.get_user_email()
+        return '<h1>Email: {} has been verified</h1>'.format(email)
     except SignatureExpired:
         return '<h1> the token has expired</h1>'
-    return '<h1>Email: {} has been verified</h1>'.format(email)
 
 
 @app.route('/set-new-password/<token>', methods=['GET', 'POST'])

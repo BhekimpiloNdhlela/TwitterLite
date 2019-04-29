@@ -15,16 +15,18 @@ def get_date():
     used to get todays date, this is done when a user is creating a post or when the user is creating
     an account. Essentially this function is used for anything that needs today's date.
     """
-    todaysdate = date.today().strftime("%Y-%m-%d")
+    todaysdate = date.today().strftime('%Y-%m-%d')
     return todaysdate
 
-
+def get_date_string(formatingdate):
+    formateddate = datetime.strptime(formatingdate, '%Y-%m-%d')
+    return formateddate
 def get_time_stamp():
     """
     used to get the now's time stamp, this is done when a user is creating a post or when the user is
     creating an account. Essentially this function is used for anything that needs a now's timestamp.
     """
-    timestamp = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")
+    timestamp = datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%f')
     return timestamp
 
 
@@ -92,8 +94,12 @@ def __send_email(fromemail, toemail, subject, htmlcontent):
     to send account verification, password reset and forgot password emails.
     NOTE: this function is never called directly hence the {__send_email} notation.
     """
-    msg = Mail(from_email=fromemail, to_emails=toemail,
-               subject=subject, html_content=htmlcontent)
+    msg = Mail(
+            from_email=fromemail,
+            to_emails=toemail,
+            subject=subject,
+            html_content=htmlcontent
+        )
     try:
         sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
         response = sg.send(msg)
