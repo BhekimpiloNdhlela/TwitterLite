@@ -1,5 +1,5 @@
 from utils import get_date, get_password_hash, get_time_stamp, get_password_verification
-from py2neo import Graph, Node, Relationship
+from py2neo import Graph, Node, Relationship, authenticate
 import uuid
 
 """
@@ -16,7 +16,7 @@ host_port = 'hobby-jieinjmgjfpbgbkecpnglccl.dbs.graphenedb.com:24780'
 DB_HTTP_PORT, DB_HTTPS_PORT = 24789, 24780
 
 # authenticate before creating the Graph instance
-authenticate(host_port, username, password)
+authenticate(host_port, user, password)
 # if authenticated create a Graph instance
 graph = Graph(
     'https://'+host_port+'/db/data/',
@@ -196,14 +196,15 @@ class User:
         """ Must Overwrite the verification process """
         return null
 
-    def get_json_user():
+    def get_json_user(self):
+        user = get_this()
         """ Json data """
         return {
-            "name": get_user_firstname(),
-            "surname": get_user_lastname(),
-            "username": get_user_name(),
-            "picture": get_user_avatar,
-            "dob": get_user_DOB(),
+            "name": user['firstname'],
+            "surname": user['lastname'],
+            "username": user['username'],
+            "picture": user['avatar'],
+            "dob": user['dob'],
             "title": "Web dev Specialist",
             "location": "Your mom's house",
             "photos": [
@@ -215,14 +216,6 @@ class User:
                 "6.jpg",
                 "8.jpg",
                 "9.jpg"
-            ],
-            "friends": [
-
-            ],
-            "notification": 2,
-            "notifications": [
-                "John Doe posted on your wall",
-                "Jane likes your post"
             ]
         }
 
