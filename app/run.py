@@ -122,10 +122,9 @@ def register():
 @app.route('/confirm-email/<token>')
 def confirm_email(token):
     """ sumary_line """
-    # TODO: this logic should go to the backend
     try:
         username = salt.loads(token, salt='email-confirm', max_age=3600)
-            user = User(username)
+        user = User(username)
         user.verify_user_account()
         email = user.get_user_email()
         return '<h1>Email: {} has been verified</h1>'.format(email)

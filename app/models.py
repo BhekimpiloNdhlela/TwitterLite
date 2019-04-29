@@ -77,19 +77,19 @@ class User:
             useremail        = email,
             firstname        = firstname,
             lastname         = lastname,
-            dob              = 'None',
+            dob              = '',
             gender           = gender,
             passwordhash     = passwordhash,
-            createdate       = 'None',
+            createdate       = '',
             useravatar       = DEFAULT_AVATAR,
-            usertitle        = 'Not Set',
+            usertitle        = '',
             accountverrified = False,
             bio              = 'Hi I just started using Bootleg Twitter!',
-            location         = '[None, None]',
-            posts            = '[None]',
-            friends          = '[None]',
-            firendrequest    = '[None]',
-            notifications    = '[None]'
+            location         = '',
+            posts            = '',
+            friends          = '',
+            firendrequest    = '',
+            notifications    = ''
         )
         graph.create(usernode)
         return True
