@@ -1,5 +1,5 @@
 from utils import get_date, get_password_hash, get_time_stamp, get_password_verification
-from py2neo import Graph, Node, Relationship
+from py2neo import authenticate, Graph, Node, Relationship
 import uuid
 
 """
