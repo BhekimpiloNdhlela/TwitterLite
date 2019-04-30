@@ -1,3 +1,5 @@
+from models import *
+
 john_doe = {
     "name": "John",
     "surname": "Doe",
@@ -35,6 +37,15 @@ mock_treading = [
     "N4j",
     "web dev"
 ]
+
+
+def get_user(username):
+    user = User(username)
+    json_user = {
+        "name": user.get_user_name(),
+        "email": user.get_email()
+    }
+    return json_user
 
 
 mock_tweets = [

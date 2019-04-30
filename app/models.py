@@ -1,96 +1,268 @@
+import uuid
+from py2neo import authenticate, Graph, Node, Relationship
+from utils import get_date, get_password_hash, get_time_stamp, get_password_verification
+
+"""
+THANK YOU KLENSCH FOR CREATING THE CLOUD CONTAINER or VIRTUAL MACHINE :-)
+
+TODO: db credentials(username, password, http_port, https_port, http_port and host_port)
+should be made enviroment variables or should be stored in the config file. for good
+practice and safety reasons.
+"""
+
+DB_USERNAME = '405-found'
+DB_PASSWORD = 'b.W3k0rCRmt6Cm.dxDei5UcxeeS6aTP'
+DB_HOST_PORT = 'hobby-jieinjmgjfpbgbkecpnglccl.dbs.graphenedb.com:24780'
+DB_HTTP_PORT, DB_HTTPS_PORT = 24789, 24780
+
+# authenticate before creating the Graph instance
+authenticate(DB_HOST_PORT, DB_USERNAME, DB_PASSWORD)
+# if authenticated create a Graph instance
+graph = Graph(
+    'https://'+DB_HOST_PORT+'/db/data/',
+    bolt=False,
+    secure=True,
+    http_port=DB_HTTP_PORT,
+    https_port=DB_HTTPS_PORT
+)
+DEFAULT_AVATAR = "/static/img/default.png"
+
+
 class User:
-    """
-    doc-string
-    """
+    """ doc-string """
+    def __init__(self, username):
+        """
+        constructor of the user object or instance, used to create an instance
+        of a user object and then operations can hence be made on that instance
+        of the user created by the client.
+        """
+        self.username = username
 
-    def __init__(self, user_name, user_email, user_dob, user_hash, user_gender, user_bio=None, user_avatar="/static/img/default.png"):
-        """
-        doc-string
-        """
-        self.user_name = user_name
-        self.user_email = user_email
-        self.user_dob = user_dob
-        self.user_hash = user_hash
-        self.user_gender = user_gender
-        self.user_bio = user_bio
-        self.user_avatar = user_avatar
 
-    def getPasswordHash(self):
+    def user_login(self, password):
         """
-        doc-string
-        """
-        return self.user_hash
+        used to login the user, this function is called with the password that
+        the user enters to the form.
+        NOTE: the password is supposed to be check for strength using regular
+        expression in validate_password() in utils.py
 
-    def getUserName(self):
+        Returns ->  -1 : Account Not verified
+                    0  : signin success
+                    1  : Wrong Password
         """
-        doc-string
-        """
-        return self.user_name
 
-    def getUserEmail(self):
-        """
-        doc-string
-        """
-        return self.user_email
+        this = self.get_this_user_data()
+        if this['accountverrified']:
+            iscorrect = get_password_verification(
+                this['passwordhash'], password)
+            return 0 if iscorrect else 1
+        else:
+            return -1
 
-    def getUserBOB(self):
-        """
-        doc-string
-        """
-        return self.user_dob
 
-    def getUserBio(self):
+    def add_user(self, firstname, lastname, email, dob, gender, passwordhash):
         """
-        doc-string
-        """
-        return self.user_bio
+        this is a function used only once, that is if the user is creating
+        a user profile with the application.
 
-    def getUserAvatar(self):
+        Returns -> False if the user exists else a new user is created
         """
-        doc-string
-        """
-        return self.user_avatar
+        # check if user is in the db return if False
+        if graph.find_one('User', 'username', self.username):
+            return False
+        # else add the user to the db
+        usernode = Node(
+            'User',
+            username         = self.username,
+            useremail        = email,
+            firstname        = firstname,
+            lastname         = lastname,
+            dob              = '',
+            gender           = gender,
+            passwordhash     = passwordhash,
+            createdate       = '',
+            useravatar       = DEFAULT_AVATAR,
+            usertitle        = '',
+            accountverrified = False,
+            bio              = 'Hi I just started using Bootleg Twitter!',
+            location         = '',
+            posts            = '',
+            friends          = '',
+            firendrequest    = '',
+            notifications    = ''
+        )
+        graph.create(usernode)
+        return True
 
-    def updateUserhash(self, new_hash):
-        """
-        doc-string
-        """
-        self.user_hash = new_hash
 
-    def updateUserBio(self, new_bio):
+    def get_this_user_data(self):
         """
-        doc-string
-        """
-        self.user_bio = new_bio
+        used to get me, the user that was created with the constructor of
+        this instance.
 
-    def updateUserAvatar(self, new_avatar):
+        Returns -> me: if found else None
         """
-        doc-string
-        """
-        self.user_avatar = new_avatar
+        this = graph.find_one('User', 'username', self.username)
+        return this
 
-    def addPost(self):
+
+    def get_account_veriffication_status(self):
+        """ doc-string """
+        this = self.get_this_user_data(self)
+        return this['']
+
+
+    def verify_user_account(self):
+        """ doc-string """
+        me = self.get_this_user_data()
+        me['accountverrified'] = True
+
+
+    def update_user_bio(self, newbio):
+        """ doc-string """
+        this = self.get_this_user_data()
+        this['bio'] = newbio
+
+
+    def update_user_avatar(self, newavatar):
+        """ doc-string """
+        this = self.get_this_user_data()
+        this['useravatar'] = newavatar
+
+
+    def update_password_hash(self, newhash):
+        """ used to update the users password hash """
+        this = self.get_this_user_data()
+        this['passwordhash'] = newhash
+
+
+    def get_password_hash(self):
+        """ doc-string """
+        this = self.get_this_user_data()
+        return this['passwordhash']
+
+
+    def get_user_name(self):
+        """
+        gets the user name of the user that this object's instance was created
+        for
+        """
+        this = self.get_this_user_data()
+        return this['username']
+
+
+    def get_user_firstname(self):
+        """
+        gets the user first name of the user that this object's instance
+        was created for
+        """
+        this = self.get_this_user_data()
+        return this['firstname']
+
+
+    def get_user_lastname(self):
+        """
+        gets the user last name of the user that this object's instance was
+        created for
+        """
+        this = self.get_this_user_data()
+        return this['lastname']
+
+
+    def get_user_email(self):
+        """
+        gets the user email of the user that this object's instance was
+        created for
+        """
+        this = self.get_this_user_data()
+        return this['useremail']
+
+
+    def get_user_DOB(self):
+        """
+        gets the user date of birth of the user that this object's
+        instance was created for
+        """
+        this = self.get_this_user_data()
+        return this['dob']
+
+
+    def get_user_bio(self):
+        """
+        gets the user biography or status of the user that this object's
+        instance was created for
+        """
+        this = self.get_this_user_data()
+        return this['bio']
+
+
+    def get_user_avatar(self):
+        """
+        gets the user avatar/ profile picture  of the user that this object's
+        instance was created for
+        """
+        this = self.get_this_user_data()
+        return this['avatar']
+
+
+    def get_location_coordinates(self, user_name):
+        """ doc-string """
+        this = self.get_this_user_data()
+        return this['location']
+
+
+    def update_location_coords(self, latitude, longtitude):
+        this = get_this_user_data()
+        this['location'] = {
+            'latitude': latitude,
+            'longtitude': longtitude
+        }
+
+
+    def get_user_friends(self):
+        """ doc-string """
         pass
 
-    def __eq__(self, this, other):
-        """
-        doc-string
-        """
-        return None
 
-    def getUserFriends(self):
-        """
-        doc-string
-        """
+    def get_user_posts(self):
+        """ doc-string """
         pass
+
+
+    def add_post(self):
+        pass
+
 
     def __str__(self):
-        """
-        doc-string
-        """
+        """ doc-string """
         return None
 
 
+    def get_json_user(self):
+        user = self.get_this_user_data()
+        """ Json data """
+        return {
+            "name": user['firstname'],
+            "surname": user['lastname'],
+            "username": user['username'],
+            "picture": user['avatar'],
+            "dob": user['dob'],
+            "title": "Web dev Specialist",
+            "location": "Your mom's house",
+            "photos": [
+                "1.jpg",
+                "2.jpg",
+                "3.jpg",
+                "4.jpg",
+                "5.jpg",
+                "6.jpg",
+                "8.jpg",
+                "9.jpg"
+            ]
+        }
+
+
+"""----------------------------------------------------------------------------"""
 class Post:
     """
     doc-string
@@ -115,61 +287,41 @@ class Post:
         pass
 
     def getPostDatetime(self):
-        """
-        doc-string
-        """
+        """ doc-string """
         pass
 
     def getPostLikes(self):
-        """
-        doc-string
-        """
+        """ doc-string """
         pass
 
     def getPostComments(self):
-        """
-        doc-string
-        """
+        """ doc-string """
         pass
 
     def getPostTitle(self):
-        """
-        doc-string
-        """
+        """ doc-string """
         pass
 
     def getPostUUID(self):
-        """
-        doc-string
-        """
+        """ doc string """
         pass
 
     def updatePost(self):
-        """
-        doc-string
-        """
+        """ doc-string """
         pass
 
     def updatePostTitle(self):
-        """
-        doc-string
-        """
+        """ doc-string """
         pass
 
     def getPostTags(self):
-        """
-        doc-string
-        """
+        """ doc-string """
         pass
 
     def updatePostTags(self):
-        """
-        doc-string
-        """
+        """ doc-string """
         pass
 
     def __str__(self):
-        """
-        doc-string
-        """
+        """ doc-string """
         pass

@@ -9,6 +9,7 @@ User
     Location           Floats
     Hash               String
     Avatar             String
+    Account_Verrified  Boolean
     Posts              Array of Ref - Posts
     Friends            Array of Ref - Users
     Friend_Request     Array of Ref - Users 
