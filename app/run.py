@@ -34,7 +34,7 @@ def home():
 def friends():
     """ sumary_line """
     template = env.get_template("friends.html")
-    return template.render(user=john_doe, tweets=mock_tweets, treading=mock_treading)
+    return template.render(user=john_doe, tweets=mock_tweets, treading=mock_treading, following=mock_following, followers=mock_followers, personaltweets=mock_personal)
 
 
 @app.route('/about')
@@ -70,7 +70,7 @@ def account():
 def messages():
     """ sumary_line """
     template = env.get_template("messages.html")
-    return template.render(user=john_doe, tweets=mock_tweets, treading=mock_treading)
+    return template.render(user=john_doe, tweets=mock_tweets, treading=mock_treading, messages=mock_messages)
 
 
 @app.route('/changepassword')
