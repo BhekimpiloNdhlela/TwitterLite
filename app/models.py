@@ -256,18 +256,27 @@ class User:
         pass    
 
     def add_post(self, title, tags, text):
+        """add post to the graph and create a published relationship between the user and the post as well as the post and its tags"""
         user = self.find_one()
         post = Node('Post',
                     id=str(uuid.uuid4())
                     title= title,
-                    tags=tags,
                     text= text,
                     timestamp = timestamp(),
                     date = date()
         )
         rel = Relationship(user,'PUBLISHED',post)
         graph.create(rel)
-      
+        'tags in post separated by comma'
+        for x in tags.lower().split(',')
+            tags = x.strip()
+        for name in set(tags):
+            tag = Node('Tag', name=name)
+            graph.merge(tag)
+            rel = Relationship(tag, 'TAGGED', post)
+            graph.create(rel)
+
+
 
     def like_post(self,post_id):
         user = self.find_one()
