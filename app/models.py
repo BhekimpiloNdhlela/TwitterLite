@@ -54,12 +54,9 @@ class User:
         this = self.get_this_user_data()
         if not this:
             return -1
-        else:
-            if this['accountverrified']:
-                return get_password_verification(this['passwordhash'], password)
-            else:
-                return -2
-
+        if this['accountverrified']:
+            return get_password_verification(this['passwordhash'], password)
+        return -2
 
 
     def add_user(self, firstname, lastname, email, dob, gender, passwordhash):
@@ -81,16 +78,11 @@ class User:
             lastname         = lastname,
             gender           = gender,
             passwordhash     = passwordhash,
+            dob              = dob,
             useravatar       = DEFAULT_AVATAR,
             accountverrified = False,
             bio              = 'Hi I just started using Bootleg Twitter!',
-            createdate       = get_time_stamp(),
-            dob              = '',
-            location         = '',
-            posts            = '',
-            friends          = '',
-            firendrequest    = '',
-            notifications    = ''
+            createdate       = get_time_stamp()
         )
         graph.create(usernode)
         return True
@@ -114,7 +106,7 @@ class User:
 
     def get_account_veriffication_status(self):
         """ doc-string """
-        this = self.get_this_user_data(self)
+        this = self.get_this_user_data()
         return this['']
 
 
@@ -129,19 +121,25 @@ class User:
     def update_user_bio(self, newbio):
         """ doc-string """
         this = self.get_this_user_data()
+        graph.merge(this)
         this['bio'] = newbio
+        this.push()
 
 
     def update_user_avatar(self, newavatar):
         """ doc-string """
         this = self.get_this_user_data()
+        graph.merge(this)
         this['useravatar'] = newavatar
+        this.push()
 
 
     def update_password_hash(self, newhash):
         """ used to update the users password hash """
         this = self.get_this_user_data()
+        graph.merge(this)
         this['passwordhash'] = newhash
+        this.push()
 
 
     def get_password_hash(self):
@@ -227,9 +225,7 @@ class User:
         }
 
     def get_recent_posts(self):
-        """
-        return the most recent posts of a users followers functionailty-10 
-        """
+        """return the most recent posts of a users followers functionailty-10 """
         pass
 
     def get_user_friends(self):
@@ -255,13 +251,13 @@ class User:
 
     def get_user_followings(self):
         """return a list of usernames of a user's followings """
-        pass    
+        pass
 
     def add_post(self, title, tags, text):
         """add post to the graph and create a published relationship between the user and the post as well as the post and its tags"""
         user = self.find_one()
         post = Node('Post',
-                    id=str(uuid.uuid4()),
+                    id=str(uuid.uuid4())
                     title= title,
                     text= text,
                     timestamp = timestamp(),
