@@ -38,6 +38,27 @@ mock_treading = [
     "web dev"
 ]
 
+mock_fsuggestions = [
+    {
+        "username": "jan_doe",
+        "avatar": "/static/img/photos/15.jpg"
+    },
+    {
+        "username": "jan_doe",
+        "avatar": "/static/img/photos/16.jpg"
+    },
+    {
+        "username": "jan_doe",
+        "avatar": "/static/img/photos/11.jpg"
+    },
+    {
+        "username": "jan_doe",
+        "avatar": "/static/img/photos/4.jpg"
+    }
+]
+    
+
+
 
 def get_user(username):
     user = User(username)
