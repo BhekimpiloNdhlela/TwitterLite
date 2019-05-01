@@ -47,17 +47,21 @@ def about():
     return template.render()
 
 
-@app.route('/password')
+@app.route('/password', methods=['GET', 'POST'])
 def forgot_password():
     """ sumary_line """
+    if request.method == 'POST':
+        pass
     template = env.get_template("forgot-password.html")
     return template.render()
 
 
-@app.route('/login')
-@app.route('/signin')
+@app.route('/login', methods=['GET', 'POST'])
+@app.route('/signin', methods=['GET', 'POST'])
 def login():
     """ sumary_line """
+    if request.method == 'POST':
+        pass
     template = env.get_template("login.html")
     return template.render()
 
@@ -132,7 +136,7 @@ def confirm_email(token):
         return '<h1> the token has expired</h1>'
 
 
-@app.route('/set-new-password/<token>', methods=['GET', 'POST'])
+@app.route('/set-new-password', methods=['GET', 'POST'])
 def set_new_password(token):
     pass
 

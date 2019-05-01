@@ -53,8 +53,7 @@ class User:
 
         this = self.get_this_user_data()
         if this['accountverrified']:
-            iscorrect = get_password_verification(
-                this['passwordhash'], password)
+            iscorrect = get_password_verification(this['passwordhash'], password)
             return 0 if iscorrect else 1
         else:
             return -1
