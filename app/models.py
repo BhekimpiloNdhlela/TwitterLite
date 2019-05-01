@@ -52,14 +52,10 @@ class User:
         """
 
         this = self.get_this_user_data()
-        if not this:
-            return -1
-        else:
-            if this['accountverrified']:
-                return get_password_verification(this['passwordhash'], password)
-            else:
-                return -2
-
+        if not this: return -1
+        if this['accountverrified']:
+            return get_password_verification(this['passwordhash'], password)
+        return -2
 
 
     def add_user(self, firstname, lastname, email, dob, gender, passwordhash):
@@ -81,24 +77,15 @@ class User:
             lastname         = lastname,
             gender           = gender,
             passwordhash     = passwordhash,
+            dob              = dob,
             useravatar       = DEFAULT_AVATAR,
             accountverrified = False,
             bio              = 'Hi I just started using Bootleg Twitter!',
-            createdate       = get_time_stamp(),
-            dob              = '',
-            location         = '',
-            posts            = '',
-            friends          = '',
-            firendrequest    = '',
-            notifications    = ''
+            title            = 'Not set.',
+            createdate       = get_time_stamp()
         )
         graph.create(usernode)
         return True
-
-    def set_user_title(self):
-        """
-        """
-        pass
 
 
     def get_this_user_data(self):
@@ -106,20 +93,25 @@ class User:
         used to get me, the user that was created with the constructor of
         this instance.
 
-        Returns -> me: if found else None
+        Returns -> this: if found else None
         """
-        this = graph.find_one('User', 'username', self.username)
-        return this
+        return graph.find_one('User', 'username', self.username)
 
 
-    def get_account_veriffication_status(self):
-        """ doc-string """
-        this = self.get_this_user_data(self)
-        return this['']
+    def update_user_title(self, newtitle):
+        """
+        doc-string
+        """
+        this = self.get_this_user_data()
+        graph.merge(this)
+        this['title'] = newtitle
+        this.push()
 
 
     def verify_user_account(self):
-        """ doc-string """
+        """
+        doc-string
+        """
         this = self.get_this_user_data()
         graph.merge(this)
         this['accountverrified'] = True
@@ -127,21 +119,38 @@ class User:
 
 
     def update_user_bio(self, newbio):
-        """ doc-string """
+        """
+        doc-string
+        """
         this = self.get_this_user_data()
+        graph.merge(this)
         this['bio'] = newbio
+        this.push()
 
 
     def update_user_avatar(self, newavatar):
-        """ doc-string """
+        """
+        doc-string
+        """
         this = self.get_this_user_data()
+        graph.merge(this)
         this['useravatar'] = newavatar
+        this.push()
 
 
     def update_password_hash(self, newhash):
         """ used to update the users password hash """
         this = self.get_this_user_data()
+        graph.merge(this)
         this['passwordhash'] = newhash
+        this.push()
+
+
+
+    def get_account_veriffication_status(self):
+        """ doc-string """
+        this = self.get_this_user_data()
+        return this['accountverrified']
 
 
     def get_password_hash(self):
@@ -226,19 +235,25 @@ class User:
             'longtitude': longtitude
         }
 
+
     def get_recent_posts(self):
         """
-        return the most recent posts of a users followers functionailty-10 
+        return the most recent posts of a users followers functionailty-10
         """
         pass
 
+
     def get_user_friends(self):
-        """ doc-string """
+        """
+        doc-string
+        """
         pass
 
+
     def get_user_suggestions(self):
-        """ doc-string """
+        """doc-string """
         pass
+
 
     def get_hashtag(self):
         """ return a particular hashtag and show tweets with this hashtag(ordered by time) functionality-8 """
@@ -249,29 +264,35 @@ class User:
         """ return all posts , with the number of likes and retweets and usernames of user's who liked and retweeted the post"""
         pass
 
+
     def get_user_followers(self):
         """ return a list of usernames of a user's followers"""
         pass
 
+
     def get_user_followings(self):
         """return a list of usernames of a user's followings """
-        pass    
+        pass
+
 
     def add_post(self, title, tags, text):
         """add post to the graph and create a published relationship between the user and the post as well as the post and its tags"""
-        user = self.find_one()
+        user = self.get_this_user_data()
         post = Node('Post',
-                    id=str(uuid.uuid4()),
-                    title= title,
-                    text= text,
-                    timestamp = timestamp(),
-                    date = date()
+                    id        = str(uuid.uuid4()),
+                    title     = title,
+                    text      = text,
+                    timestamp = ti5mestamp(),
+                    date      = date()
         )
+
         rel = Relationship(user,'PUBLISHED',post)
         graph.create(rel)
-        'tags in post separated by comma'
+
+        '''tags in post separated by comma '''
         for x in tags.lower().split(','):
             tags = x.strip()
+
         for name in set(tags):
             tag = Node('Tag', name=name)
             graph.merge(tag)
@@ -279,101 +300,37 @@ class User:
             graph.create(rel)
 
 
-
     def like_post(self,post_id):
         user = self.find_one()
         post = graph.find_one('Post','id',post_id)
         graph.merge(Relationship(user,'likes',post))
 
-    def __str__(self):
-        """ doc-string """
-        return None
-
 
     def get_json_user(self):
-        user = self.get_this_user_data()
         """ Json data """
+        user = self.get_this_user_data()
         return {
-            "name": user['firstname'],
-            "surname": user['lastname'],
-            "username": user['username'],
-            "picture": user['avatar'],
-            "dob": user['dob'],
-            "title": "Web dev Specialist",
-            "location": "Your mom's house",
-            "photos": [
-                "1.jpg",
-                "2.jpg",
-                "3.jpg",
-                "4.jpg",
-                "5.jpg",
-                "6.jpg",
-                "8.jpg",
-                "9.jpg"
+            "name"     : user['firstname'],
+            "surname"  : user['lastname'],
+            "username" : user['username'],
+            "picture"  : user['useravatar'],
+            "dob"      : user['dob'],
+            "title"    : user['title'],
+            "location" : "Your mom's house",
+            "photos"   : [
+                    "1.jpg",
+                    "2.jpg",
+                    "3.jpg",
+                    "4.jpg",
+                    "5.jpg",
+                    "6.jpg",
+                    "8.jpg",
+                    "9.jpg"
+            ],
+            "friends": [],
+            "notification": 2,
+            "notifications": [
+                "John Doe posted on your wall",
+                "Jane likes your post"
             ]
         }
-
-
-"""----------------------------------------------------------------------------"""
-class Post:
-    """
-    doc-string
-    """
-
-    def __init__(self, *args, **kwargs):
-        """
-        doc-string
-        """
-        pass
-
-    def getPost(self):
-        """
-        doc-string
-        """
-        pass
-
-    def getPostOwner(self):
-        """
-        doc-string
-        """
-        pass
-
-    def getPostDatetime(self):
-        """ doc-string """
-        pass
-
-    def getPostLikes(self):
-        """ doc-string """
-        pass
-
-    def getPostComments(self):
-        """ doc-string """
-        pass
-
-    def getPostTitle(self):
-        """ doc-string """
-        pass
-
-    def getPostUUID(self):
-        """ doc string """
-        pass
-
-    def updatePost(self):
-        """ doc-string """
-        pass
-
-    def updatePostTitle(self):
-        """ doc-string """
-        pass
-
-    def getPostTags(self):
-        """ doc-string """
-        pass
-
-    def updatePostTags(self):
-        """ doc-string """
-        pass
-
-    def __str__(self):
-        """ doc-string """
-        pass

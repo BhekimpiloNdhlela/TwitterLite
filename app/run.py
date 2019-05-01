@@ -10,27 +10,29 @@ from jinja2 import Environment, select_autoescape, FileSystemLoader
 from mock_data import *
 from models import *
 
+
 # TODO: remains in the run.py when moving goes down
 app = Flask(__name__)
 # TODO: add this to the config file
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 # TODO: this has to be changed. the salt should be set in a config file
-salt = URLSafeTimedSerializer('ThisIsASecretSaltStringURLSafeTimedSerializerURLSafeTimedSerializer')
+salt = URLSafeTimedSerializer(
+    'ThisIsASecretSaltStringURLSafeTimedSerializerURLSafeTimedSerializer'
+)
 
 env = Environment(
     loader=FileSystemLoader('templates'),
     autoescape=select_autoescape(['html'])
 )
 
-
 @app.route('/')
 @app.route('/home')
 def home():
     """ sumary_line """
     template = env.get_template("index.html")
-    user= 'john_dave'
-    #user = User(session['username'])
+    user = User(session['username']).get_json_user()
+    #user = john_doe
     return template.render(user=user, tweets=mock_tweets, treading=mock_treading, account=True)
 
 
@@ -135,7 +137,7 @@ def login():
             return ('Account not verified, please check you email to verify account.')
         elif login_status == True:
             session['username'] = username
-            return render_template('index.html', user=User(username))
+            return render_template('index.html', user=User(username).get_json_user(), tweets=mock_tweets, treading=mock_treading, account=True)
         elif login_status == False:
             return ('Wrong password, please check your password or change it if you forgot the password.')
 

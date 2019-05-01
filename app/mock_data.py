@@ -19,7 +19,7 @@ john_doe = {
         "9.jpg"
     ],
     "friends": [
-
+        
     ],
     "notification": 2,
     "notifications": [
@@ -56,7 +56,7 @@ mock_friend_suggestions = [
         "avatar": "/static/img/photos/4.jpg"
     },
 ]
-    
+
 
 
 
@@ -242,5 +242,4 @@ mock_personal = [
         "retweets": "43",
         "likes": "68"
     },
-    
 ]

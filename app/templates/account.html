@@ -44,7 +44,18 @@
 
     <div id="Security" class="w3-container tab" style="display:none">
         <h2>Security</h2>
-        <p>XYZ</p>
+        <label for='name' class=''>Old Password</label>
+        <input type="password" name="oldpassword" id="" class="w3-input w3-large w3-animate-input" value={{ user['name'] }}
+                placeholder='Name' required>
+
+        <label for='name' class=''>New Password</label>
+        <input type="password" name="newpassword0" id="" class="w3-input w3-large w3-animate-input" value={{ user['name'] }}
+                placeholder='Name' required>
+        
+        <label for='name' class=''>Confirm Password</label>
+        <input type="password" name="newpassword1" id="" class="w3-input w3-large w3-animate-input" value={{ user['name'] }}
+                placeholder='Name' required>
+        <input type="submit" value="Update Password" class="w3-input w3-large w3-animate-input w3-blue">
     </div>
 
     <div id="Tab 3" class="w3-container tab" style="display:none">
