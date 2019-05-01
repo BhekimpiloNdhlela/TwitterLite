@@ -13,6 +13,7 @@ from models import *
 # TODO: remains in the run.py when moving goes down
 app = Flask(__name__)
 
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 # TODO: this has to be changed. the salt should be set in a config file
 salt = URLSafeTimedSerializer(
@@ -61,10 +62,26 @@ def forgot_password():
 def login():
     """ sumary_line """
     if request.method == 'POST':
-        pass
+        #TODO: user regualr expression to validate user input
+        username = request.form['username']
+        password = request.form['password']
+        user = User(username).login
+        if user.user_login(password) == -1:
+            flash('The email address of this account not verrified please check your email to verify.')
+        elif :
+            flash('invalid user account please check you username')
+
     template = env.get_template("login.html")
     return template.render()
 
+'''
+if not User(username).verify_password(password):
+            flash('Invalid login.')
+        else:
+            session['username'] = username
+            flash('Logged in.')
+            return redirect(url_for('index'))
+'''
 
 @app.route('/account')
 def account():
@@ -104,12 +121,12 @@ def logout():
 def register():
     """ sumary_line """
     if request.method == 'POST':
-        # user form input should be processed and verified
+        #TODO: user regualr expression to validate user input
         email = request.form['email']
         username = request.form['username']
         firstname = request.form['firstname']
         lastname = request.form['lastname']
-        dob = get_date_string(request.form['dob'])
+        dob = get_formated_date(request.form['dob'])
         gender = request.form['gender']
         password0 = request.form['password']
         password1 = request.form['password1']
@@ -117,7 +134,7 @@ def register():
         user.add_user(firstname, lastname, email, dob, gender, get_password_hash(password0))
         token = salt.dumps(username, salt='email-confirm')
         send_account_verification_email(email, token)
-        return '<h2>The verification Email Has been sent please check you email inbox<h2>'
+        flash('The verification Email Has been sent please check you email inbox')
     template = env.get_template("register.html")
     return template.render()
 
@@ -133,7 +150,7 @@ def confirm_email(token):
         email = user.get_user_email()
         return '<h1>Email: {} has been verified</h1>'.format(email)
     except SignatureExpired:
-        return '<h1> the token has expired</h1>'
+        flash('<h1>This token has expired')
 
 
 @app.route('/set-new-password', methods=['GET', 'POST'])

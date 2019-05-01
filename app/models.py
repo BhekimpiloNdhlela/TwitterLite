@@ -1,6 +1,6 @@
 import uuid
 from py2neo import authenticate, Graph, Node, Relationship
-from utils import get_date, get_password_hash, get_time_stamp, get_password_verification
+from utils import get_time_stamp, get_password_hash, get_time_stamp, get_password_verification
 
 """
 THANK YOU KLENSCH FOR CREATING THE CLOUD CONTAINER or VIRTUAL MACHINE :-)
@@ -52,11 +52,14 @@ class User:
         """
 
         this = self.get_this_user_data()
-        if this['accountverrified']:
-            iscorrect = get_password_verification(this['passwordhash'], password)
-            return 0 if iscorrect else 1
-        else:
+        if not this:
             return -1
+        else:
+            if this['accountverrified']:
+                return get_password_verification(this['passwordhash'], password)
+            else:
+                return -2
+
 
 
     def add_user(self, firstname, lastname, email, dob, gender, passwordhash):
@@ -76,14 +79,13 @@ class User:
             useremail        = email,
             firstname        = firstname,
             lastname         = lastname,
-            dob              = '',
             gender           = gender,
             passwordhash     = passwordhash,
-            createdate       = '',
             useravatar       = DEFAULT_AVATAR,
-            usertitle        = '',
             accountverrified = False,
             bio              = 'Hi I just started using Bootleg Twitter!',
+            createdate       = get_time_stamp(),
+            dob              = '',
             location         = '',
             posts            = '',
             friends          = '',
@@ -92,6 +94,11 @@ class User:
         )
         graph.create(usernode)
         return True
+
+    def set_user_title(self):
+        """
+        """
+        pass
 
 
     def get_this_user_data(self):
@@ -113,8 +120,10 @@ class User:
 
     def verify_user_account(self):
         """ doc-string """
-        me = self.get_this_user_data()
-        me['accountverrified'] = True
+        this = self.get_this_user_data()
+        graph.merge(this)
+        this['accountverrified'] = True
+        this.push()
 
 
     def update_user_bio(self, newbio):
@@ -201,7 +210,7 @@ class User:
         instance was created for
         """
         this = self.get_this_user_data()
-        return this['avatar']    
+        return this['avatar']
 
 
     def get_location_coordinates(self, user_name):
@@ -211,13 +220,13 @@ class User:
 
 
     def update_location_coords(self, latitude, longtitude):
-        this = get_this_user_data()
+        this = self.get_this_user_data()
         this['location'] = {
             'latitude': latitude,
             'longtitude': longtitude
         }
 
-    def get_recent_posts:
+    def get_recent_posts(self):
         """return the most recent posts of a users followers functionailty-10 """
         pass
 
@@ -226,12 +235,12 @@ class User:
         pass
 
     def get_user_suggestions(self):
-         """ doc-string """
+        """ doc-string """
         pass
 
     def get_hashtag(self):
-         """ return a particular hashtag and show tweets with this hashtag(ordered by time) functionality-8 """
-         pass
+        """ return a particular hashtag and show tweets with this hashtag(ordered by time) functionality-8 """
+        pass
 
 
     def get_user_posts(self):

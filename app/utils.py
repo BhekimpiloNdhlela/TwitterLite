@@ -10,24 +10,37 @@ from itsdangerous import URLSafeTimedSerializer
 from datetime import date, datetime
 
 
-def get_date():
-    """
-    used to get todays date, this is done when a user is creating a post or when the user is creating
-    an account. Essentially this function is used for anything that needs today's date.
-    """
-    todaysdate = date.today().strftime('%Y-%m-%d')
-    return todaysdate
-
-def get_date_string(formatingdate):
-    formateddate = datetime.strptime(formatingdate, '%Y-%m-%d')
-    return formateddate
 def get_time_stamp():
     """
     used to get the now's time stamp, this is done when a user is creating a post or when the user is
     creating an account. Essentially this function is used for anything that needs a now's timestamp.
     """
-    timestamp = datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%f')
-    return timestamp
+    return datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%f')
+
+
+def get_formated_date(formatingdate):
+    """
+    used to get todays date, this is done when a user is creating a post or when the user is creating
+    an account. Essentially this function is used for anything that needs today's date.
+    """
+    return datetime.strptime(formatingdate, '%Y-%m-%d')
+
+
+def get_date_string():
+    """
+    used to get todays date, this is done when a user is creating a post or when the user is creating
+    an account. Essentially this function is used for anything that needs today's date.
+    """
+    return  date.today().strftime('%Y-%m-%d')
+
+
+def get_timestamp_seconds():
+    """
+    used to get the now's time stamp, this is done when a user is creating a post or when the user is
+    creating an account. Essentially this function is used for anything that needs a now's timestamp.
+    """
+    delta = datetime.now() - datetime.utcfromtimestamp(0)
+    return delta.total_seconds()
 
 
 def get_password_hash(password, salt='THESALTISsaltyLi', rounds=99999):
@@ -140,3 +153,11 @@ def process_picture(forminput, status, debug=True):
 def compare_password(this, that, debug=True):
     """ sumary_line """
     return True
+
+
+
+if __name__ == '__main__':
+
+    print(get_date_string())
+
+    print(get_timestamp())
