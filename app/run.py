@@ -12,12 +12,11 @@ from models import *
 
 # TODO: remains in the run.py when moving goes down
 app = Flask(__name__)
-
+# TODO: add this to the config file
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 # TODO: this has to be changed. the salt should be set in a config file
-salt = URLSafeTimedSerializer(
-    "ThisIsASecretSaltStringURLSafeTimedSerializerURLSafeTimedSerializer")
+salt = URLSafeTimedSerializer('ThisIsASecretSaltStringURLSafeTimedSerializerURLSafeTimedSerializer')
 
 env = Environment(
     loader=FileSystemLoader('templates'),
@@ -30,7 +29,7 @@ env = Environment(
 def home():
     """ sumary_line """
     template = env.get_template("index.html")
-    user = User("john_doe")
+    user = User(session['username'])
     return template.render(user=user, tweets=mock_tweets, treading=mock_treading, account=True)
 
 
@@ -76,6 +75,7 @@ def change_user_password():
     """ sumary_line """
     pass
 
+
 # TODO Must implement - Get user data from db
 @app.route('/profile/<username>')
 def view_user_bio():
@@ -87,7 +87,9 @@ def view_user_bio():
 @app.route('/logout')
 def logout():
     """ sumary_line """
-    return '<h1>Loging Out</h1>'
+    session.pop('username', None)
+    flash('Logged out.')
+    return render_template('login.html')
 
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -96,12 +98,12 @@ def register():
     """ sumary_line """
     if request.method == 'POST':
         #TODO: user regualr expression to validate user input
-        email = request.form['email']
-        username = request.form['username']
+        email     = request.form['email']
+        username  = request.form['username']
         firstname = request.form['firstname']
-        lastname = request.form['lastname']
-        dob = get_formated_date(request.form['dob'])
-        gender = request.form['gender']
+        lastname  = request.form['lastname']
+        dob       = request.form['dob']
+        gender    = request.form['gender']
         password0 = request.form['password']
         password1 = request.form['password1']
         user = User(username)
@@ -131,7 +133,8 @@ def login():
         elif login_status == -2:
             return ('Account not verified, please check you email to verify account.')
         elif login_status == True:
-            return ('Successfully Login')
+            session['username'] = username
+            return render_template('index.html', user=User(username))
         elif login_status == False:
             return ('Wrong password, please check your password or change it if you forgot the password.')
 
@@ -155,7 +158,19 @@ def confirm_email(token):
 
 @app.route('/set-new-password', methods=['GET', 'POST'])
 def set_new_password(token):
-    pass
+    if request.method == 'POST':
+        # TODO: user regualr expression to validate user input
+        if request.form['newpassword0'] == request.form['newpassword1']:
+            oldpassword = request.form['oldpassword']
+            user        = User(session['username'])
+            if get_password_verification(user.get_password_hash(), oldpassword):
+                user.update_password_hash(request.form['newpassword0'])
+                send_resset_password_email(user.get_user_email())
+                flash('Password updated.')
+            else:
+                flash('Wrong password, please try again.')
+        else:
+            flash('Password do not match, please try again.')
 
 
 if __name__ == '__main__':
