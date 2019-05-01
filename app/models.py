@@ -257,7 +257,7 @@ class User:
         """add post to the graph and create a published relationship between the user and the post as well as the post and its tags"""
         user = self.find_one()
         post = Node('Post',
-                    id=str(uuid.uuid4())
+                    id=str(uuid.uuid4()),
                     title= title,
                     text= text,
                     timestamp = timestamp(),

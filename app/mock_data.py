@@ -54,7 +54,7 @@ mock_friend_suggestions = [
     {
         "username": "jan_doe",
         "avatar": "/static/img/photos/4.jpg"
-    },
+    }
 ]
     
 
