@@ -29,7 +29,7 @@ env = Environment(
 def home():
     """ sumary_line """
     template = env.get_template("index.html")
-    user= 'john_dave'
+    user= john_doe
     #user = User(session['username'])
     return template.render(user=user, tweets=mock_tweets, treading=mock_treading, fsuggestions= mock_fsuggestions, account=True)
 
