@@ -31,7 +31,7 @@ def home():
     template = env.get_template("index.html")
     user= 'john_dave'
     #user = User(session['username'])
-    return template.render(user=user, tweets=mock_tweets, treading=mock_treading, account=True)
+    return template.render(user=user, tweets=mock_tweets, treading=mock_treading, fsuggestions= mock_fsuggestions, account=True)
 
 
 @app.route('/friends')
