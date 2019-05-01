@@ -31,7 +31,7 @@ def get_date_string():
     used to get todays date, this is done when a user is creating a post or when the user is creating
     an account. Essentially this function is used for anything that needs today's date.
     """
-    return  date.today().strftime('%Y-%m-%d')
+    return  date.today().strftime('%d-%m-%Y')
 
 
 def get_timestamp_seconds():
@@ -150,14 +150,11 @@ def process_picture(forminput, status, debug=True):
     return True
 
 
-def compare_password(this, that, debug=True):
-    """ sumary_line """
-    return True
-
 
 
 if __name__ == '__main__':
 
-    print(get_date_string())
+    #print(get_date_string())
+    print(date(1987, 6, 15), 'Formatted')
 
-    print(get_timestamp())
+    help(date)
