@@ -120,41 +120,43 @@ def __send_email(fromemail, toemail, subject, htmlcontent):
         print(e)
 
 
-def validate_password(formInput, debug=True):
+def validate_password(password):
+    """
+    uses regular expression to validate password strength at least 8 characters,
+    must be restricted to, though does not specifically require any of: uppercase
+    letters: A-Z, lowercase letters: a-z, numbers: 0-9 any of the special
+    characters: @#$%^&+!=
+    """
+    return bool(re.match(r'[A-Za-z0-9@#!$%^&+=]{9,20}', password))
+
+
+def validate_date(formInput):
     """ uses regular expression to validate password strength """
     return True
 
 
-def validate_date(formInput, debug=True):
+def validate_name(formInput):
     """ uses regular expression to validate password strength """
     return True
 
 
-def validate_name(formInput, debug=True):
-    """ uses regular expression to validate password strength """
-    return True
-
-
-def validate_surname(formInput, debug=True):
+def validate_surname(formInput):
     """ sumary_line """
     return True
 
 
-def validate_string(string, debug=True):
+def validate_string(string):
     """ sumary_line """
     return True
 
 
-def process_picture(forminput, status, debug=True):
+def process_picture(forminput, status):
     """ sumary_line """
     return True
-
-
 
 
 if __name__ == '__main__':
-
-    #print(get_date_string())
-    print(date(1987, 6, 15), 'Formatted')
-
-    help(date)
+    print("Bheki", validate_password("Bheki"))
+    print("B1jfd!", validate_password("B1jfd!"))
+    print("B@1jfd!sd", validate_password("B@1jfd!sd"))
+    print("Bhek1jhfd#i", validate_password("Bhek1jhfd#i"))
