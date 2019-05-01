@@ -6,7 +6,77 @@
 
 <div class="w3-container w3-card w3-white w3-round w3-margin" style="margin-top:0!important;">
     <br>
-    <!-- Insert Content Here -->
+    
+    <div class="w3-row">
+        <a href="javascript:void(0)" onclick="openCity(event, 'Your Tweets');">
+            <div class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding w3-border-blue" style="text-align:center;">Your Tweets</div>
+        </a>
+        <a href="javascript:void(0)" onclick="openCity(event, 'Following');">
+            <div class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding" style="text-align:center;">Following</div>
+        </a>
+        <a href="javascript:void(0)" onclick="openCity(event, 'Followers');">
+            <div class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding" style="text-align:center;">Followers</div>
+        </a>
+    </div>
+
+    <div id="Your Tweets" class="w3-container tab" style="display: inherit;">
+        {% for tweet in personaltweets %}
+        <hr class="w3-clear">
+        <div>
+            <span class="w3-right w3-opacity">{{ tweet['date'] }}</span>
+            {{ tweet['content'] }}
+        </div>  
+        <br>
+        <div class="w3-row-padding" style="margin:0 -16px">
+            {% for photo in tweet['photos'] %}
+            <div class="w3-half">
+                <img src="/static/img/photos/{{ photo }}" style="width:100%" alt="Northern Lights" class="w3-margin-bottom">
+            </div>
+            {% endfor %}
+        </div>
+
+        <i class="fa fa-retweet"> {{ tweet['retweets'] }}</i> <i class="fa fa-heart"> {{ tweet['likes'] }}</i>
+        {% endfor %}
+    </div>
+
+    <div id="Following" class="w3-container tab" style="display:none">
+        {% for follow in following %}
+        <hr class="w3-clear">
+        <div>
+            <img src="{{ follow['avatar'] }}" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:30px">
+            <h4>{{ follow['username'] }}</h4>
+        </div>    
+        {% endfor %}
+        
+    </div>
+
+    <div id="Followers" class="w3-container tab" style="display:none">
+        {% for follow in followers %}
+        <hr class="w3-clear">
+        <div>
+            <img src="{{ follow['avatar'] }}" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:30px">
+            <h4>{{ follow['username'] }}</h4>
+        </div>    
+        {% endfor %}
+        
+    </div>
+
+    <script>
+        function openCity(evt, cityName) {
+            var i, x, tablinks;
+            x = document.getElementsByClassName("tab");
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablink");
+            for (i = 0; i < x.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" w3-border-blue", "");
+            }
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.firstElementChild.className += " w3-border-blue";
+        }
+    </script>
+
     <br>
 </div>
 {% endblock %}
