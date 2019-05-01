@@ -255,9 +255,24 @@ class User:
         """return a list of usernames of a user's followings """
         pass    
 
-    def add_post(self):
-        pass
+    def add_post(self, title, tags, text):
+        user = self.find_one()
+        post = Node('Post',
+                    id=str(uuid.uuid4())
+                    title= title,
+                    tags=tags,
+                    text= text,
+                    timestamp = timestamp(),
+                    date = date()
+        )
+        rel = Relationship(user,'PUBLISHED',post)
+        graph.create(rel)
+      
 
+    def like_post(self,post_id):
+        user = self.find_one()
+        post = graph.find_one('Post','id',post_id)
+        graph.merge(Relationship(user,'likes',post))
 
     def __str__(self):
         """ doc-string """
