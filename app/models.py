@@ -202,7 +202,7 @@ class User:
         instance was created for
         """
         this = self.get_this_user_data()
-        return this['avatar']
+        return this['avatar']    
 
 
     def get_location_coordinates(self, user_name):
@@ -218,16 +218,34 @@ class User:
             'longtitude': longtitude
         }
 
+    def get_recent_posts:
+        """return the most recent posts of a users followers functionailty-10 """
+        pass
 
     def get_user_friends(self):
         """ doc-string """
         pass
 
-
-    def get_user_posts(self):
-        """ doc-string """
+    def get_user_suggestions(self):
+         """ doc-string """
         pass
 
+    def get_hashtag(self):
+         """ return a particular hashtag and show tweets with this hashtag(ordered by time) functionality-8 """
+         pass
+
+
+    def get_user_posts(self):
+        """ return all posts , with the number of likes and retweets and usernames of user's who liked and retweeted the post"""
+        pass
+
+    def get_user_followers(self):
+        """ return a list of usernames of a user's followers"""
+        pass
+
+    def get_user_followings(self):
+        """return a list of usernames of a user's followings """
+        pass    
 
     def add_post(self):
         pass
