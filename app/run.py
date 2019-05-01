@@ -57,32 +57,6 @@ def forgot_password():
     return template.render()
 
 
-@app.route('/login', methods=['GET', 'POST'])
-@app.route('/signin', methods=['GET', 'POST'])
-def login():
-    """ sumary_line """
-    if request.method == 'POST':
-        #TODO: user regualr expression to validate user input
-        username = request.form['username']
-        password = request.form['password']
-        user = User(username).login
-        if user.user_login(password) == -1:
-            flash('The email address of this account not verrified please check your email to verify.')
-        elif :
-            flash('invalid user account please check you username')
-
-    template = env.get_template("login.html")
-    return template.render()
-
-'''
-if not User(username).verify_password(password):
-            flash('Invalid login.')
-        else:
-            session['username'] = username
-            flash('Logged in.')
-            return redirect(url_for('index'))
-'''
-
 @app.route('/account')
 def account():
     """ sumary_line """
@@ -131,11 +105,37 @@ def register():
         password0 = request.form['password']
         password1 = request.form['password1']
         user = User(username)
-        user.add_user(firstname, lastname, email, dob, gender, get_password_hash(password0))
-        token = salt.dumps(username, salt='email-confirm')
-        send_account_verification_email(email, token)
-        flash('The verification Email Has been sent please check you email inbox')
+        if not user.get_this_user_data():
+            user.add_user(firstname, lastname, email, dob, gender, get_password_hash(password0))
+            token = salt.dumps(username, salt='email-confirm')
+            send_account_verification_email(email, token)
+            return ('a verification Email Has been sent please check you email inbox')
+        else:
+            return ('This username already exits please select a new user name')
     template = env.get_template("register.html")
+    return template.render()
+
+
+@app.route('/login', methods=['GET', 'POST'])
+@app.route('/signin', methods=['GET', 'POST'])
+def login():
+    """ sumary_line """
+    if request.method == 'POST':
+        #TODO: user regualr expression to validate user input
+        username = request.form['username']
+        password = request.form['password']
+        login_status = User(username).user_login(password)
+
+        if login_status == -1:
+            return ('Invalid user account please check your username.')
+        elif login_status == -2:
+            return ('Account not verified, please check you email to verify account.')
+        elif login_status == True:
+            return ('Successfully Login')
+        elif login_status == False:
+            return ('Wrong password, please check your password or change it if you forgot the password.')
+
+    template = env.get_template("login.html")
     return template.render()
 
 
@@ -150,7 +150,7 @@ def confirm_email(token):
         email = user.get_user_email()
         return '<h1>Email: {} has been verified</h1>'.format(email)
     except SignatureExpired:
-        flash('<h1>This token has expired')
+        flash('This token has expired')
 
 
 @app.route('/set-new-password', methods=['GET', 'POST'])
