@@ -6,12 +6,24 @@
 <div class="w3-row-padding">
     <div class="w3-col m12">
         <div class="w3-card w3-round w3-white">
-            <div class="w3-container w3-padding">
-                <h6 class="w3-opacity">Social Media template by w3.css</h6>
-                <p contenteditable="true" class="w3-border w3-padding">Status: Feeling Blue</p>
-                <button type="button" class="w3-button w3-theme"><i class="fa fa-pencil"></i>
-                    Post</button>
+            <form action="/account" method="post">
+            <div class="w3-container w3-padding"  style="min-height: 250px;">
+                <div style="display: block;">
+                    <img src="{{ user['picture'] }}" alt="Avatar" class="w3-left w3-circle" style="width:30px; margin:1rem;">
+                    <textarea name="tweet" class="w3-border w3-padding w3-opacity w3-animate-input" style="width: 100%; min-height: 100px;">What's on your mind, {{ user['name'] }}? </textarea>
+                </div>
+                <div style="margin-top:1rem;">
+                    <button type="submit" class="w3-button w3-theme" value="tweet"><i class="fa fa-pencil"></i>
+                        Tweet</button>
+                    <button type="button" class="w3-button w3-theme"><i class="fa fa-image"></i>
+                        Add Image</button> 
+                    <!--
+                        <input type="file" class="w3-button w3-theme w3-animate-input" id="picture"
+                        name="picture" accept="image/*" onchange="upload()">
+                    -->
+                </div>
             </div>
+            </form>
         </div>
     </div>
 </div>
@@ -30,13 +42,13 @@
         </div>
         {% endfor %}
     </div>
-    <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i class="fa fa-thumbs-up"></i>
+    <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-thumbs-up"></i>
         Like</button>
-    <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa-retweet"></i>
+    <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-retweet"></i>
         Retweet</button>
     <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-comment"></i>
         Comment</button>
 </div>
 {% endfor %}
-
+<script src="/static/js/upload.js"></script>
 {% endblock %}

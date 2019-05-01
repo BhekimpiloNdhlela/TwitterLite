@@ -52,7 +52,12 @@ class User:
         """
 
         this = self.get_this_user_data()
+<<<<<<< HEAD
         if not this: return -1
+=======
+        if not this:
+            return -1
+>>>>>>> 917ef4ee9880c22c8098040f8686e7d4b38ab7b0
         if this['accountverrified']:
             return get_password_verification(this['passwordhash'], password)
         return -2
@@ -81,7 +86,10 @@ class User:
             useravatar       = DEFAULT_AVATAR,
             accountverrified = False,
             bio              = 'Hi I just started using Bootleg Twitter!',
+<<<<<<< HEAD
             title            = 'Not set.',
+=======
+>>>>>>> 917ef4ee9880c22c8098040f8686e7d4b38ab7b0
             createdate       = get_time_stamp()
         )
         graph.create(usernode)
@@ -98,6 +106,7 @@ class User:
         return graph.find_one('User', 'username', self.username)
 
 
+<<<<<<< HEAD
     def update_user_title(self, newtitle):
         """
         doc-string
@@ -106,6 +115,12 @@ class User:
         graph.merge(this)
         this['title'] = newtitle
         this.push()
+=======
+    def get_account_veriffication_status(self):
+        """ doc-string """
+        this = self.get_this_user_data()
+        return this['']
+>>>>>>> 917ef4ee9880c22c8098040f8686e7d4b38ab7b0
 
 
     def verify_user_account(self):
@@ -144,6 +159,7 @@ class User:
         graph.merge(this)
         this['passwordhash'] = newhash
         this.push()
+<<<<<<< HEAD
 
 
 
@@ -151,6 +167,8 @@ class User:
         """ doc-string """
         this = self.get_this_user_data()
         return this['accountverrified']
+=======
+>>>>>>> 917ef4ee9880c22c8098040f8686e7d4b38ab7b0
 
 
     def get_password_hash(self):
@@ -237,9 +255,13 @@ class User:
 
 
     def get_recent_posts(self):
+<<<<<<< HEAD
         """
         return the most recent posts of a users followers functionailty-10
         """
+=======
+        """return the most recent posts of a users followers functionailty-10 """
+>>>>>>> 917ef4ee9880c22c8098040f8686e7d4b38ab7b0
         pass
 
 
@@ -273,7 +295,10 @@ class User:
     def get_user_followings(self):
         """return a list of usernames of a user's followings """
         pass
+<<<<<<< HEAD
 
+=======
+>>>>>>> 917ef4ee9880c22c8098040f8686e7d4b38ab7b0
 
     def add_post(self, title, tags, text):
         """add post to the graph and create a published relationship between the user and the post as well as the post and its tags"""

@@ -38,23 +38,23 @@ mock_treading = [
     "web dev"
 ]
 
-mock_friend_suggestions = [
+mock_fsuggestions = [
     {
         "username": "jan_doe",
         "avatar": "/static/img/photos/15.jpg"
     },
     {
-        "username": "jan_doe",
+        "username": "john_doe",
         "avatar": "/static/img/photos/16.jpg"
     },
     {
-        "username": "jan_doe",
+        "username": "welike123",
         "avatar": "/static/img/photos/11.jpg"
     },
     {
-        "username": "jan_doe",
+        "username": "blueomountain123",
         "avatar": "/static/img/photos/4.jpg"
-    },
+    }
 ]
 
 
