@@ -1,7 +1,9 @@
 <div class="w3-card w3-round w3-white w3-padding-16 w3-center">
     <h4>Who to follow</h4>
-    {% for friend in friend_suggestions %}
+    {% for friend in fsuggestions %}
     <p>{{ friend['username'] }}</p>
+    <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i class="fa fa-user"></i>
+        + Follow</button>
     {% endfor %}
 </div>
 <br>

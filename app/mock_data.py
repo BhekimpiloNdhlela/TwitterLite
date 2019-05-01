@@ -38,7 +38,7 @@ mock_treading = [
     "web dev"
 ]
 
-mock_friend_suggestions = [
+mock_fsuggestions = [
     {
         "username": "jan_doe",
         "avatar": "/static/img/photos/15.jpg"
