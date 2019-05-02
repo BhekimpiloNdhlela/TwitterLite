@@ -1,5 +1,18 @@
 {% include 'partials/header.html' %}
-
+<head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script>
+        $(document).ready(function(){
+         $("p").html(function(_, html){
+            return html.replace(/(\#\w+)/g, '<span class="blue">$1</span>');   
+         });
+         });
+        </script>
+        <style>
+        .blue { color: blue}
+        </style>
+</head>
+    
 <body class="w3-theme-l5">
 
     <!-- Navbar -->
