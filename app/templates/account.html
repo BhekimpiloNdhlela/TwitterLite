@@ -34,8 +34,9 @@
             <label for='Date of Birth' class=''>Date of Birth</label>
             <input type="date" name="dob" id="" class="w3-input w3-large w3-animate-input"
                 value={{ user['dob'] }} placeholder='Date of Birth' required>
-            <br>
-            <label for='Title' class=''>Bio</label>
+            <br><br>
+
+            <label for='Title' class=''>Title</label>
             <textarea name="title" class="w3-border w3-padding w3-opacity w3-animate-input"
                 style="width: 100%; min-height: 10px;color:black;"
                 placeholder="{{ user['title'] }}"></textarea>
@@ -44,14 +45,14 @@
             <textarea name="bio" class="w3-border w3-padding w3-opacity w3-animate-input"
                 style="width: 100%; min-height: 10px;color:black;"
                 placeholder="{{ user['bio'] }}"></textarea>
-            <br>
+            <br><br>
             <label for='image' class=''>Profile Picture</label>
             <br>
             <img src={{ user['avatar'] }} alt="" id="image" name="image" class="w3-image">
             <br>
             <input class="file-upload" type="file" class="w3-input w3-large w3-animate-input" id="picture"
                 name="picture" accept="image/*" onchange="upload()">
-            <br>
+            <br><br>
             <input type="submit" value="Save Details" class="w3-input w3-large w3-animate-input w3-blue">
         </form>
     </div>
@@ -62,14 +63,15 @@
             <label for='name' class=''>Old Password</label>
             <input type="password" name="oldpassword" id="" class="w3-input w3-large w3-animate-input" value={{ user['name'] }}
                     placeholder='Name' required>
-
+            <br><br>
             <label for='name' class=''>New Password</label>
             <input type="password" name="newpassword0" id="" class="w3-input w3-large w3-animate-input" value={{ user['name'] }}
                     placeholder='Name' required>
-
+            <br><br>
             <label for='name' class=''>Confirm Password</label>
             <input type="password" name="newpassword1" id="" class="w3-input w3-large w3-animate-input" value={{ user['name'] }}
                     placeholder='Name' required>
+            <br><br>
             <input type="submit" value="Update Password" class="w3-input w3-large w3-animate-input w3-blue">
         </form>
     </div>
