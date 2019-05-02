@@ -201,12 +201,11 @@ def register():
 
 @app.route('/post', methods=['POST'])
 def add_tweet():
-    if request.method == 'POST':
-        posting_user = User(session['username'])
+    if request.method == 'POST' and is_logged_in():
         tweet = request.form['tweet']
-        tweet_title = request.form['title']
-        hashtags = get_hashtags(request.form['hashtags'])
-        tagged_users = get_tagged(request.form['taggedusers'])
+        hashtags, taggedusers = get_hashtags(tweet),  get_tagged(tweet)
+        user = User(session['username']).add_post(tweet, hashtags, taggedusers)
+        return '<h1>Post posted<h1>'
 
 
 @app.route('/verify-email/<token>')
