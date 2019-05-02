@@ -225,7 +225,7 @@ def forgot_password():
     template = env.get_template("forgot-password.html")
     return template.render()
 
-@app.route('/update-user-profile', method=['POST'])
+@app.route('/update-user-profile', methods=['POST'])
 def update_user_profile():
     if request.method == 'POST' and is_logged_in():
         newlastname  = request.form['lastname']
