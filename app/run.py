@@ -143,15 +143,18 @@ def messages():
 
 # TODO: Must implement - Get user data from db
 @app.route('/profile/<username>')
-def view_user_bio():
+def view_user_bio(username):
     """ sumary_line """
-    template = env.get_template("index.html")
+    template = env.get_template("friends.html")
+    user = User(username).get_json_user()
     return template.render(
-        user=john_doe,
+        user=user,
         tweets=mock_tweets,
         treading=mock_treading,
         fsuggestions=mock_fsuggestions,
-        account=False
+        following=mock_following,
+        followers=mock_followers,
+        personaltweets=mock_personal
     )
 
 
