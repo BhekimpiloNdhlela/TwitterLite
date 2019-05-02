@@ -15,30 +15,20 @@ from models import *
 app = Flask(__name__)
 # TODO: add this to the config file
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
-
 # TODO: this has to be changed. the salt should be set in a config file
 salt = URLSafeTimedSerializer(
     'ThisIsASecretSaltStringURLSafeTimedSerializerURLSafeTimedSerializer'
 )
-
 env = Environment(
     loader=FileSystemLoader('templates'),
     autoescape=select_autoescape(['html'])
 )
 
-@app.route('/')
-@app.route('/home')
+@app.route('/',  methods=['GET', 'POST'])
+@app.route('/home',  methods=['GET', 'POST'])
 @app.route('/login', methods=['GET', 'POST'])
 @app.route('/signin', methods=['GET', 'POST'])
-
 def home():
-    """ sumary_line """
-    """
-    template = env.get_template("index.html")
-    user = User(session['username']).get_json_user()
-    #user = john_doe
-    return template.render(user=user, tweets=mock_tweets, treading=mock_treading, account=True)
-    """
     """ sumary_line """
     if request.method == 'POST':
         #TODO: user regualr expression to validate user input
@@ -66,8 +56,7 @@ def home():
 def friends():
     """ sumary_line """
     template = env.get_template("friends.html")
-    return template.render(user=john_doe, tweets=mock_tweets, treading=mock_treading,fsuggestions= mock_fsuggestions, following=mock_following, followers=mock_followers, personaltweets=mock_personal)
-
+    return template.render(user=user.get_json_user(), tweets=mock_tweets, treading=mock_treading,fsuggestions= mock_fsuggestions, following=mock_following, followers=mock_followers, personaltweets=mock_personal)
 
 @app.route('/about')
 def about():
@@ -174,7 +163,7 @@ def set_new_password(token):
             oldpassword = request.form['oldpassword']
             user        = User(session['username'])
             if get_password_verification(user.get_password_hash(), oldpassword):
-                user.update_password_hash(request.form['newpassword0'])
+                user.update_password_hash(request.form['newpassword1'])
                 send_resset_password_email(user.get_user_email())
                 flash('Password updated.')
             else:
