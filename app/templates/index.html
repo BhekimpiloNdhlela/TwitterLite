@@ -12,6 +12,8 @@
                 <div style="display: block;">
                     <img src="{{ user['picture'] }}" alt="Avatar" class="w3-left w3-circle" style="width:30px; margin:1rem;">
                     <textarea name="tweet" class="w3-border w3-padding w3-opacity w3-animate-input" style="width: 100%; min-height: 100px;">What's on your mind, {{ user['username'] }}? </textarea>
+                    <input type="text" class="w3-animate-input w3-input w3-large" placeholder="Insert Hashtags" name="tags" required>
+                    <input type="text" class="w3-animate-input w3-input w3-large" placeholder="Tag Your Friends" name="taggedusers">
                 </div>
                 <div style="margin-top:1rem;">
                     <button type="submit" class="w3-button w3-theme" value="tweet"><i class="fa fa-pencil"></i>

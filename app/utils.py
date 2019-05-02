@@ -12,32 +12,36 @@ from datetime import date, datetime
 
 def get_time_stamp():
     """
-    used to get the now's time stamp, this is done when a user is creating a post or when the user is
-    creating an account. Essentially this function is used for anything that needs a now's timestamp.
+    used to get the now's time stamp, this is done when a user is creating a
+    post or when the user is creating an account. Essentially this function is
+    used for anything that needs a now's timestamp.
     """
     return datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%f')
 
 
 def get_formated_date(formatingdate):
     """
-    used to get todays date, this is done when a user is creating a post or when the user is creating
-    an account. Essentially this function is used for anything that needs today's date.
+    used to get todays date, this is done when a user is creating a post or when
+    the user is creating an account. Essentially this function is used for
+    anything that needs today's date.
     """
     return datetime.strptime(formatingdate, '%Y-%m-%d')
 
 
 def get_date_string():
     """
-    used to get todays date, this is done when a user is creating a post or when the user is creating
-    an account. Essentially this function is used for anything that needs today's date.
+    used to get todays date, this is done when a user is creating a post or when
+    the user is creating an account. Essentially this function is used for anything
+    that needs today's date.
     """
     return  date.today().strftime('%d-%m-%Y')
 
 
 def get_timestamp_seconds():
     """
-    used to get the now's time stamp, this is done when a user is creating a post or when the user is
-    creating an account. Essentially this function is used for anything that needs a now's timestamp.
+    used to get the now's time stamp, this is done when a user is creating a post
+    or when the user is creating an account. Essentially this function is used
+    for anything that needs a now's timestamp.
     """
     delta = datetime.now() - datetime.utcfromtimestamp(0)
     return delta.total_seconds()
@@ -45,26 +49,27 @@ def get_timestamp_seconds():
 
 def get_password_hash(password, salt='THESALTISsaltyLi', rounds=99999):
     """
-    used to obtain a users password hash, since password should not be stored in the database explicitly
-    this function makes use of the sha512_crypt algorithm to make hashes with the default rounds.
+    used to obtain a users password hash, since password should not be stored in
+    the database explicitly this function makes use of the sha512_crypt algorithm
+    to make hashes with the default rounds.
     """
-    hash = sha512_crypt.encrypt(password, salt=salt, rounds=rounds)
-    return hash
+    return sha512_crypt.encrypt(password, salt=salt, rounds=rounds)
 
 
 def get_password_verification(passwordhash, password):
     """
-    used when the user is loging in or when the user is attemping to change the password. this function
-    should be used by any function that wants to verify a user password given a user password hash
+    used when the user is loging in or when the user is attemping to change the
+    password. this function should be used by any function that wants to verify
+    a user password given a user password hash
     """
-    verificationstatus = sha512_crypt.verify(password, passwordhash)
-    return verificationstatus
+    return sha512_crypt.verify(password, passwordhash)
 
 
 def send_resset_password_email(toemail, fromemail='resetpassword@bootlegtwitter.com'):
     """
-    used when the user is loging in or when the user is attemping to change the password. this function
-    should be used by any function that wants to verify a user password given a user password hash
+    used when the user is loging in or when the user is attemping to change the
+    password. this function should be used by any function that wants to verify
+    a user password given a user password hash
     """
     subject = 'Password Changed'
     htmlcontent = '<h2>BootlegTwitter Password changed Notification<h2><br>'
@@ -103,16 +108,17 @@ def send_account_verification_email(to_email, token, from_email='verifyaccount@b
 
 def __send_email(fromemail, toemail, subject, htmlcontent):
     """
-    [private/ helper] function to send emails, to the user at hand. This helper function can be used
-    to send account verification, password reset and forgot password emails.
-    NOTE: this function is never called directly hence the {__send_email} notation.
+    [private/ helper] function to send emails, to the user at hand. This helper
+    function can be used to send account verification, password reset and forgot
+    password emails. NOTE: this function is never called directly hence the
+    {__send_email} notation.
     """
     msg = Mail(
             from_email=fromemail,
             to_emails=toemail,
             subject=subject,
             html_content=htmlcontent
-        )
+    )
     try:
         sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
         response = sg.send(msg)
@@ -128,6 +134,36 @@ def validate_password(password):
     characters: @#$%^&+!=
     """
     return bool(re.match(r'^(?=.*[a-z])(?=.*\d)(?=.*[A-Z])(?:.{9,})$', password))
+
+
+def get_hashtags(rawstring):
+    """
+    used to obtain/get all the hash tags in a string, used when a user is
+    posing a tweet. A hashtag should not be a hashtag if it has special chars
+    uses regex to check if a hashtag has special chars. In this case a hash
+    tag wont be considered.
+    """
+
+    hashtags = []
+    for hashtag in set(rawstring.lower().split(' ')):
+        if len(hashtag) and hashtag[0] == '#':
+            hashtags.append(hashtag.strip())
+    return hashtags
+
+
+def get_tagged(rawstring):
+    """
+    used to obtain all the users tagged in a string, used when a user is posing
+    a tweet. this assumes that the tagged users are separated by spaces or
+    whitespaces and that a tagged user beging with an '@' token or char.
+    """
+
+    tagged_users = []
+    for tagged_user in set(rawstring.split(' ')):
+        if len(tagged_user) and tagged_users[0] == '@':
+            tagged_users.append(tagged_user.strip())
+    return tagged_users
+
 
 def validate_date(formInput):
     """ uses regular expression to validate password strength """
@@ -152,22 +188,6 @@ def validate_string(string):
 def process_picture(forminput, status):
     """ sumary_line """
     return True
-
-
-def get_hashtags(rawstring):
-    hashtags = []
-    for hashtag in set(rawstring.lower().split(' ')):
-        if len(hashtag) and hashtag[0] == '#':
-            hashtags.append(hashtag.strip())
-    return hashtags
-
-
-def get_tagged(rawstring):
-    tagged_users = []
-    for tagged_user in set(rawstring.split(' ')):
-        if len(tagged_user) and tagged_users[0] == '@':
-            tagged_users.append(tagged_user.strip())
-    return tagged_users
 
 if __name__ == '__main__':
     print("Bhesdafsdfasdfki", validate_password("Bhesdafsdfasdfki")) # false
