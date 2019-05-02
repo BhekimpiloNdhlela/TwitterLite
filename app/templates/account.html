@@ -24,31 +24,27 @@
             <label for='name' class=''>Name</label>
             <input type="text" name="name" id="" class="w3-input w3-large w3-animate-input" value={{ user['name'] }}
                 placeholder='Name' required>
+            <br><br>
+
             <label for='name' class=''>Surname</label>
             <input type="text" name="surname" id="" class="w3-input w3-large w3-animate-input"
                 value={{ user['surname'] }} placeholder='Surname' required>
-            <label for='name' class=''>Username</label>
-            <input type="text" name="username" id="" class="w3-input w3-large w3-animate-input"
-                value={{ user['username'] }} placeholder='Username' required>
-            <br>
+            <br><br>
+
             <label for='Date of Birth' class=''>Date of Birth</label>
             <input type="date" name="dob" id="" class="w3-input w3-large w3-animate-input"
                 value={{ user['dob'] }} placeholder='Date of Birth' required>
             <br>
-            <label for='Title' class=''>Title</label>
-            <input type="text" name="title" id="" class="w3-input w3-small w3-animate-input"
-                value={{ user['title'] }} placeholder='Date of Birth' required>
-            <br>
+            <label for='Title' class=''>Bio</label>
+            <textarea name="title" class="w3-border w3-padding w3-opacity w3-animate-input"
+                style="width: 100%; min-height: 10px;color:black;"
+                placeholder="{{ user['title'] }}"></textarea>
+            <br><br>
             <label for='Bio' class=''>Bio</label>
-            <input type="text" name="title" id="" class="w3-input w3-small w3-animate-input"
-                value={{ user['bio'] }} placeholder='Bio' required>
+            <textarea name="bio" class="w3-border w3-padding w3-opacity w3-animate-input"
+                style="width: 100%; min-height: 10px;color:black;"
+                placeholder="{{ user['bio'] }}"></textarea>
             <br>
-
-            <label for='Bio' class=''>Bio</label>
-            <input type="text" name="title" id="" class="w3-input w3-small w3-animate-input"
-                value={{ user['bio'] }} placeholder="Bio" required>
-            <br>
-
             <label for='image' class=''>Profile Picture</label>
             <br>
             <img src={{ user['avatar'] }} alt="" id="image" name="image" class="w3-image">
