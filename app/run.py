@@ -51,12 +51,12 @@ def home():
     return template.render()
 
 
-
 @app.route('/friends')
 def friends():
     """ sumary_line """
     template = env.get_template("friends.html")
     return template.render(user=user.get_json_user(), tweets=mock_tweets, treading=mock_treading,fsuggestions= mock_fsuggestions, following=mock_following, followers=mock_followers, personaltweets=mock_personal)
+
 
 @app.route('/about')
 def about():
@@ -95,7 +95,7 @@ def change_user_password():
     pass
 
 
-# TODO Must implement - Get user data from db
+# TODO: Must implement - Get user data from db
 @app.route('/profile/<username>')
 def view_user_bio():
     """ sumary_line """
