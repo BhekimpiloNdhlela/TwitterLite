@@ -159,6 +159,23 @@ def view_user_bio(username):
     )
 
 
+@app.route('/hashtag/<tag>')
+def view_hashtags(username):
+    """ Summary  """
+    # TODO: Add method to get posts with certain hashtag
+    template = env.get_template("friends.html")
+    user = User(username).get_json_user()
+    return template.render(
+        user=user,
+        tweets=mock_tweets,
+        treading=mock_treading,
+        fsuggestions=mock_fsuggestions,
+        following=mock_following,
+        followers=mock_followers,
+        personaltweets=mock_personal
+    )
+
+
 @app.route('/changepassword')
 def change_user_password():
     """ sumary_line """
