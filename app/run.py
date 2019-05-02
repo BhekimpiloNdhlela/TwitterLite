@@ -132,8 +132,9 @@ def account():
 def messages():
     """ sumary_line """
     template = env.get_template("messages.html")
+    user = User(username).get_json_user()
     return template.render(
-        user=john_doe,
+        user=user,
         tweets=mock_tweets,
         treading=mock_treading,
         messages=mock_messages,
