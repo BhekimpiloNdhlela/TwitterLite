@@ -1,6 +1,5 @@
 import uuid
 from py2neo import authenticate, Graph, Node, Relationship
-def get_timestamp_seconds():
 from utils import get_time_stamp, get_timestamp_seconds, get_password_hash, get_time_stamp, get_password_verification
 
 """

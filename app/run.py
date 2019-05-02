@@ -91,13 +91,16 @@ def forgot_password():
 @app.route('/account')
 def account():
     """ sumary_line """
-    template = env.get_template("account.html")
-    user = User(session['username']).get_json_user()
-    return template.render(
-                user=user,
-                tweets=mock_tweets,
-                treading=mock_treading
-    )
+    try:
+        template = env.get_template("account.html")
+        user = User(session['username']).get_json_user()
+        return template.render(
+                    user=user,
+                    tweets=mock_tweets,
+                    treading=mock_treading
+        )
+    except KeyError: 
+        return render_template('login.html')
 
 
 @app.route('/messages')
