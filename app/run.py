@@ -45,7 +45,8 @@ def home():
         user=user.get_json_user(),
         tweets=mock_tweets,
         treading=mock_treading,
-        account=True
+        account=True,
+        fsuggestions=mock_fsuggestions
     )
 
 
@@ -119,7 +120,8 @@ def account():
         return template.render(
             user=user,
             tweets=mock_tweets,
-            treading=mock_treading
+            treading=mock_treading,
+             fsuggestions=mock_fsuggestions
         )
     except KeyError:
         return render_template('login.html')
