@@ -162,19 +162,23 @@ mock_messages = [
 mock_followers = [
 
     {
-        "username": "Fan 1",
+        "username": "keanudamon123",
+        "name": "Kevin Surname",
         "avatar": "/static/img/photos/15.jpg"
     },
     {
         "username": "Fan 2",
+        "name": "Ken Surname",
         "avatar": "/static/img/photos/16.jpg"
     },
     {
         "username": "Fan 3",
+        "name": "Kurt Surname",
         "avatar": "/static/img/photos/11.jpg"
     },
     {
         "username": "Bheks",
+        "name": "Kirsten Surname",
         "avatar": "/static/img/default.png"
     }
 ]
@@ -183,19 +187,18 @@ mock_following = [
 
     {
         "username": "Celeb 1",
+        "name": "Kevin Surname",
         "avatar": "/static/img/photos/15.jpg"
     },
     {
         "username": "Celeb 2",
+        "name": "Ken Surname",
         "avatar": "/static/img/photos/16.jpg"
     },
     {
         "username": "Celeb 3",
+        "name": "Kurt Surname",
         "avatar": "/static/img/photos/11.jpg"
-    },
-    {
-        "username": "Bheks",
-        "avatar": "/static/img/default.png"
     }
 ]
 
@@ -242,4 +245,28 @@ mock_personal = [
         "retweets": "43",
         "likes": "68"
     },
+]
+
+mock_results = [
+
+    {
+        "username": "Celeb 1",
+        "avatar": "/static/img/photos/15.jpg",
+        "bio": "Celeb 1's BIO"
+    },
+    {
+        "username": "Celeb 2",
+        "avatar": "/static/img/photos/16.jpg",
+        "bio": "Celeb 2's BIO"
+    },
+    {
+        "username": "Celeb 3",
+        "avatar": "/static/img/photos/11.jpg",
+        "bio": "Celeb 3's BIO"
+    },
+    {
+        "username": "Bheks",
+        "avatar": "/static/img/default.png",
+        "bio": "Bheks's BIO"
+    }
 ]

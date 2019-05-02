@@ -44,9 +44,11 @@
         <hr class="w3-clear">
         <div>
             <img src="{{ follow['avatar'] }}" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:30px">
-            <h4>{{ follow['username'] }}
-            <button type="button" class="w3-button w3-theme-d1 w3-right"><i class="fa fa-user" ></i>
+            <a href="/profile/{{ follow['username'] }}" style="text-decoration: none;">@{{ follow['username'] }}</a>
+            <h4><button type="button" class="w3-button w3-theme-d1 w3-right" style="font-size: 0.8rem;"><i class="fa fa-user" ></i>
                 Unfollow</button></h4>
+            <h4>{{ follow['name'] }}</h4>
+            
         </div>    
         {% endfor %}
         
@@ -57,7 +59,11 @@
         <hr class="w3-clear">
         <div>
             <img src="{{ follow['avatar'] }}" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:30px">
-            <h4>{{ follow['username'] }}</h4>
+            <!-- <h4>{{ follow['username'] }}</h4> -->
+            <a href="/profile/{{ follow['username'] }}" style="text-decoration: none;">@{{ follow['username'] }}</a>
+            <h4><button type="button" class="w3-button w3-theme-d1 w3-right" style="font-size: 0.8rem;"><i class="fa fa-user" ></i>
+                Follow</button></h4>
+            <h4>{{ follow['name'] }}</h4>
         </div>    
         {% endfor %}
         

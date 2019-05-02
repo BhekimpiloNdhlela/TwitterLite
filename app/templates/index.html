@@ -30,7 +30,7 @@
 <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
     <img src="{{ tweet['avatar'] }}" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
     <span class="w3-right w3-opacity">1 min</span>
-    <h4>{{ tweet['username'] }}</h4><br>
+    <h4><a href="/profile/{{ tweet['username'] }}" style="text-decoration: none;">@{{ tweet['username'] }}</a></h4>
     <hr class="w3-clear">
     <p style="word-break:break-all;">{{ tweet['content'] }}</p>
     <div class="w3-row-padding" style="margin:0 -16px">
