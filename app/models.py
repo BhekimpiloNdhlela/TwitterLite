@@ -1,6 +1,7 @@
 import uuid
 from py2neo import authenticate, Graph, Node, Relationship
-from utils import get_time_stamp, get_password_hash, get_time_stamp, get_password_verification
+def get_timestamp_seconds():
+from utils import get_time_stamp, get_timestamp_seconds, get_password_hash, get_time_stamp, get_password_verification
 
 """
 THANK YOU KLENSCH FOR CREATING THE CLOUD CONTAINER or VIRTUAL MACHINE :-)
@@ -327,11 +328,10 @@ class User:
                     title     = title,
                     text      = text,
                     timestamp = get_timestamp_seconds(),
-                    date      = date(),
+                    date      = get_time_stamp(),
                     likes     = 0,
                     comments  = 0,
                     hashtags  = hashtags,
-                    taggedussers = taggedussers
         )
 
         rel = Relationship(user, 'PUBLISHED', post)
@@ -349,6 +349,7 @@ class User:
             if exists:
                 graph.merge(taggeduser)
                 graph.create(Relationship(post, 'TAGGED', taggeduser))
+            # else we ignore the non existing tagged user
 
     def like_post(self, post_id):
         user = self.find_one()
