@@ -83,8 +83,9 @@ def login():
 def friends():
     """ sumary_line """
     template = env.get_template("friends.html")
+    user = User(session['username']).get_json_user()
     return template.render(
-        user=user.get_json_user(),
+        user=user,
         tweets=mock_tweets,
         treading=mock_treading,
         fsuggestions=mock_fsuggestions,
