@@ -122,7 +122,7 @@ def account():
             user=user,
             tweets=mock_tweets,
             treading=mock_treading,
-             fsuggestions=mock_fsuggestions
+            fsuggestions=mock_fsuggestions
         )
     except KeyError:
         return render_template('login.html')
@@ -242,6 +242,24 @@ def set_new_password(token):
                 flash('Wrong password, please try again.')
         else:
             flash('Password do not match, please try again.')
+
+
+@app.route('/like/<postid>', methods=['GET'])
+def like_post(postid):
+    """
+    Likes a users post
+    @params postid Postid of the post to like
+     """
+    pass
+
+
+@app.route('/follow/<username>', methods=['GET'])
+def follow_user(username):
+    """
+    Follows a user
+    @params username Username of the user to follow
+    """
+    pass
 
 
 if __name__ == '__main__':
