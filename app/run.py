@@ -32,7 +32,8 @@ def home():
     user= john_doe
     #user = User(session['username'])
     return template.render(user=user, tweets=mock_tweets, treading=mock_treading, fsuggestions= mock_fsuggestions, account=True)
-
+def post():
+    pass
 
 @app.route('/friends')
 def friends():

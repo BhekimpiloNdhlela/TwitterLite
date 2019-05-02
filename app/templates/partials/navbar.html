@@ -19,6 +19,11 @@
                         {% endfor %}
                     </div>
                 </div>
+                 <form  class="w3-bar-item" action="/" style="display:inline-block;">
+                    <input type="text" placeholder="Search.." name="search">
+                          <button type="submit">Submit</button>
+                </form>
+                      
                 <a href="/account" class="w3-bar-item w3-button w3-hide-small w3-right w3-padding-large w3-hover-white"
                     title="My Account">
                     <img src="{{user['picture']}}" class="w3-circle" style="height:23px;width:23px" alt="Avatar">
