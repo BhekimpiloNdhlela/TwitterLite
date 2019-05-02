@@ -73,7 +73,7 @@ mock_tweets = [
 
     {
         "username": "jan_doe",
-        "content": "The dick ain't free doe...<br>#hashtag #summerfun #thisisapun",
+        "content": "The dick ain't free doe...#hashtag #summerfun #thisisapunsadasdasdaskn.. JY my bru . gi  to new line Questions explained agreeable preferred strangers too him her son. Set put shyness offices his females him distant. Improve has message besides shy himself cheered however how son. Quick judge other leave ask first chief her. Indeed or remark always silent seemed narrow be. Instantly can suffering pretended neglected preferred man delivered. Perhaps fertile brandon do imagine to cordial cottage. ",
         "photos": [
             "12.jpg",
             "3.jpg",
