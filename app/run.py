@@ -28,12 +28,38 @@ env = Environment(
 
 @app.route('/')
 @app.route('/home')
+@app.route('/login', methods=['GET', 'POST'])
+@app.route('/signin', methods=['GET', 'POST'])
+
 def home():
     """ sumary_line """
+    """
     template = env.get_template("index.html")
     user = User(session['username']).get_json_user()
     #user = john_doe
     return template.render(user=user, tweets=mock_tweets, treading=mock_treading, account=True)
+    """
+    """ sumary_line """
+    if request.method == 'POST':
+        #TODO: user regualr expression to validate user input
+        username = request.form['username']
+        password = request.form['password']
+        user     = User(username)
+        login_status = user.user_login(password)
+
+        if login_status == -1:
+            return ('Invalid user account please check your username.')
+        elif login_status == -2:
+            return ('Account not verified, please check you email to verify account.')
+        elif login_status == True:
+            session['username'] = username
+            return render_template('index.html', user=user.get_json_user(), tweets=mock_tweets, treading=mock_treading, account=True)
+        elif login_status == False:
+            return ('Wrong password, please check your password or change it if you forgot the password.')
+
+    template = env.get_template("login.html")
+    return template.render()
+
 
 
 @app.route('/friends')
@@ -63,7 +89,8 @@ def forgot_password():
 def account():
     """ sumary_line """
     template = env.get_template("account.html")
-    return template.render(user=john_doe, tweets=mock_tweets, treading=mock_treading)
+    user = User(session['username']).get_json_user()
+    return template.render(user=user, tweets=mock_tweets, treading=mock_treading)
 
 
 @app.route('/messages')
@@ -109,6 +136,10 @@ def register():
         gender    = request.form['gender']
         password0 = request.form['password']
         password1 = request.form['password1']
+        if password0 != password1:
+            return ('passwords do not match')
+        if not validate_date(password0):
+            return ('Password should be at least 9 chars, A-Za-z0-9')
         user = User(username)
         if not user.get_this_user_data():
             user.add_user(firstname, lastname, email, dob, gender, get_password_hash(password0))
@@ -118,30 +149,6 @@ def register():
         else:
             return ('This username already exits please select a new user name')
     template = env.get_template("register.html")
-    return template.render()
-
-
-@app.route('/login', methods=['GET', 'POST'])
-@app.route('/signin', methods=['GET', 'POST'])
-def login():
-    """ sumary_line """
-    if request.method == 'POST':
-        #TODO: user regualr expression to validate user input
-        username = request.form['username']
-        password = request.form['password']
-        login_status = User(username).user_login(password)
-
-        if login_status == -1:
-            return ('Invalid user account please check your username.')
-        elif login_status == -2:
-            return ('Account not verified, please check you email to verify account.')
-        elif login_status == True:
-            session['username'] = username
-            return render_template('index.html', user=User(username).get_json_user(), tweets=mock_tweets, treading=mock_treading, account=True)
-        elif login_status == False:
-            return ('Wrong password, please check your password or change it if you forgot the password.')
-
-    template = env.get_template("login.html")
     return template.render()
 
 

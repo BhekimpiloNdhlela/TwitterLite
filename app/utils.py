@@ -122,13 +122,12 @@ def __send_email(fromemail, toemail, subject, htmlcontent):
 
 def validate_password(password):
     """
-    uses regular expression to validate password strength at least 8 characters,
+    uses regular expression to validate password strength at least 9 characters,
     must be restricted to, though does not specifically require any of: uppercase
     letters: A-Z, lowercase letters: a-z, numbers: 0-9 any of the special
     characters: @#$%^&+!=
     """
-    return bool(re.match(r'[A-Za-z0-9@#!$%^&+=]{9,20}', password))
-
+    return bool(re.match(r'^(?=.*[a-z])(?=.*\d)(?=.*[A-Z])(?:.{9,})$', password))
 
 def validate_date(formInput):
     """ uses regular expression to validate password strength """
@@ -154,9 +153,16 @@ def process_picture(forminput, status):
     """ sumary_line """
     return True
 
-
+def get_hashtags(rawstring):
+    
+    print(rawstring.strip())
+    
+    
 if __name__ == '__main__':
-    print("Bheki", validate_password("Bheki"))
-    print("B1jfd!", validate_password("B1jfd!"))
-    print("B@1jfd!sd", validate_password("B@1jfd!sd"))
-    print("Bhek1jhfd#i", validate_password("Bhek1jhfd#i"))
+    print("Bhesdafsdfasdfki", validate_password("Bhesdafsdfasdfki")) # false
+    print("B1jfd!", validate_password("B1jfd!")) # false
+    print("B@1jfd!sd", validate_password("B@1jfd!sd"))  # true
+    print("Bhek1jhfd#i", validate_password("Bhek1jhfd#i")) #true
+
+
+    get_hashtags("#his #cool-kid dhsbhasjbf sadkjfsjkadf kdjsfhakjf\n #kjhf dsakjfh\n dsjkafh dsajfh    hdskjafhjk\t \rndsjfhsdkj#southafric")

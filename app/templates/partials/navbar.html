@@ -15,13 +15,13 @@
                             class="w3-badge w3-right w3-small w3-green">{{ user['notification'] }}</span></button>
                     <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:300px">
                         {% for notification in user['notifications'] %}
-                        <a href="#" class="w3-bar-item w3-button">{{ notification }}</a>
+                            <a href="#" class="w3-bar-item w3-button">{{ notification }}</a>
                         {% endfor %}
                     </div>
                 </div>
                 <a href="/account" class="w3-bar-item w3-button w3-hide-small w3-right w3-padding-large w3-hover-white"
                     title="My Account">
-                    <img src="{{user['picture']}}" class="w3-circle" style="height:23px;width:23px" alt="Avatar">
+                    <img src="{{ user['picture'] }}" class="w3-circle" style="height:23px;width:23px" alt="Avatar">
                 </a>
             </div>
         </div>
