@@ -187,7 +187,7 @@ def register():
         user = User(username)
         if not user.get_this_user_data():
             user.add_user(firstname, lastname, email, dob,
-                        gender, get_password_hash(password0))
+                          gender, get_password_hash(password0))
             token = salt.dumps(username, salt='email-confirm')
             send_account_verification_email(email, token)
             return ('a verification Email Has been sent please check you email inbox')
@@ -204,6 +204,7 @@ def add_tweet():
         hashtags, taggedusers = get_hashtags(tweet),  get_tagged(tweet)
         user = User(session['username']).add_post(tweet, hashtags, taggedusers)
         return '<h1>Post posted<h1>'
+
 
 @app.route('/verify-email/<token>')
 @app.route('/confirm-email/<token>')
