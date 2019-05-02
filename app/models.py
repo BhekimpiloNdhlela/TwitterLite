@@ -316,19 +316,19 @@ class User:
         """return a list of usernames of a user's followings """
         pass
 
-    def add_post(self, title, text, hashtags, taggedussers):
+    def add_post(self, tweet, hashtags, taggedusers):
         """add post to the graph and create a published relationship between the user and the post as well as the post and its tags"""
         user = self.get_this_user_data()
         post = Node(
                     'Post',
-                    id        = str(uuid.uuid4()),
-                    title     = title,
-                    text      = text,
-                    timestamp = get_timestamp_seconds(),
-                    date      = get_time_stamp(),
-                    likes     = 0,
-                    comments  = 0,
-                    hashtags  = hashtags,
+                    id          = str(uuid.uuid4()),
+                    tweet       = tweet,
+                    timestamp   = get_timestamp_seconds(),
+                    date        = get_time_stamp(),
+                    likes       = 0,
+                    comments    = 0,
+                    hashtags    = hashtags,
+                    taggedusers = taggedusers
         )
 
         rel = Relationship(user, 'PUBLISHED', post)
@@ -343,7 +343,7 @@ class User:
         # build TAGGED user relationship
         for taggeduser in taggedusers:
             taggeduser = User(taggeduser).get_this_user_data()
-            if exists:
+            if taggeduser:
                 graph.merge(taggeduser)
                 graph.create(Relationship(post, 'TAGGED', taggeduser))
             # else we ignore the non existing tagged user
