@@ -338,7 +338,7 @@ class User:
         for hashtag in hashtags:
             tag = Node('Tag', name=hashtag)
             graph.merge(tag)
-            graph.create(Relationship(tag, 'TAG', post))
+            graph.create(Relationship(tag, 'HASHTAG', post))
 
         # build TAGGED user relationship
         for taggeduser in taggedusers:
