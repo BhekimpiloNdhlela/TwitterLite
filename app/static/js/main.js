@@ -20,22 +20,33 @@ function openNav() {
         x.className = x.className.replace(" w3-show", "");
     }
 }
-
+// used to make hashtags anchor tag in order to access page display all posts containing the hashtag
 const reg = /(\#\w+)/g;
 $(document).ready(function () {
     $("p").html(function (_, html) {
         return html.replace(reg,
-            '<a style="color: blue;" href="http://twitter.com/#!/search/$1">$1</a>');
+            '<a style="color: blue;" href="/tag/$1">$1</a>');
 
     });
 });
+
+// used to make @'s of users anchor tags to view users profile
+const reg1 = /(\@\w+)/g;
+$(document).ready(function () {
+    $("p").html(function (_, html) {
+        return html.replace(reg1,
+            '<a style="color: red;" href="/user/$1">$1</a>');
+
+    });
+});
+
 
 let image = 1;
 $("#imageUpload").click(function () {
     // Create file input and upload file
     let input = $(document.createElement("input"));
     input.attr("type", "file");
-    input.attr("name", image++);
+    input.attr("name", 'picture['+(image++) +']');
     input.trigger("click");
     $("#pictures").append(input);
     input.on("change", () => {
