@@ -19,7 +19,7 @@ john_doe = {
         "9.jpg"
     ],
     "friends": [
-        
+
     ],
     "notification": 2,
     "notifications": [
@@ -58,19 +58,7 @@ mock_fsuggestions = [
 ]
 
 
-
-
-def get_user(username):
-    user = User(username)
-    json_user = {
-        "name": user.get_user_name(),
-        "email": user.get_email()
-    }
-    return json_user
-
-
 mock_tweets = [
-
     {
         "username": "jan_doe",
         "content": "The dick ain't free doe...#hashtag #summerfun #thisisapunsadasdasdaskn.. JY my bru . gi  to new line Questions explained agreeable preferred strangers too him her son. Set put shyness offices his females him distant. Improve has message besides shy himself cheered however how son. Quick judge other leave ask first chief her. Indeed or remark always silent seemed narrow be. Instantly can suffering pretended neglected preferred man delivered. Perhaps fertile brandon do imagine to cordial cottage. ",
@@ -80,7 +68,8 @@ mock_tweets = [
             "7.jpg"
         ],
         # must remove
-        "avatar": "/static/img/photos/15.jpg"
+        "avatar": "/static/img/photos/15.jpg",
+        "id": "tweet1234567890"
     },
     {
         "username": "jan_doe",
@@ -89,7 +78,8 @@ mock_tweets = [
 
         ],
         # must remove
-        "avatar": "/static/img/photos/16.jpg"
+        "avatar": "/static/img/photos/16.jpg",
+        "id": "tweet1234567891"
     },
     {
         "username": "jan_doe",
@@ -98,7 +88,8 @@ mock_tweets = [
 
         ],
         # must remove
-        "avatar": "/static/img/photos/11.jpg"
+        "avatar": "/static/img/photos/11.jpg",
+        "id": "tweet1234567892"
     },
     {
         "username": "Bheks",
@@ -107,7 +98,9 @@ mock_tweets = [
 
         ],
         # must remove
-        "avatar": "/static/img/default.png"
+        "avatar": "/static/img/default.png",
+
+        "id": "tweet1234567893"
     },
     {
         "username": "DR Evil",
@@ -116,7 +109,8 @@ mock_tweets = [
 
         ],
         # must remove
-        "avatar": "/static/img/default.png"
+        "avatar": "/static/img/default.png",
+        "id": "tweet123456784"
     },
     {
         "username": "jan_doe",
@@ -126,7 +120,8 @@ mock_tweets = [
             "11.jpg"
         ],
         # must remove
-        "avatar": "/static/img/default.png"
+        "avatar": "/static/img/default.png",
+        "id": "tweet1234567895"
     }
 ]
 
@@ -200,7 +195,6 @@ mock_following = [
 ]
 
 mock_personal = [
-
     {
         "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
         "photos": [

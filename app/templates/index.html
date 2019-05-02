@@ -40,7 +40,8 @@
         </div>
         {% endfor %}
     </div>
-    <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-thumbs-up"></i>
+    <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"
+        onclick="likePost('{{tweet['id']|safe}}', this)"><i class="fa fa-thumbs-up"></i>
         Like</button>
     <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-retweet"></i>
         Retweet</button>

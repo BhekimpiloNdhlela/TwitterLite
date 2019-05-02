@@ -46,7 +46,7 @@ $("#imageUpload").click(function () {
     // Create file input and upload file
     let input = $(document.createElement("input"));
     input.attr("type", "file");
-    input.attr("name", 'picture['+(image++) +']');
+    input.attr("name", 'picture[' + (image++) + ']');
     input.trigger("click");
     $("#pictures").append(input);
     input.on("change", () => {
@@ -63,3 +63,14 @@ $("#imageUpload").click(function () {
     });
     return false; // avoiding navigation
 });
+
+/**
+ * Make a AJAX get request to like a tweet
+ * @param {String} tweetID ID of the tweet
+ * @param {this} thisElement A clone of the button from which it called
+ */
+const likePost = (tweetID, thisElement) => {
+    $.get(("/like/" + tweetID)).then((response) => {
+        $(thisElement).text(response);
+    });
+}

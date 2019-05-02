@@ -250,7 +250,7 @@ def like_post(postid):
     Likes a users post
     @params postid Postid of the post to like
      """
-    pass
+    return "True"
 
 
 @app.route('/follow/<username>', methods=['GET'])
