@@ -3,8 +3,6 @@ from py2neo import authenticate, Graph, Node, Relationship
 from utils import get_time_stamp, get_timestamp_seconds, get_password_hash, get_time_stamp, get_password_verification
 
 """
-THANK YOU KLENSCH FOR CREATING THE CLOUD CONTAINER or VIRTUAL MACHINE :-)
-
 TODO: db credentials(username, password, http_port, https_port, http_port and host_port)
 should be made enviroment variables or should be stored in the config file. for good
 practice and safety reasons.
