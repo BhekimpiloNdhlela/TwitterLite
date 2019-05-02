@@ -83,9 +83,8 @@ def login():
 def friends():
     """ sumary_line """
     template = env.get_template("friends.html")
-    user = User(session['username']).get_json_user()
     return template.render(
-        user=user,
+        user=user.get_json_user(),
         tweets=mock_tweets,
         treading=mock_treading,
         fsuggestions=mock_fsuggestions,
@@ -189,7 +188,7 @@ def register():
         user = User(username)
         if not user.get_this_user_data():
             user.add_user(firstname, lastname, email, dob,
-                        gender, get_password_hash(password0))
+                          gender, get_password_hash(password0))
             token = salt.dumps(username, salt='email-confirm')
             send_account_verification_email(email, token)
             return ('a verification Email Has been sent please check you email inbox')
@@ -207,7 +206,6 @@ def add_tweet():
         tweet_title = request.form['title']
         hashtags = get_hashtags(request.form['hashtags'])
         tagged_users = get_tagged(request.form['taggedusers'])
-        
 
 
 @app.route('/verify-email/<token>')

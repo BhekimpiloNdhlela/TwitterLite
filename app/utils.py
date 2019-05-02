@@ -143,8 +143,12 @@ def get_hashtags(rawstring):
     uses regex to check if a hashtag has special chars. In this case a hash
     tag wont be considered.
     """
-    pattern = re.compile(r"#(\w+)")
-    return set(pattern.findall(rawstring))
+
+    hashtags = []
+    for hashtag in set(rawstring.lower().split(' ')):
+        if len(hashtag) and hashtag[0] == '#':
+            hashtags.append(hashtag.strip())
+    return hashtags
 
 
 def get_tagged(rawstring):
@@ -153,8 +157,12 @@ def get_tagged(rawstring):
     a tweet. this assumes that the tagged users are separated by spaces or
     whitespaces and that a tagged user beging with an '@' token or char.
     """
-    pattern = re.compile(r"@(\w+)")
-    return set(pattern.findall(rawstring))
+
+    tagged_users = []
+    for tagged_user in set(rawstring.split(' ')):
+        if len(tagged_user) and tagged_users[0] == '@':
+            tagged_users.append(tagged_user.strip())
+    return tagged_users
 
 
 def validate_date(formInput):
@@ -181,34 +189,12 @@ def process_picture(forminput, status):
     """ sumary_line """
     return True
 
-
 if __name__ == '__main__':
-    print('PASSWORD VALIDATOR')
     print("Bhesdafsdfasdfki", validate_password("Bhesdafsdfasdfki")) # false
     print("B1jfd!", validate_password("B1jfd!")) # false
     print("B@1jfd!sd", validate_password("B@1jfd!sd"))  # true
     print("Bhek1jhfd#i", validate_password("Bhek1jhfd#i")) #true
-
-    hashtags0 = '#his #cool-kid dhsbhasjbf #cool-kid sadkjfsjkadf kdjsfhakjf\n\
-                #kjhf dsakjfh\n dsjkafh dsajfh    hdskjafhjk\t #ndsjfhsd#kjsouthafric'
-    hashtags1 = "Hey # guys! #sta3ckoverflow really #rocks #ro_cks #announ!cement"
-
-    tagged0 = "The House of Bonang @seeandbe_seen  30m30 minutes ago More #UthandoNesthembu\
-                fuck the matters of the heart I'd marry Musa Mseleku kusizani badikhalisa\
-                be poor labo fucken"
-    tagged1 = "How One Brand Switched A Million URLs & Lived To Tell About It: 5 Questions\
-                With @HomeAdvisor\ http://selnd.com/18WkBZg (@sengineland)"
-    tagged2 = "You are like dentures, because I could not smile without you @notseongyeol\
-                (@fakepcho91)#FACTS The acid in Coca Cola is called phosphoric acid which\
-                is known to dissolve teeth, metal N it can eat away your liver.\
-                (@incarceratedbob) Drinking beer actually helps strengthen your bones and\
-                teeth because it gives you a healthy dose of silicon. (@UberFacts)"
-    print("TAGGED USERS")
-    print(get_tagged(tagged0))
-    print(get_tagged(tagged1))
-    print(get_tagged(tagged2))
-
-    print('HASHTAGS')
-    print(get_hashtags(hashtags0))
-    print(get_hashtags(hashtags1))
-
+    print('\n\n\n')
+    temp = '#his #cool-kid dhsbhasjbf #cool-kid sadkjfsjkadf kdjsfhakjf\n #kjhf dsakjfh\n dsjkafh dsajfh    hdskjafhjk\t #ndsjfhsd#kjsouthafric'
+    print(temp, '\n')
+    print(get_hashtags(temp))

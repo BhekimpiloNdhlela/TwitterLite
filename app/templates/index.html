@@ -11,8 +11,8 @@
                         style="width:30px; margin:1rem;">
                     <textarea name="tweet" class="w3-border w3-padding w3-opacity w3-animate-input"
                         style="width: 100%; min-height: 100px;color:black;"
-                        placeholder="What's on your mind, {{ user['name'] }}?" required></textarea>
-                    <div id="picturesDisplay"></div>
+                        placeholder="What's on your mind, {{ user['username'] }}?"></textarea>
+                    <div id="picturesDisplay" style="display: block"></div>
                 </div>
                 <div style="margin-top:1rem;">
                     <button type="submit" class="w3-button w3-theme" value="tweet"><i class="fa fa-pencil"></i>
@@ -48,35 +48,4 @@
         Comment</button>
 </div>
 {% endfor %}
-<script src="/static/js/upload.js"></script>
-<script>
-    let image = 1;
-    $("#imageUpload").click(function () {
-        // Create file input and upload file
-        let input = $(document.createElement("input"));
-        input.attr("type", "file");
-        input.attr("name", image++);
-        input.trigger("click");
-        $("#pictures").append(input);
-
-        // Preview image
-        let picturePreview = $(document.createElement("img"));
-        picturePreview.addClass("w3-half");
-        let file = input.files[0];
-        $("#picturesDisplay").append(input);
-        let reader = new FileReader();
-        reader.onload = function () {
-            picturePreview.attr("src", reader.result);
-            console.log(picturePreview);
-            $("#picturesDisplay").append(picturePreview);
-            $("#picturesDisplay").append(input);
-            reader.readAsDataURL(file);
-        };
-        reader.readAsDataURL(file);
-        $("#picturesDisplay").append(picturePreview);
-        $("#picturesDisplay").append(input);
-
-        return false; // avoiding navigation
-    });
-</script>
 {% endblock %}
