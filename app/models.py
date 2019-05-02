@@ -296,7 +296,9 @@ class User:
 
 
     def get_location_coordinates(self, user_name):
-        """ doc-string """
+        """
+        doc-string
+        """
         this = self.get_this_user_data()
         return this['location']
 
@@ -346,16 +348,23 @@ class User:
 
 
     def get_user_followers(self):
-        """ return a list of usernames of a user's followers"""
+        """
+        return a list of usernames of a user's followers
+        """
         pass
 
 
     def get_user_followings(self):
-        """return a list of usernames of a user's followings """
+        """
+        return a list of usernames of a user's followings
+        """
         pass
 
     def add_post(self, tweet, hashtags, taggedusers):
-        """add post to the graph and create a published relationship between the user and the post as well as the post and its tags"""
+        """
+        add post to the graph and create a published relationship between the
+        user and the post as well as the post and its tags
+        """
         user = self.get_this_user_data()
         post = Node(
                     'Post',
@@ -387,6 +396,9 @@ class User:
             # else we ignore the non existing tagged user
 
     def like_post(self, post_id):
+        """
+        doc-string
+        """
         user = self.find_one()
         post = graph.find_one('Post','id', post_id)
         graph.merge(Relationship(user,'likes', post))
