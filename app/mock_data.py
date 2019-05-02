@@ -33,9 +33,9 @@ john_doe = {
 # "username": "Dr Evil"
 
 mock_treading = [
-    "Game of thrones",
+    "Gameofthrones",
     "N4j",
-    "web dev"
+    "webdev"
 ]
 
 mock_fsuggestions = [

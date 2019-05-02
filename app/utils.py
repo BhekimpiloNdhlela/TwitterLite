@@ -153,16 +153,28 @@ def process_picture(forminput, status):
     """ sumary_line """
     return True
 
+
 def get_hashtags(rawstring):
-    
-    print(rawstring.strip())
-    
-    
+    hashtags = []
+    for hashtag in set(rawstring.lower().split(' ')):
+        if len(hashtag) and hashtag[0] == '#':
+            hashtags.append(hashtag.strip())
+    return hashtags
+
+
+def get_tagged(rawstring):
+    tagged_users = []
+    for tagged_user in set(rawstring.split(' ')):
+        if len(tagged_user) and tagged_users[0] == '@':
+            tagged_users.append(tagged_user.strip())
+    return tagged_users
+
 if __name__ == '__main__':
     print("Bhesdafsdfasdfki", validate_password("Bhesdafsdfasdfki")) # false
     print("B1jfd!", validate_password("B1jfd!")) # false
     print("B@1jfd!sd", validate_password("B@1jfd!sd"))  # true
     print("Bhek1jhfd#i", validate_password("Bhek1jhfd#i")) #true
-
-
-    get_hashtags("#his #cool-kid dhsbhasjbf sadkjfsjkadf kdjsfhakjf\n #kjhf dsakjfh\n dsjkafh dsajfh    hdskjafhjk\t \rndsjfhsdkj#southafric")
+    print('\n\n\n')
+    temp = '#his #cool-kid dhsbhasjbf #cool-kid sadkjfsjkadf kdjsfhakjf\n #kjhf dsakjfh\n dsjkafh dsajfh    hdskjafhjk\t #ndsjfhsd#kjsouthafric'
+    print(temp, '\n')
+    print(get_hashtags(temp))

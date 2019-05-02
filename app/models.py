@@ -318,7 +318,7 @@ class User:
         """return a list of usernames of a user's followings """
         pass
 
-    def add_post(self, title, tags, text):
+    def add_post(self, title, text, hashtags, taggedussers):
         """add post to the graph and create a published relationship between the user and the post as well as the post and its tags"""
         user = self.get_this_user_data()
         post = Node(
@@ -326,25 +326,31 @@ class User:
                     id        = str(uuid.uuid4()),
                     title     = title,
                     text      = text,
-                    timestamp = ti5mestamp(),
-                    date      = date()
+                    timestamp = get_timestamp_seconds(),
+                    date      = date(),
+                    likes     = 0,
+                    comments  = 0,
+                    hashtags  = hashtags,
+                    taggedussers = taggedussers
         )
 
-        rel = Relationship(user,'PUBLISHED',post)
+        rel = Relationship(user, 'PUBLISHED', post)
         graph.create(rel)
 
-        '''tags in post separated by comma '''
-        for x in tags.lower().split(','):
-            tags = x.strip()
-
-        for name in set(tags):
-            tag = Node('Tag', name=name)
+        # build TAG relationship
+        for hashtag in hashtags:
+            tag = Node('Tag', name=hashtag)
             graph.merge(tag)
-            rel = Relationship(tag, 'TAGGED', post)
-            graph.create(rel)
+            graph.create(Relationship(tag, 'TAG', post))
 
+        # build TAGGED user relationship
+        for taggeduser in taggedusers:
+            taggeduser = User(taggeduser).get_this_user_data()
+            if exists:
+                graph.merge(taggeduser)
+                graph.create(Relationship(post, 'TAGGED', taggeduser))
 
-    def like_post(self,post_id):
+    def like_post(self, post_id):
         user = self.find_one()
-        post = graph.find_one('Post','id',post_id)
-        graph.merge(Relationship(user,'likes',post))
+        post = graph.find_one('Post','id', post_id)
+        graph.merge(Relationship(user,'likes', post))

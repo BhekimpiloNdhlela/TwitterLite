@@ -1,6 +1,6 @@
 #!usr/bin/python3
-# TODO: All the sectret keys, salts should be placed in a config
 
+# TODO: All the sectret keys, salts should be placed in a config
 from utils import *
 from flask import Flask, request, session, redirect, url_for, render_template, flash
 from itsdangerous import URLSafeTimedSerializer
@@ -43,7 +43,13 @@ def home():
             return ('Account not verified, please check you email to verify account.')
         elif login_status == True:
             session['username'] = username
-            return render_template('index.html', user=user.get_json_user(), tweets=mock_tweets, treading=mock_treading, account=True)
+            return render_template(
+                        'index.html',
+                        user=user.get_json_user(),
+                        tweets=mock_tweets,
+                        treading=mock_treading,
+                        account=True
+            )
         elif login_status == False:
             return ('Wrong password, please check your password or change it if you forgot the password.')
 
@@ -55,7 +61,15 @@ def home():
 def friends():
     """ sumary_line """
     template = env.get_template("friends.html")
-    return template.render(user=user.get_json_user(), tweets=mock_tweets, treading=mock_treading,fsuggestions= mock_fsuggestions, following=mock_following, followers=mock_followers, personaltweets=mock_personal)
+    return template.render(
+                user=user.get_json_user(),
+                tweets=mock_tweets,
+                treading=mock_treading,
+                fsuggestions=mock_fsuggestions,
+                following=mock_following,
+                followers=mock_followers,
+                personaltweets=mock_personal
+    )
 
 
 @app.route('/about')
@@ -79,20 +93,24 @@ def account():
     """ sumary_line """
     template = env.get_template("account.html")
     user = User(session['username']).get_json_user()
-    return template.render(user=user, tweets=mock_tweets, treading=mock_treading)
+    return template.render(
+                user=user,
+                tweets=mock_tweets,
+                treading=mock_treading
+    )
 
 
 @app.route('/messages')
 def messages():
     """ sumary_line """
     template = env.get_template("messages.html")
-    return template.render(user=john_doe, tweets=mock_tweets, treading=mock_treading, messages=mock_messages, fsuggestions= mock_fsuggestions)
-
-
-@app.route('/changepassword')
-def change_user_password():
-    """ sumary_line """
-    pass
+    return template.render(
+                user=john_doe,
+                tweets=mock_tweets,
+                treading=mock_treading,
+                messages=mock_messages,
+                fsuggestions=mock_fsuggestions
+    )
 
 
 # TODO: Must implement - Get user data from db
@@ -100,7 +118,19 @@ def change_user_password():
 def view_user_bio():
     """ sumary_line """
     template = env.get_template("index.html")
-    return template.render(user=john_doe, tweets=mock_tweets, treading=mock_treading,fsuggestions= mock_fsuggestions, account=False)
+    return template.render(
+                user=john_doe,
+                tweets=mock_tweets,
+                treading=mock_treading,
+                fsuggestions=mock_fsuggestions,
+                account=False
+    )
+
+
+@app.route('/changepassword')
+def change_user_password():
+    """ sumary_line """
+    pass
 
 
 @app.route('/logout')
@@ -128,7 +158,7 @@ def register():
         if password0 != password1:
             return ('passwords do not match')
         if not validate_date(password0):
-            return ('Password should be at least 9 chars, A-Za-z0-9')
+            return ('Password should be at least 9 chars, A-Za-z0-9 with atleast one special char.')
         user = User(username)
         if not user.get_this_user_data():
             user.add_user(firstname, lastname, email, dob, gender, get_password_hash(password0))
@@ -139,6 +169,15 @@ def register():
             return ('This username already exits please select a new user name')
     template = env.get_template("register.html")
     return template.render()
+
+@app.route('/post', methods=['POST'])
+def add_tweet():
+    if request.method == 'POST':
+        posting_user = User(session['username'])
+        tweet       = request.form['tweet']
+        tweet_title = request.form['title']
+        hashtags     = get_hashtags(request.form['hashtags'])
+        tagged_users = get_tagged(request.form['taggedusers'])
 
 
 @app.route('/verify-email/<token>')
