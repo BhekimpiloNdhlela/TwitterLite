@@ -65,12 +65,23 @@ $("#imageUpload").click(function () {
 });
 
 /**
- * Make a AJAX get request to like a tweet
+ * Makes a AJAX get request to like a tweet
  * @param {String} tweetID ID of the tweet
  * @param {this} thisElement A clone of the button from which it called
  */
 const likePost = (tweetID, thisElement) => {
     $.get(("/like/" + tweetID)).then((response) => {
+        $(thisElement).text(response);
+    });
+}
+
+/**
+ * Makes a AJAX get request to follow a user
+ * @param {String} username Username of the user to follow
+ * @param {this} thisElement A clone of the button from which it called
+ */
+const followUser = (username, thisElement) => {
+    $.get(("/follow/" + username)).then((response) => {
         $(thisElement).text(response);
     });
 }
