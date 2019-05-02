@@ -36,18 +36,15 @@
                 value={{ user['dob'] }} placeholder='Date of Birth' required>
             <br>
             <label for='Title' class=''>Title</label>
-            <input type="text" name="title" id="" class="w3-input w3-small w3-animate-input"
-                value={{ user['title'] }} placeholder='Date of Birth' required>
-            <br>
+            <textarea name="title" class="w3-border w3-padding w3-opacity w3-animate-input"
+                    style="width: 100%; min-height: 5px;color:black;"
+                    placeholder="{{ user['title'] }}?" required></textarea>
+            <br><br>
             <label for='Bio' class=''>Bio</label>
-            <input type="text" name="title" id="" class="w3-input w3-small w3-animate-input"
-                value={{ user['bio'] }} placeholder='Bio' required>
-            <br>
-
-            <label for='Bio' class=''>Bio</label>
-            <input type="text" name="title" id="" class="w3-input w3-small w3-animate-input"
-                value={{ user['bio'] }} placeholder="Bio" required>
-            <br>
+            <textarea name="bio" class="w3-border w3-padding w3-opacity w3-animate-input"
+                    style="width: 100%; min-height: 10px;color:black;"
+                    placeholder="{{ user['bio'] }}?" required></textarea>
+            <br><br>
 
             <label for='image' class=''>Profile Picture</label>
             <br>
