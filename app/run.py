@@ -26,8 +26,9 @@ env = Environment(
 
 
 def is_logged_in():
-    """ Checks if user is logged in 
-        @return bool 
+    """
+    Checks if user is logged in
+    @return bool
     """
     return bool(session.get('username'))
 
