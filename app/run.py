@@ -66,7 +66,7 @@ def home():
 def friends():
     """ sumary_line """
     template = env.get_template("friends.html")
-    return template.render(user=john_doe, tweets=mock_tweets, treading=mock_treading, following=mock_following, followers=mock_followers, personaltweets=mock_personal)
+    return template.render(user=john_doe, tweets=mock_tweets, treading=mock_treading,fsuggestions= mock_fsuggestions, following=mock_following, followers=mock_followers, personaltweets=mock_personal)
 
 
 @app.route('/about')
@@ -97,7 +97,7 @@ def account():
 def messages():
     """ sumary_line """
     template = env.get_template("messages.html")
-    return template.render(user=john_doe, tweets=mock_tweets, treading=mock_treading, messages=mock_messages)
+    return template.render(user=john_doe, tweets=mock_tweets, treading=mock_treading, messages=mock_messages, fsuggestions= mock_fsuggestions)
 
 
 @app.route('/changepassword')
@@ -111,7 +111,7 @@ def change_user_password():
 def view_user_bio():
     """ sumary_line """
     template = env.get_template("index.html")
-    return template.render(user=john_doe, tweets=mock_tweets, treading=mock_treading, account=False)
+    return template.render(user=john_doe, tweets=mock_tweets, treading=mock_treading,fsuggestions= mock_fsuggestions, account=False)
 
 
 @app.route('/logout')

@@ -44,7 +44,9 @@
         <hr class="w3-clear">
         <div>
             <img src="{{ follow['avatar'] }}" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:30px">
-            <h4>{{ follow['username'] }}</h4>
+            <h4>{{ follow['username'] }}
+            <button type="button" class="w3-button w3-theme-d1 w3-right"><i class="fa fa-user" ></i>
+                Unfollow</button></h4>
         </div>    
         {% endfor %}
         
