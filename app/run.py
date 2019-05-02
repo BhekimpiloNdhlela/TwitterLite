@@ -24,17 +24,44 @@ env = Environment(
     autoescape=select_autoescape(['html'])
 )
 
+
+def is_logged_in():
+    """ Checks if user is logged in 
+        @return bool 
+    """
+    return bool(session.get('username'))
+
+
 @app.route('/',  methods=['GET', 'POST'])
 @app.route('/home',  methods=['GET', 'POST'])
+def home():
+    if is_logged_in() == False:
+        return redirect('/login', '302')
+
+    user = User(session['username'])
+    return render_template(
+        'index.html',
+        user=user.get_json_user(),
+        tweets=mock_tweets,
+        treading=mock_treading,
+        account=True
+    )
+
+
 @app.route('/login', methods=['GET', 'POST'])
 @app.route('/signin', methods=['GET', 'POST'])
-def home():
+def login():
     """ sumary_line """
+
+    # Redirect User if the user is logged already
+    if is_logged_in():
+        return redirect('/', 302)
+
     if request.method == 'POST':
-        #TODO: user regualr expression to validate user input
+        # TODO: user regualr expression to validate user input
         username = request.form['username']
         password = request.form['password']
-        user     = User(username)
+        user = User(username)
         login_status = user.user_login(password)
 
         if login_status == -1:
@@ -43,13 +70,7 @@ def home():
             return ('Account not verified, please check you email to verify account.')
         elif login_status == True:
             session['username'] = username
-            return render_template(
-                        'index.html',
-                        user=user.get_json_user(),
-                        tweets=mock_tweets,
-                        treading=mock_treading,
-                        account=True
-            )
+            return redirect('/', 302)
         elif login_status == False:
             return ('Wrong password, please check your password or change it if you forgot the password.')
 
@@ -62,13 +83,13 @@ def friends():
     """ sumary_line """
     template = env.get_template("friends.html")
     return template.render(
-                user=user.get_json_user(),
-                tweets=mock_tweets,
-                treading=mock_treading,
-                fsuggestions=mock_fsuggestions,
-                following=mock_following,
-                followers=mock_followers,
-                personaltweets=mock_personal
+        user=user.get_json_user(),
+        tweets=mock_tweets,
+        treading=mock_treading,
+        fsuggestions=mock_fsuggestions,
+        following=mock_following,
+        followers=mock_followers,
+        personaltweets=mock_personal
     )
 
 
@@ -95,11 +116,11 @@ def account():
         template = env.get_template("account.html")
         user = User(session['username']).get_json_user()
         return template.render(
-                    user=user,
-                    tweets=mock_tweets,
-                    treading=mock_treading
+            user=user,
+            tweets=mock_tweets,
+            treading=mock_treading
         )
-    except KeyError: 
+    except KeyError:
         return render_template('login.html')
 
 
@@ -108,11 +129,11 @@ def messages():
     """ sumary_line """
     template = env.get_template("messages.html")
     return template.render(
-                user=john_doe,
-                tweets=mock_tweets,
-                treading=mock_treading,
-                messages=mock_messages,
-                fsuggestions=mock_fsuggestions
+        user=john_doe,
+        tweets=mock_tweets,
+        treading=mock_treading,
+        messages=mock_messages,
+        fsuggestions=mock_fsuggestions
     )
 
 
@@ -122,11 +143,11 @@ def view_user_bio():
     """ sumary_line """
     template = env.get_template("index.html")
     return template.render(
-                user=john_doe,
-                tweets=mock_tweets,
-                treading=mock_treading,
-                fsuggestions=mock_fsuggestions,
-                account=False
+        user=john_doe,
+        tweets=mock_tweets,
+        treading=mock_treading,
+        fsuggestions=mock_fsuggestions,
+        account=False
     )
 
 
@@ -149,13 +170,13 @@ def logout():
 def register():
     """ sumary_line """
     if request.method == 'POST':
-        #TODO: user regualr expression to validate user input
-        email     = request.form['email']
-        username  = request.form['username']
+        # TODO: user regualr expression to validate user input
+        email = request.form['email']
+        username = request.form['username']
         firstname = request.form['firstname']
-        lastname  = request.form['lastname']
-        dob       = request.form['dob']
-        gender    = request.form['gender']
+        lastname = request.form['lastname']
+        dob = request.form['dob']
+        gender = request.form['gender']
         password0 = request.form['password']
         password1 = request.form['password1']
         if password0 != password1:
@@ -164,7 +185,8 @@ def register():
             return ('Password should be at least 9 chars, A-Za-z0-9 with atleast one special char.')
         user = User(username)
         if not user.get_this_user_data():
-            user.add_user(firstname, lastname, email, dob, gender, get_password_hash(password0))
+            user.add_user(firstname, lastname, email, dob,
+                          gender, get_password_hash(password0))
             token = salt.dumps(username, salt='email-confirm')
             send_account_verification_email(email, token)
             return ('a verification Email Has been sent please check you email inbox')
@@ -173,13 +195,14 @@ def register():
     template = env.get_template("register.html")
     return template.render()
 
+
 @app.route('/post', methods=['POST'])
 def add_tweet():
     if request.method == 'POST':
         posting_user = User(session['username'])
-        tweet       = request.form['tweet']
+        tweet = request.form['tweet']
         tweet_title = request.form['title']
-        hashtags     = get_hashtags(request.form['hashtags'])
+        hashtags = get_hashtags(request.form['hashtags'])
         tagged_users = get_tagged(request.form['taggedusers'])
 
 
@@ -203,7 +226,7 @@ def set_new_password(token):
         # TODO: user regualr expression to validate user input
         if request.form['newpassword0'] == request.form['newpassword1']:
             oldpassword = request.form['oldpassword']
-            user        = User(session['username'])
+            user = User(session['username'])
             if get_password_verification(user.get_password_hash(), oldpassword):
                 user.update_password_hash(request.form['newpassword1'])
                 send_resset_password_email(user.get_user_email())
