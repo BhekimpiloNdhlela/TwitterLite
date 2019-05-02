@@ -1,21 +1,5 @@
 {% include 'partials/header.html' %}
-<head>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <script>
-         var reg=  /(\#\w+)/g ;
-        $(document).ready(function(){
-         $("p").html(function(_, html){
-            return html.replace(reg, '<a class="blue" href="http://twitter.com/#!/search/$1">$1</a>');   
-         $
-         });
-         });
 
-        </script>
-        <style>
-        .blue { color: blue}
-        </style>
-</head>
-    
 <body class="w3-theme-l5">
 
     <!-- Navbar -->
@@ -54,10 +38,9 @@
     </div>
     <!-- Footer -->
     {% include 'partials/footer.html' %}
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="/static/js/main.js">
     </script>
-
 </body>
 
 </html>
