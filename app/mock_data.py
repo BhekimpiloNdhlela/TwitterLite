@@ -84,7 +84,7 @@ mock_tweets = [
     },
     {
         "username": "jan_doe",
-        "content": "didididid jfdskdsjkk",
+        "content": "didididid @joumase jfdskdsjkk",
         "photos": [
 
         ],
@@ -93,7 +93,7 @@ mock_tweets = [
     },
     {
         "username": "jan_doe",
-        "content": "I don't know",
+        "content": "I don't know @Corban",
         "photos": [
 
         ],
@@ -102,7 +102,7 @@ mock_tweets = [
     },
     {
         "username": "Bheks",
-        "content": "pytthong yay",
+        "content": "pytthong yay @Bekhi",
         "photos": [
 
         ],
