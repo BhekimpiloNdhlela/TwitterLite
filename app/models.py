@@ -135,7 +135,7 @@ class User:
 
     def update_user_title(self, newtitle):
         """
-        doc-string
+        used to update the users title
         """
         this = self.get_this_user_data()
         graph.merge(this)
@@ -145,7 +145,7 @@ class User:
 
     def verify_user_account(self):
         """
-        doc-string
+        used to update the users account verification status
         """
         this = self.get_this_user_data()
         graph.merge(this)
@@ -153,9 +153,39 @@ class User:
         this.push()
 
 
+    def update_user_dob(newdob):
+        """
+        used to update the users date of birth
+        """
+        this = self.get_this_user_data()
+        graph.merge(this)
+        this['dob'] = newdob
+        this.push()
+
+
+    def update_user_firstname(newfirstname):
+        """
+        used to update the users first name
+        """
+        this = self.get_this_user_data()
+        graph.merge(this)
+        this['firstname'] = newfirstname
+        this.push()
+
+
+    def update_user_lastname(newlastname):
+        """
+        used to update the users last name
+        """
+        this = self.get_this_user_data()
+        graph.merge(this)
+        this['lastname'] = newlastname
+        this.push()
+
+
     def update_user_bio(self, newbio):
         """
-        doc-string
+        used to update the users bio
         """
         this = self.get_this_user_data()
         graph.merge(this)
@@ -165,7 +195,7 @@ class User:
 
     def update_user_avatar(self, newavatar):
         """
-        doc-string
+        used to update the users avatar or prifile picture
         """
         this = self.get_this_user_data()
         graph.merge(this)
@@ -174,7 +204,9 @@ class User:
 
 
     def update_password_hash(self, newhash):
-        """ used to update the users password hash """
+        """
+        used to update the users password hash
+        """
         this = self.get_this_user_data()
         graph.merge(this)
         this['passwordhash'] = newhash
@@ -183,13 +215,19 @@ class User:
 
 
     def get_account_veriffication_status(self):
-        """ doc-string """
+        """
+        used to obtain a users account status False if not verified and the
+        oposite holds true
+        """
         this = self.get_this_user_data()
         return this['accountverrified']
 
 
     def get_password_hash(self):
-        """ doc-string """
+        """
+        used to obtain a users password hash, this is for password verification
+        reasons.
+        """
         this = self.get_this_user_data()
         return this['passwordhash']
 

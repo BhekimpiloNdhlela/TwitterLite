@@ -103,13 +103,6 @@ def about():
     return template.render()
 
 
-@app.route('/password', methods=['GET', 'POST'])
-def forgot_password():
-    """ sumary_line """
-    if request.method == 'POST':
-        pass
-    template = env.get_template("forgot-password.html")
-    return template.render()
 
 
 @app.route('/account')
@@ -159,15 +152,12 @@ def view_user_bio(username):
     )
 
 
-@app.route('/changepassword')
-def change_user_password():
-    """ sumary_line """
-    pass
-
-
 @app.route('/logout')
 def logout():
-    """ sumary_line """
+    """
+    functionality used to log out/ sigout a user, the existing session token/
+    id attached to the user is deleted.
+    """
     session.pop('username', None)
     flash('Logged out.')
     return render_template('login.html')
@@ -194,7 +184,7 @@ def register():
         user = User(username)
         if not user.get_this_user_data():
             user.add_user(firstname, lastname, email, dob,
-                          gender, get_password_hash(password0))
+                        gender, get_password_hash(password0))
             token = salt.dumps(username, salt='email-confirm')
             send_account_verification_email(email, token)
             return ('a verification Email Has been sent please check you email inbox')
@@ -227,21 +217,51 @@ def confirm_email(token):
         flash('This token has expired')
 
 
-@app.route('/set-new-password', methods=['GET', 'POST'])
-def set_new_password(token):
+@app.route('/password', methods=['GET', 'POST'])
+def forgot_password():
+    """ sumary_line """
     if request.method == 'POST':
-        # TODO: user regualr expression to validate user input
+        pass
+    template = env.get_template("forgot-password.html")
+    return template.render()
+
+@app.route('/update-user-profile', method=['POST'])
+def update_user_profile():
+    if request.method == 'POST' and is_logged_in():
+        newlastname  = request.form['lastname']
+        newfirstname = request.form['firstname']
+        newdob       = request.form['dob']
+        newtitle     = request.form['title']
+        newbio       = request.form['bio']
+
+        user = User(session['username'])
+        user.update_user_bio(newbio)
+        user.update_user_title(newtitle)
+        user.update_user_dob(newdob)
+        user.update_user_firstname(newfirstname)
+        user.update_user_lastname(newlastname)
+        return 'Your Details have been updated.'
+    return render_template('account.html')
+
+
+@app.route('/set-new-password', methods=['POST'])
+def set_new_password():
+    if request.method == 'POST' and is_logged_in():
         if request.form['newpassword0'] == request.form['newpassword1']:
-            oldpassword = request.form['oldpassword']
-            user = User(session['username'])
-            if get_password_verification(user.get_password_hash(), oldpassword):
-                user.update_password_hash(request.form['newpassword1'])
-                send_resset_password_email(user.get_user_email())
-                flash('Password updated.')
+            if validate_password(request.form['newpassword0']):
+                oldpassword = request.form['oldpassword']
+                user = User(session['username'])
+                if get_password_verification(user.get_password_hash(), oldpassword):
+                    user.update_password_hash(request.form['newpassword1'])
+                    send_resset_password_email(user.get_user_email())
+                    return ('Password updated.')
+                else:
+                    return ('Wrong password, please try again.')
             else:
-                flash('Wrong password, please try again.')
+                return ('Password should be at least 9 chars, A-Za-z0-9 with atleast one special char.')
         else:
-            flash('Password do not match, please try again.')
+            return ('Password do not match, please try again.')
+    return render_template('account.html')
 
 
 @app.route('/like/<postid>', methods=['GET'])
@@ -249,7 +269,7 @@ def like_post(postid):
     """
     Likes a users post
     @params postid Postid of the post to like
-     """
+    """
     pass
 
 
