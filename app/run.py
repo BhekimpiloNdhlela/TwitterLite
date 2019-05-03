@@ -284,6 +284,3 @@ def follow_user(username):
 
 if __name__ == '__main__':
     app.run(debug=True)
-else:
-    from sys import exit
-    exit('usage: python2 run.py')

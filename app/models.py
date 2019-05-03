@@ -153,7 +153,7 @@ class User:
         this.push()
 
 
-    def update_user_dob(newdob):
+    def update_user_dob(self, newdob):
         """
         used to update the users date of birth
         """
@@ -163,7 +163,7 @@ class User:
         this.push()
 
 
-    def update_user_firstname(newfirstname):
+    def update_user_firstname(self, newfirstname):
         """
         used to update the users first name
         """
@@ -173,7 +173,7 @@ class User:
         this.push()
 
 
-    def update_user_lastname(newlastname):
+    def update_user_lastname(self, newlastname):
         """
         used to update the users last name
         """
@@ -393,12 +393,12 @@ class User:
             if taggeduser:
                 graph.merge(taggeduser)
                 graph.create(Relationship(post, 'TAGGED', taggeduser))
-            # else we ignore the non existing tagged user
+            # else we ignore t`he non existing tagged user
 
     def like_post(self, post_id):
         """
         doc-string
         """
-        user = self.find_one()
+        user = self.get_this_user_data()
         post = graph.find_one('Post','id', post_id)
         graph.merge(Relationship(user,'likes', post))
