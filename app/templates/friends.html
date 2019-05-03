@@ -6,7 +6,6 @@
 
 <div class="w3-container w3-card w3-white w3-round w3-margin" style="margin-top:0!important;">
     <br>
-    
     <div class="w3-row">
         <a href="javascript:void(0)" onclick="openCity(event, 'Your Tweets');">
             <div class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding w3-border-blue" style="text-align:center;">Your Tweets</div>
@@ -24,8 +23,8 @@
         <hr class="w3-clear">
         <div>
             <span class="w3-right w3-opacity">{{ tweet['date'] }}</span>
-            {{ tweet['content'] }}
-        </div>  
+            {{ tweet['tweet'] }}
+        </div>
         <br>
         <div class="w3-row-padding" style="margin:0 -16px">
             {% for photo in tweet['photos'] %}
@@ -47,11 +46,9 @@
             <a href="/profile/{{ follow['username'] }}" style="text-decoration: none;">@{{ follow['username'] }}</a>
             <h4><button type="button" class="w3-button w3-theme-d1 w3-right" style="font-size: 0.8rem;"><i class="fa fa-user" ></i>
                 Unfollow</button></h4>
-            <h4>{{ follow['name'] }}</h4>
-            
-        </div>    
+            <h4>{{ follow['name'] }} {{ follow['surname']}}</h4>
+        </div>
         {% endfor %}
-        
     </div>
 
     <div id="Followers" class="w3-container tab" style="display:none">
@@ -63,10 +60,9 @@
             <a href="/profile/{{ follow['username'] }}" style="text-decoration: none;">@{{ follow['username'] }}</a>
             <h4><button type="button" class="w3-button w3-theme-d1 w3-right" style="font-size: 0.8rem;"><i class="fa fa-user" ></i>
                 Follow</button></h4>
-            <h4>{{ follow['name'] }}</h4>
-        </div>    
+            <h4>{{ follow['name'] }} {{ follow['surname']}}</h4>
+        </div>
         {% endfor %}
-        
     </div>
 
     <script>

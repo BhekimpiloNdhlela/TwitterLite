@@ -54,18 +54,15 @@ def home():
 @app.route('/signin', methods=['GET', 'POST'])
 def login():
     """ sumary_line """
-
     # Redirect User if the user is logged already
     if is_logged_in():
         return redirect('/', 302)
-
     if request.method == 'POST':
         # TODO: user regualr expression to validate user input
         username = request.form['username']
         password = request.form['password']
         user = User(username)
         login_status = user.user_login(password)
-
         if login_status == -1:
             return ('Invalid user account please check your username.')
         elif login_status == -2:
@@ -103,8 +100,6 @@ def about():
     return template.render()
 
 
-
-
 @app.route('/account')
 def account():
     """ sumary_line """
@@ -140,15 +135,19 @@ def messages():
 def view_user_bio(username):
     """ sumary_line """
     template = env.get_template("friends.html")
-    user = User(username).get_json_user()
+    user = User(username)
+
+    following = user.get_user_following()
+    followers = user.get_user_followers()
+    tweetids  = user.get_user_posts()
     return template.render(
-        user=user,
+        user=user.get_json_user(),
         tweets=mock_tweets,
         treading=mock_treading,
         fsuggestions=mock_fsuggestions,
-        following=mock_following,
-        followers=mock_followers,
-        personaltweets=mock_personal
+        following=[User(uname).get_json_user() for uname in following],
+        followers=[User(uname).get_json_user() for uname in followers],
+        personaltweets=[user.get_json_post(tweetid) for tweetid in tweetids]
     )
 
 
@@ -227,6 +226,7 @@ def forgot_password():
     template = env.get_template("forgot-password.html")
     return template.render()
 
+
 @app.route('/update-user-profile', methods=['POST'])
 def update_user_profile():
     """
@@ -272,6 +272,20 @@ def set_new_password():
     return render_template('account.html')
 
 
+@app.route('/search-user', methods=['POST'])
+def search_user():
+    """
+    doc - string
+    """
+    if request.method == 'POST' and is_logged_in():
+        user = User(request.form['search'])
+        useravailability = user.get_this_user_data()
+        if bool(useravailability):
+            user = user.get_json_user()
+            return 'user found' # return the user profile page with an option of following
+        return " user not found"
+    return "nothing"
+
 @app.route('/like-post/<postid>', methods=['GET'])
 def like_post(postid):
     """
@@ -299,6 +313,7 @@ def follow_user(username):
     User(session['username']).follow_user(username)
     flash('Following user')
     return 'followed user' # this should be a template
+
 
 if __name__ == '__main__':
     app.run(debug=True)

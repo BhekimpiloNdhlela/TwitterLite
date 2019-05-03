@@ -44,9 +44,10 @@ class User:
         NOTE: the password is supposed to be check for strength using regular
         expression in validate_password() in utils.py
 
-        Returns ->  -1 : Account Not verified
-                    0  : signin success
-                    1  : Wrong Password
+        Returns -> -1 : Account does no exist
+                    0 : signin success
+                    1 : Wrong Password
+                   -2 : Account not verrified
         """
 
         this = self.get_this_user_data()
@@ -82,7 +83,6 @@ class User:
             bio              = 'Hi I just started using Bootleg Twitter!',
             title            = 'Title not set.',
             createdate       = get_time_stamp(),
-            friends          = [],
             notifications    = [
                 'welcome to bootleg twitter, enjoy.',
                 'edit your details',
@@ -91,6 +91,7 @@ class User:
             notification     = 2
         )
         graph.create(usernode)
+        usernode.labels.add(self.username)
         return True
 
 
@@ -213,7 +214,6 @@ class User:
         this.push()
 
 
-
     def get_account_veriffication_status(self):
         """
         used to obtain a users account status False if not verified and the
@@ -311,54 +311,22 @@ class User:
         }
 
 
-    def get_recent_posts(self):
+    def get_json_post(self, postid):
         """
-        return the most recent posts of a users followers functionailty-10
+        used to return a posts details in jason format, this is unnecessary but
+        Klensch insisted i do this.
         """
-        pass
+        post = graph.find_one('Post','id', postid)
+        return {
+            'id'        : post['id'],
+            'tweet'     : post['tweet'],
+            'timestamp' : post['timestamp'],
+            'date'      : post['date'],
+            'retweets'  : post['retweets'],
+            'likes'     : post['likes'],
+            'photos'    : post['photos']
+        }
 
-
-    def get_user_friends(self):
-        """
-        doc-string
-        """
-        pass
-
-
-    def get_user_suggestions(self):
-        """
-        doc-string
-        """
-        pass
-
-
-    def get_hashtag(self):
-        """
-        return a particular hashtag and show tweets with this hashtag(ordered
-        by time) functionality-8
-        """
-        pass
-
-
-    def get_user_posts(self):
-        """
-        return all posts , with the number of likes and retweets and usernames
-        of user's who liked and retweeted the post"""
-        pass
-
-
-    def get_user_followers(self):
-        """
-        return a list of usernames of a user's followers
-        """
-        pass
-
-
-    def get_user_followings(self):
-        """
-        return a list of usernames of a user's followings
-        """
-        pass
 
     def add_post(self, tweet, hashtags, taggedusers):
         """
@@ -372,12 +340,13 @@ class User:
                     tweet       = tweet,
                     timestamp   = get_timestamp_seconds(),
                     date        = get_time_stamp(),
+                    hashtags    = hashtags,
+                    taggedusers = taggedusers,
+                    retweets    = 0,
                     likes       = 0,
                     comments    = 0,
-                    hashtags    = hashtags,
-                    taggedusers = taggedusers
+                    photos      = []
         )
-
         rel = Relationship(user, 'PUBLISHED', post)
         graph.create(rel)
 
@@ -386,7 +355,6 @@ class User:
             tag = Node('Tag', name=hashtag)
             graph.merge(tag)
             graph.create(Relationship(tag, 'HASHTAG', post))
-
         # build TAGGED user relationship
         for taggeduser in taggedusers:
             taggeduser = User(taggeduser).get_this_user_data()
@@ -397,18 +365,130 @@ class User:
 
     def like_post(self, postid):
         """
-        doc-string
+        used to like a post, also increments the like field by one.
         """
         user = self.get_this_user_data()
         post = graph.find_one('Post','id', postid)
+        post['likes'] = int(post['likes']) + 1
+        post.push()
         graph.merge(Relationship(user, 'LIKES', post))
+
 
     def follow_user(self, username):
         """
-        doc-string
+        used to follow a user, @param username   the username of the user i would
+        like to follow
         """
-        pass
         usertofollow = graph.find_one('User', 'username', username)
         userfollowing = self.get_this_user_data()
         graph.merge(Relationship(userfollowing, 'FOLLOWING', usertofollow))
 
+
+    def get_user_followers(self):
+        """
+        used to get the users that are following this user
+        """
+        query = '''
+        MATCH (user:User)-[:FOLLOWING]->(follower:User)
+        WHERE follower.username = {username}
+        RETURN user.username
+        '''
+        queryresults = graph.run(query, username=self.username)
+        return [result['user.username'] for result in queryresults]
+
+
+    def get_user_following(self):
+        """
+        used to get the user names that this user is following
+        """
+        query = '''
+        MATCH (user:User)-[:FOLLOWING]->(following:User)
+        WHERE user.username = {username}
+        RETURN following.username
+        '''
+        queryresults = graph.run(query, username=self.username)
+        return [result['following.username'] for result in queryresults]
+
+
+    def get_user_posts(self):
+        """
+        used to get all the post id a user has posted
+        """
+        query = '''
+        MATCH (user:User)-[:PUBLISHED]->(post:Post)
+        WHERE user.username = {username}
+        RETURN post.id
+        '''
+        queryresults = graph.run(query, username=self.username)
+        return [result['post.id'] for result in queryresults]
+
+
+    def get_recent_posts(self):
+        """
+        return the most recent posts id of a users followers functionailty-10
+        """
+        query = '''
+        MATCH (user:User)-[:PUBLISHED]->(post:Post)<-[:HASHTAG]-(tag:Tag)
+        WHERE user.username = {username}
+        RETURN post, COLLECT(tag.name) AS tags
+        ORDER BY post.timestamp DESC LIMIT 6
+        '''
+        queryresults =  graph.run(query, username=self.username)
+        return [result['post']['id'] for result in queryresults]
+
+
+    def retweet_post(self, postid):
+        """
+        used to retweet a tweet or post with the aid of an postid
+        """
+        retweetinguser = self.get_this_user_data()
+        retweetingpost = graph.find_one('Post','id', postid)
+        retweetingpost['retweets'] = int(retweetingpost['retweets']) + 1
+        retweetingpost.push()
+        graph.merge(Relationship(retweetingpost, 'RETWEET', retweetinguser))
+
+
+    def get_user_suggestions(self):
+        """
+        doc-string
+        """
+        pass
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+            Test client for models. [NOTE used during development stage]
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if __name__ == '__main__':
+    # get all the posts that HexDEADBEEF has posted
+    user_recent_posts = User('HexDEADBEEF').get_user_posts()
+    print("\ALL MY POSTS ID")
+    [print(post) for post in user_recent_posts]
+
+
+    # get the users that are following HexDEADBEEF
+    user_following_users = User('HexDEADBEEF').get_user_following()
+    print("\n\nUSERS THAT I AM FOLLOWING")
+    [print(following) for following in user_following_users]
+
+
+    # get users that are following nish
+    user_followers = User('nish').get_user_followers()
+    print("\n\nNISH's FOLLOWERS")
+    [print(follower) for follower in user_followers]
+
+
+    # test retweeting, make Corban retweet the post
+    User('Corban').retweet_post('e48c3d0a-66f7-48ea-a069-d98ca6e02216')
+    User('keanud').retweet_post('2a73d1c0-4546-46e1-adcd-dd37d91da15f')
+
+
+    print('\n\nMY RECENT POSTS')
+    users_recent_posts = User('HexDEADBEEF').get_recent_posts()
+    [print(recentpost) for recentpost in users_recent_posts]
+
+
+    # make keanu follow me
+    user = User('Corban').follow_user('HexDEADBEEF')
+    user = User('klensch_the_machine').follow_user('HexDEADBEEF')
+    user = User('keanudamon123').follow_user('HexDEADBEEF')
+    user = User('nish').follow_user('HexDEADBEEF')
