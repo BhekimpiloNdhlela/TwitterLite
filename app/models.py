@@ -395,10 +395,20 @@ class User:
                 graph.create(Relationship(post, 'TAGGED', taggeduser))
             # else we ignore t`he non existing tagged user
 
-    def like_post(self, post_id):
+    def like_post(self, postid):
         """
         doc-string
         """
         user = self.get_this_user_data()
-        post = graph.find_one('Post','id', post_id)
-        graph.merge(Relationship(user,'likes', post))
+        post = graph.find_one('Post','id', postid)
+        graph.merge(Relationship(user, 'LIKES', post))
+
+    def follow_user(self, username):
+        """
+        doc-string
+        """
+        pass
+        usertofollow = graph.find_one('User', 'username', username)
+        userfollowing = self.get_this_user_data()
+        graph.merge(Relationship(userfollowing, 'FOLLOWING', usertofollow))
+

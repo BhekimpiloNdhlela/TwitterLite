@@ -219,7 +219,9 @@ def confirm_email(token):
 
 @app.route('/password', methods=['GET', 'POST'])
 def forgot_password():
-    """ sumary_line """
+    """
+    sumary_line
+    """
     if request.method == 'POST':
         pass
     template = env.get_template("forgot-password.html")
@@ -227,6 +229,9 @@ def forgot_password():
 
 @app.route('/update-user-profile', methods=['POST'])
 def update_user_profile():
+    """
+    sumary_line
+    """
     if request.method == 'POST' and is_logged_in():
         newlastname  = request.form['lastname']
         newfirstname = request.form['firstname']
@@ -246,6 +251,9 @@ def update_user_profile():
 
 @app.route('/set-new-password', methods=['POST'])
 def set_new_password():
+    """
+    doc-string
+    """
     if request.method == 'POST' and is_logged_in():
         if request.form['newpassword0'] == request.form['newpassword1']:
             if validate_password(request.form['newpassword0']):
@@ -264,23 +272,33 @@ def set_new_password():
     return render_template('account.html')
 
 
-@app.route('/like/<postid>', methods=['GET'])
+@app.route('/like-post/<postid>', methods=['GET'])
 def like_post(postid):
     """
     Likes a users post
     @params postid Postid of the post to like
     """
-    pass
+    if request.method == 'GET':
+        if False == is_logged_in():
+            flash('Login to like a post')
+            return render_template('login.html')
+        User(session['username']).like_post(postid)
+        flash('Liked post.')
+        return 'liked post' # this should be a template
 
 
-@app.route('/follow/<username>', methods=['GET'])
+@app.route('/follow-user/<username>', methods=['GET'])
 def follow_user(username):
     """
     Follows a user
     @params username Username of the user to follow
     """
-    pass
-
+    if False == is_logged_in():
+        flash('Login to like a post')
+        return render_template('login.html')
+    User(session['username']).follow_user(username)
+    flash('Following user')
+    return 'followed user' # this should be a template
 
 if __name__ == '__main__':
     app.run(debug=True)
