@@ -6,16 +6,20 @@ from flask import Flask, request, session, redirect, url_for, render_template, f
 from itsdangerous import URLSafeTimedSerializer
 from itsdangerous.exc import SignatureExpired
 from jinja2 import Environment, select_autoescape, FileSystemLoader
-
+from werkzeug.utils import secure_filename
 from mock_data import *
 from models import *
+import os
 
 
 # TODO: remains in the run.py when moving goes down
 app = Flask(__name__)
 # TODO: add this to the config file
-app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
+
 # TODO: this has to be changed. the salt should be set in a config file
+
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
+
 salt = URLSafeTimedSerializer(
     'ThisIsASecretSaltStringURLSafeTimedSerializerURLSafeTimedSerializer'
 )
@@ -137,17 +141,21 @@ def view_user_bio(username):
     template = env.get_template("friends.html")
     user = User(username)
 
-    following = user.get_user_following()
-    followers = user.get_user_followers()
-    tweetids  = user.get_user_posts()
+    following = [User(uname).get_json_user() for uname in user.get_user_following()]
+    followers = [User(uname).get_json_user() for uname in user.get_user_followers()]
+    tweets    = [user.get_json_post(tweetid) for tweetid in user.get_user_posts()]
+
+    for f in followers:
+        f['following'] = True if f in following else False
+
     return template.render(
         user=user.get_json_user(),
         tweets=mock_tweets,
         treading=mock_treading,
         fsuggestions=mock_fsuggestions,
-        following=[User(uname).get_json_user() for uname in following],
-        followers=[User(uname).get_json_user() for uname in followers],
-        personaltweets=[user.get_json_post(tweetid) for tweetid in tweetids]
+        following=following,
+        followers=followers,
+        personaltweets=tweets
     )
 
 
@@ -227,6 +235,11 @@ def forgot_password():
     return template.render()
 
 
+UPLOAD_FOLDER                       =   'app/static/img/useravatar/'
+ALLOWED_EXTENSIONS                  =   set(['png', 'jpg', 'jpeg', 'gif'])
+app.config['UPLOAD_FOLDER']         =   UPLOAD_FOLDER
+
+
 @app.route('/update-user-profile', methods=['POST'])
 def update_user_profile():
     """
@@ -245,9 +258,19 @@ def update_user_profile():
         user.update_user_dob(newdob)
         user.update_user_firstname(newfirstname)
         user.update_user_lastname(newlastname)
+        # upload image
+        # check if the post request has the file part
+
+        f = request.files['avatar']
+        filepath = os.path.abspath("../"+UPLOAD_FOLDER+f.filename)
+        f.save(filepath)
+        user.update_user_avatar('/static/img/useravatar/'+f.filename)
         return 'Your Details have been updated.'
     return render_template('account.html')
 
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/set-new-password', methods=['POST'])
 def set_new_password():
