@@ -183,7 +183,7 @@ def process_picture(forminput, status):
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-            Test client for models. [NOTE used during development stage]
+Test client for models. [NOTE used during development stage]
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if __name__ == '__main__':
     print('PASSWORD VALIDATOR ')

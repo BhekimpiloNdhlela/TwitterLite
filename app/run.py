@@ -27,6 +27,9 @@ env = Environment(
     loader=FileSystemLoader('templates'),
     autoescape=select_autoescape(['html'])
 )
+UPLOAD_FOLDER                       =   'app/static/img/useravatar/'
+ALLOWED_EXTENSIONS                  =   set(['png', 'jpg', 'jpeg', 'gif'])
+app.config['UPLOAD_FOLDER']         =   UPLOAD_FOLDER
 
 
 def is_logged_in():
@@ -235,11 +238,6 @@ def forgot_password():
     return template.render()
 
 
-UPLOAD_FOLDER                       =   'app/static/img/useravatar/'
-ALLOWED_EXTENSIONS                  =   set(['png', 'jpg', 'jpeg', 'gif'])
-app.config['UPLOAD_FOLDER']         =   UPLOAD_FOLDER
-
-
 @app.route('/update-user-profile', methods=['POST'])
 def update_user_profile():
     """
@@ -258,11 +256,9 @@ def update_user_profile():
         user.update_user_dob(newdob)
         user.update_user_firstname(newfirstname)
         user.update_user_lastname(newlastname)
-        # upload image
-        # check if the post request has the file part
-
         f = request.files['avatar']
         filepath = os.path.abspath("../"+UPLOAD_FOLDER+f.filename)
+        # this is not safe in practise you need to secure the file before an upload
         f.save(filepath)
         user.update_user_avatar('/static/img/useravatar/'+f.filename)
         return 'Your Details have been updated.'

@@ -456,7 +456,7 @@ class User:
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-            Test client for models. [NOTE used during development stage]
+Test client for models. [NOTE used during development stage]
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if __name__ == '__main__':
     # get all the posts that HexDEADBEEF has posted
