@@ -186,7 +186,7 @@ def register():
         password1 = request.form['password1']
         if password0 != password1:
             return ('passwords do not match')
-        if not validate_date(password0):
+        if not validate_password(password0):
             return ('Password should be at least 9 chars, A-Za-z0-9 with atleast one special char.')
         user = User(username)
         if not user.get_this_user_data():
@@ -283,7 +283,8 @@ def set_new_password():
                 oldpassword = request.form['oldpassword']
                 user = User(session['username'])
                 if get_password_verification(user.get_password_hash(), oldpassword):
-                    user.update_password_hash(request.form['newpassword1'])
+                    newpasswordhash = get_password_hash(request.form['newpassword1'])
+                    user.update_password_hash(newpasswordhash)
                     send_resset_password_email(user.get_user_email())
                     return ('Password updated.')
                 else:
