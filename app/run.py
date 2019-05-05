@@ -265,9 +265,6 @@ def update_user_profile():
     return render_template('account.html')
 
 
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
 @app.route('/set-new-password', methods=['POST'])
 def set_new_password():
     """
@@ -292,7 +289,7 @@ def set_new_password():
     return render_template('account.html')
 
 
-@app.route('/search-user', methods=['POST'])
+@app.route('/search', methods=['POST'])
 def search_user():
     """
     doc - string
@@ -306,7 +303,8 @@ def search_user():
         return " user not found"
     return "nothing"
 
-@app.route('/like-post/<postid>', methods=['GET'])
+
+@app.route('/like/<postid>', methods=['GET'])
 def like_post(postid):
     """
     Likes a users post
@@ -321,7 +319,20 @@ def like_post(postid):
         return 'liked post' # this should be a template
 
 
-@app.route('/follow-user/<username>', methods=['GET'])
+@app.route('/retweet/<postid>', methods=['GET'])
+def retweet_post(postid):
+    """
+    used to retweet a tweet
+    """
+    if False == is_logged_in():
+        flash('Login to retweet a post')
+        return render_template('login.html')
+    User(session['username']).retweet_post(postid)
+    flash('retweed post')
+    return 'retweed post' # this should be a template
+
+
+@app.route('/follow/<username>', methods=['GET'])
 def follow_user(username):
     """
     Follows a user
