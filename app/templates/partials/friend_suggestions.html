@@ -2,9 +2,10 @@
     <h4>Who to follow</h4>
     {% for friend in fsuggestions %}
     <p><img src="{{ friend['avatar'] }}" alt="Avatar" class="w3-left w3-circle" style="width:50px; margin:0.5rem;">
-        <a href="/profile/{{ friend['username'] }}" style="text-decoration: none;">{{ friend['username'] }}</a></p>
-    <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i class="fa fa-user" ></i>
-        + Follow</button>
+        @{{ friend['username'] }}</p>
+    <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"
+        onclick='followUser({{ friend['username'] | safe}}, this);'><i class="fa fa-user"></i>
+        Follow</button>
     {% endfor %}
 </div>
 <br>

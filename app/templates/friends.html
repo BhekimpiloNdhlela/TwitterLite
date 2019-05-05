@@ -8,13 +8,16 @@
     <br>
     <div class="w3-row">
         <a href="javascript:void(0)" onclick="openCity(event, 'Your Tweets');">
-            <div class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding w3-border-blue" style="text-align:center;">Your Tweets</div>
+            <div class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding w3-border-blue"
+                style="text-align:center;">Your Tweets</div>
         </a>
         <a href="javascript:void(0)" onclick="openCity(event, 'Following');">
-            <div class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding" style="text-align:center;">Following</div>
+            <div class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding" style="text-align:center;">
+                Following</div>
         </a>
         <a href="javascript:void(0)" onclick="openCity(event, 'Followers');">
-            <div class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding" style="text-align:center;">Followers</div>
+            <div class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding" style="text-align:center;">
+                Followers</div>
         </a>
     </div>
 
@@ -29,7 +32,8 @@
         <div class="w3-row-padding" style="margin:0 -16px">
             {% for photo in tweet['photos'] %}
             <div class="w3-half">
-                <img src="/static/img/photos/{{ photo }}" style="width:100%" alt="Northern Lights" class="w3-margin-bottom">
+                <img src="/static/img/photos/{{ photo }}" style="width:100%" alt="Northern Lights"
+                    class="w3-margin-bottom">
             </div>
             {% endfor %}
         </div>
@@ -44,8 +48,9 @@
         <div>
             <img src="{{ follow['avatar'] }}" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:30px">
             <a href="/profile/{{ follow['username'] }}" style="text-decoration: none;">@{{ follow['username'] }}</a>
-            <h4><button type="button" class="w3-button w3-theme-d1 w3-right" style="font-size: 0.8rem;"><i class="fa fa-user" ></i>
-                Unfollow</button></h4>
+            <h4><button type="button" class="w3-button w3-theme-d1 w3-right" style="font-size: 0.8rem;"><i
+                        class="fa fa-user"></i>
+                    Unfollow</button></h4>
             <h4>{{ follow['name'] }} {{ follow['surname']}}</h4>
         </div>
         {% endfor %}
@@ -58,7 +63,8 @@
             <img src="{{ follow['avatar'] }}" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:30px">
             <a href="/profile/{{ follow['username'] }}" style="text-decoration: none;">@{{ follow['username'] }}</a>
             {% if follow['following'] == False %}
-                <h4><button type="button" class="w3-button w3-theme-d1 w3-right" style="font-size: 0.8rem;"><i class="fa fa-user" ></i>Follow</button></h4>
+            <h4><button type="button" class="w3-button w3-theme-d1 w3-right" style="font-size: 0.8rem;"
+                    onclick="followUser({{ }});"><i class="fa fa-user"></i>Follow</button></h4>
             {% endif %}
             <h4>{{ follow['name'] }} {{ follow['surname']}}</h4>
         </div>
