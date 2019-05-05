@@ -143,14 +143,16 @@ def view_user_bio(username):
     """ sumary_line """
     template = env.get_template("friends.html")
 
-    user = User(username)
+    user, vuser  = User(username), User(session['username'])
 
-    following = [User(uname).get_json_user() for uname in user.get_user_following()]
-    followers = [User(uname).get_json_user() for uname in user.get_user_followers()]
-    tweets    = [user.get_json_post(tweetid) for tweetid in user.get_user_posts()]
+    following  = [User(uname).get_json_user() for uname in user.get_user_following()]
+    vfollowing = [User(uname).get_json_user() for uname in vuser.get_user_following()]
+    followers  = [User(uname).get_json_user() for uname in user.get_user_followers()]
+    tweets     = [user.get_json_post(tweetid) for tweetid in user.get_user_posts()]
 
     activeunfollowbtn = True if session['username'] == username else False
-    for f in followers: f['following'] = True if f in following else False
+    for f in followers:
+        f['following'] = f in vfollowing or f['username'] == session['username']
 
     return template.render(
         user=user.get_json_user(),
@@ -162,8 +164,6 @@ def view_user_bio(username):
         personaltweets=tweets,
         activeunfollowbtn=activeunfollowbtn
     )
-
-
 
 
 @app.route('/logout')
