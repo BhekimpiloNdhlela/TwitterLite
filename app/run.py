@@ -142,14 +142,15 @@ def messages():
 def view_user_bio(username):
     """ sumary_line """
     template = env.get_template("friends.html")
+
     user = User(username)
 
     following = [User(uname).get_json_user() for uname in user.get_user_following()]
     followers = [User(uname).get_json_user() for uname in user.get_user_followers()]
     tweets    = [user.get_json_post(tweetid) for tweetid in user.get_user_posts()]
 
-    for f in followers:
-        f['following'] = True if f in following else False
+    activeunfollowbtn = True if session['username'] == username else False
+    for f in followers: f['following'] = True if f in following else False
 
     return template.render(
         user=user.get_json_user(),
@@ -158,8 +159,11 @@ def view_user_bio(username):
         fsuggestions=mock_fsuggestions,
         following=following,
         followers=followers,
-        personaltweets=tweets
+        personaltweets=tweets,
+        activeunfollowbtn=activeunfollowbtn
     )
+
+
 
 
 @app.route('/logout')
@@ -280,12 +284,9 @@ def set_new_password():
                     user.update_password_hash(newpasswordhash)
                     send_resset_password_email(user.get_user_email())
                     return ('Password updated.')
-                else:
-                    return ('Wrong password, please try again.')
-            else:
-                return ('Password should be at least 9 chars, A-Za-z0-9 with atleast one special char.')
-        else:
-            return ('Password do not match, please try again.')
+                return ('Wrong password, please try again.')
+            return ('Password should be at least 9 chars, A-Za-z0-9 with atleast one special char.')
+        return ('Password do not match, please try again.')
     return render_template('account.html')
 
 
@@ -299,7 +300,7 @@ def search_user():
         useravailability = user.get_this_user_data()
         if bool(useravailability):
             user = user.get_json_user()
-            return 'user found' # return the user profile page with an option of following
+            return view_user_bio(request.form['search']) # return the user profile page with an option of following
         return " user not found"
     return "nothing"
 

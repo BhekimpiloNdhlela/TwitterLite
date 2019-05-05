@@ -363,6 +363,7 @@ class User:
                 graph.create(Relationship(post, 'TAGGED', taggeduser))
             # else we ignore t`he non existing tagged user
 
+
     def like_post(self, postid):
         """
         used to like a post, also increments the like field by one.
@@ -445,7 +446,7 @@ class User:
         retweetingpost = graph.find_one('Post','id', postid)
         retweetingpost['retweets'] = int(retweetingpost['retweets']) + 1
         retweetingpost.push()
-        graph.merge(Relationship(retweetingpost, 'RETWEET', retweetinguser))
+        graph.merge(Relationship(retweetinguser, 'RETWEET', retweetingpost))
 
 
     def get_user_suggestions(self):
@@ -492,3 +493,7 @@ if __name__ == '__main__':
     user = User('klensch_the_machine').follow_user('HexDEADBEEF')
     user = User('keanudamon123').follow_user('HexDEADBEEF')
     user = User('nish').follow_user('HexDEADBEEF')
+    user = User('klensch_the_machine').follow_user('nish')
+    user = User('nish').follow_user('klensch_the_machine')
+    user = User('klensch_the_machine').follow_user('Corban')
+    user = User('keanudamon123').follow_user('klensch_the_machine')
