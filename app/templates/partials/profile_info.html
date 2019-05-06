@@ -12,14 +12,12 @@
         <div class="w3-card w3-round w3-white">
             <p class="w3-center"> <strong>Biography:</strong><br>{{ user['bio'] }} </p>
         </div>
-        
-      
-        <button type="button" style="width: 100%;" class="fa fa-user w3-button w3-theme-d1 w3-margin-bottom">
-            My Profile Activity
-        </button>
-        <button type="button" style="width: 100%;" class="fa fa-cogs w3-button w3-theme-d1 w3-margin-bottom">
-            Account Settings
-        </button>
+            <a href="/profile/{{ user['username'] }}" style="width: 100%;" class="fa fa-user w3-button w3-theme-d1 w3-margin-bottom"
+                title="Profile Activity"> View Profile
+            </a>
+            <a href="/account" style="width: 100%;" class="fa fa-cog w3-button w3-theme-d1 w3-margin-bottom"
+                title="Profile Activity"> Account Settings
+            </a>
     </div>
 </div>
 <br>
