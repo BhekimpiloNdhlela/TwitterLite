@@ -23,12 +23,13 @@
 
     <div id="Your Tweets" class="w3-container tab" style="display: inherit;">
         {% for tweet in personaltweets %}
-        <hr class="w3-clear">
-        <div>
-            <span class="w3-right w3-opacity">{{ tweet['timestamp'] }}</span>
-            {{ tweet['tweet'] }}
-        </div>
         <br>
+        <img src="/static/img/default.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
+        <span class="w3-right w3-opacity timestamp">{{ tweet['timestamp'] }}</span>
+        <h3><a href="/profile/{{ user['username'] }}" style="text-decoration: none;">@{{ user['username'] }}</a></h3>
+        <br>
+        <p>{{ tweet['tweet'] }}</p>
+
         <div class="w3-row-padding" style="margin:0 -16px">
             {% for photo in tweet['photos'] %}
             <div class="w3-half">
@@ -37,8 +38,17 @@
             </div>
             {% endfor %}
         </div>
+        <i class="fa fa-heart"> {{ tweet['likes'] }} </i>
+        <i class="fa fa-retweet"> {{ tweet['retweets'] }} </i>
+        <br><br>
+        <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"
+            onclick="likePost('{{tweet['id']|safe}}', this)" title="Like Tweet"><i class="fa fa-thumbs-up"></i>
+            Like</button>
+        <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom" title="Retweet"><i
+                class="fa fa-retweet"></i>
+            Retweet</button>
+        <hr class="w3-clear">
 
-        <i class="fa fa-retweet"> {{ tweet['retweets'] }}</i> <i class="fa fa-heart"> {{ tweet['likes'] }}</i>
         {% endfor %}
     </div>
 
@@ -73,22 +83,6 @@
         </div>
         {% endfor %}
     </div>
-
-    <script>
-        const changeTab = (evt, cityName) => {
-            let x = document.getElementsByClassName("tab");
-            for (let i = 0; i < x.length; i++) {
-                x[i].style.display = "none";
-            }
-            let tabLinks = document.getElementsByClassName("tabLink");
-            for (i = 0; i < x.length; i++) {
-                tabLinks[i].className = tabLinks[i].className.replace(" w3-border-blue", "");
-            }
-            document.getElementById(cityName).style.display = "block";
-            evt.currentTarget.firstElementChild.className += " w3-border-blue";
-        }
-    </script>
-
     <br>
 </div>
 {% endblock %}
