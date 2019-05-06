@@ -429,10 +429,10 @@ class User:
         return the most recent posts id of a users followers functionailty-10
         """
         query = '''
-        MATCH (user:User)-[:PUBLISHED]->(post:Post)<-[:HASHTAG]-(tag:Tag)
+        MATCH (user:User)-[:PUBLISHED]->(post:Post)
         WHERE user.username = {username}
-        RETURN post, COLLECT(tag.name) AS tags
-        ORDER BY post.timestamp DESC LIMIT 6
+        RETURN post
+        ORDER BY post.timestamp ASC LIMIT 6
         '''
         queryresults =  graph.run(query, username=self.username)
         return [result['post']['id'] for result in queryresults]
