@@ -457,6 +457,37 @@ class User:
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Graph Database functions that are not related to creating a user instance
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+def get_tweet_likes_usernames(postid):
+    """
+    get all the usernames of users that liked a tweet, make use of the tweetid
+    or postid to search for the usernames that liked a post or tweet
+    """
+    query = '''
+    MATCH (post:Post)-[:LIKES]-(user:User)
+    WHERE post.id = {postid}
+    RETURN user.username
+    '''
+    queryresults = graph.run(query, postid=postid)
+    return [result['user.username'] for result in queryresults]
+
+
+def get_tweet_retweets_usernames(postid):
+    """
+    get all the usernames of users that retweeded a tweet, make use of the tweetid
+    or postid to search for the usernames that retweeted a post or tweet
+    """
+    query = '''
+    MATCH (post:Post)-[:RETWEET]-(user:User)
+    WHERE post.id = {postid}
+    RETURN user.username
+    '''
+    queryresults = graph.run(query, postid=postid)
+    return [result['user.username'] for result in queryresults]
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Test client for models. [NOTE used during development stage]
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if __name__ == '__main__':
@@ -465,28 +496,32 @@ if __name__ == '__main__':
     print("\ALL MY POSTS ID")
     [print(post) for post in user_recent_posts]
 
-
     # get the users that are following HexDEADBEEF
     user_following_users = User('HexDEADBEEF').get_user_following()
     print("\n\nUSERS THAT I AM FOLLOWING")
     [print(following) for following in user_following_users]
-
 
     # get users that are following nish
     user_followers = User('nish').get_user_followers()
     print("\n\nNISH's FOLLOWERS")
     [print(follower) for follower in user_followers]
 
-
     # test retweeting, make Corban retweet the post
     User('Corban').retweet_post('e48c3d0a-66f7-48ea-a069-d98ca6e02216')
     User('keanud').retweet_post('2a73d1c0-4546-46e1-adcd-dd37d91da15f')
 
+    User('Corban').retweet_post('250f2a79-59ee-4700-aa1e-b2c7594cedb2')
+    User('keanudamon123').retweet_post('250f2a79-59ee-4700-aa1e-b2c7594cedb2')
+    User('nish').retweet_post('250f2a79-59ee-4700-aa1e-b2c7594cedb2')
+    User('keanud').retweet_post('250f2a79-59ee-4700-aa1e-b2c7594cedb2')
+
+    User('nish').like_post('250f2a79-59ee-4700-aa1e-b2c7594cedb2')
+    User('Corban').like_post('250f2a79-59ee-4700-aa1e-b2c7594cedb2')
+    User('keanudamon123').like_post('250f2a79-59ee-4700-aa1e-b2c7594cedb2')
 
     print('\n\nMY RECENT POSTS')
     users_recent_posts = User('HexDEADBEEF').get_recent_posts()
     [print(recentpost) for recentpost in users_recent_posts]
-
 
     # make keanu follow me
     user = User('Corban').follow_user('HexDEADBEEF')
@@ -497,3 +532,15 @@ if __name__ == '__main__':
     user = User('nish').follow_user('klensch_the_machine')
     user = User('klensch_the_machine').follow_user('Corban')
     user = User('keanudamon123').follow_user('klensch_the_machine')
+
+    #get the usernames of people that like the post with post id:
+    # '250f2a79-59ee-4700-aa1e-b2c7594cedb2'
+    print("\n\nPOST LIKERS")
+    postlikers = get_tweet_likes_usernames('250f2a79-59ee-4700-aa1e-b2c7594cedb2')
+    [print(postliker) for postliker in postlikers]
+
+    #get the usernames of people that retweeted a post with postid:
+    # '250f2a79-59ee-4700-aa1e-b2c7594cedb2'
+    print("\n\nPOST RETWEETERS")
+    postretweeters = get_tweet_retweets_usernames('250f2a79-59ee-4700-aa1e-b2c7594cedb2')
+    [print(postretweeter) for postretweeter in postretweeters]
