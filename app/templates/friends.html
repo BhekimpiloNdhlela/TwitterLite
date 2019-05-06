@@ -23,7 +23,8 @@
 
     <div id="Your Tweets" class="w3-container tab" style="display: inherit;">
         {% for tweet in personaltweets %}
-        <br>
+        <div class="w3-container w3-card w3-white w3-round w3-margin">
+            <br>
         <img src="/static/img/default.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
         <span class="w3-right w3-opacity timestamp">{{ tweet['timestamp'] }}</span>
         <h3><a href="/profile/{{ user['username'] }}" style="text-decoration: none;">@{{ user['username'] }}</a></h3>
@@ -49,6 +50,8 @@
             Retweet</button>
         <hr class="w3-clear">
 
+        </div>
+        
         {% endfor %}
     </div>
 
