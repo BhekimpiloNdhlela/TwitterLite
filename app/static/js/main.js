@@ -1,4 +1,3 @@
-// Accordion
 /**
  * Activates the left sidebar for the variers user options
  * @param {String} id Name of the group to show
@@ -44,12 +43,16 @@ $(document).ready(function () {
         let time = moment(html.match(timestamp)[0], "x");
         return html.replace(html, moment(time + 6048e5).twitterLong());
     });
+    $(".tweetbox").on("change", (e) => {
+        console.log(e);
+    });
 });
 
 
 let image = 1;
 $("#imageUpload").click(function () {
     // Create file input and upload file
+    console.log("Test");
     let input = $(document.createElement("input"));
     input.attr("type", "file");
     input.attr("name", 'picture[' + (image++) + ']');
@@ -108,4 +111,17 @@ const changeTab = (e, tabName) => {
     }
     document.getElementById(tabName).style.display = "block";
     e.currentTarget.firstElementChild.className += " w3-border-blue";
+}
+
+/**
+ * Preview function for Profile pictures
+ */
+const upload = () => {
+    let file = document.getElementById('picture').files[0];
+    let image = document.getElementById('image');
+    let reader = new FileReader();
+    reader.onload = function () {
+        image.src = reader.result;
+    };
+    reader.readAsDataURL(file);
 }

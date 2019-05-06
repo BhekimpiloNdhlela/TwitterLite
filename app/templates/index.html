@@ -10,7 +10,7 @@
                     <br>
                     <textarea name="tweet" class="w3-border w3-padding w3-opacity w3-animate-input"
                         style="width: 100%; min-height: 120px;color:black;"
-                        placeholder="What's on your mind, {{ user['name'] }}?"></textarea>
+                        placeholder="What's on your mind, {{ user['name'] }}?" id="tweetbox"></textarea>
                     <div id="picturesDisplay" style="display: block"></div>
                 </div>
                 <br>
@@ -29,7 +29,7 @@
 {% for tweet in tweets %}
 <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
     <img src="{{ tweet['avatar'] }}" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
-    <span class="w3-right w3-opacity timestamp">{{ tweet['timestamp'] }}</span>
+    <span class="w3-right w3-opacity">{{ tweet['timestamp'] }}</span>
     <h3><a href="/profile/{{ tweet['username'] }}" style="text-decoration: none;">@{{ tweet['username'] }}</a></h3>
     <hr class="w3-clear">
     <p>{{ tweet['content'] }}</p>
