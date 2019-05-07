@@ -2,12 +2,13 @@
             <div class="w3-bar w3-blue w3-left-align w3-large">
                 <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-theme-d2"
                     href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
-                <a href="/" class="w3-bar-item w3-button w3-padding-large w3-theme-d4"><i
-                        class="fa fa-home w3-margin-right"></i>405 Found</a>
+                <a href="/" class="w3-bar-item w3-button w3-padding-large w3-theme-d4"><img src="/static/img/logo.png"
+                        alt="Logo" style="max-height: 1.5em;"> 405 Found</a>
                 <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="News"><i
                         class="fa fa-globe"></i></a>
-                <a href="/profile/{{ user['username'] }}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white"
-                    title="Profile"><i class="fa fa-user"></i></a>
+                <a href="/profile/{{ user['username'] }}"
+                    class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Profile"><i
+                        class="fa fa-user"></i></a>
                 <a href="/messages" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white"
                     title="Messages"><i class="fa fa-envelope"></i></a>
                 <div class="w3-dropdown-hover w3-hide-small">
@@ -19,7 +20,7 @@
                         {% endfor %}
                     </div>
                 </div>
-                <form class="w3-bar-item" action="/" style="line-height: 10px">
+                <form class="w3-bar-item" action="/search" method="POST" style="line-height: 10px">
                     <input class="w3-padding-small" type="text" placeholder="Search 405-Found.." name="search">
                     <button type="submit" class="w3-hide-small w3-padding-small w3-button w3-theme-d4 "><i
                             class="fa fa-search"></i></button>

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title%}Search{% endblock %}
+
+{% block content %}
+
+<div class="w3-container w3-card w3-white w3-round w3-margin" style="margin-top:0!important;">
+    <br>
+    <h3>Search Results</h3>
+    {% for result in results %}
+    <hr class="w3-clear">
+    <div>
+        <img src="{{ result['avatar'] }}" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:30px">
+        <h4>{{ result['username'] }}</h4>
+    </div>    
+    {% endfor %}
+</div>
+
+{% endblock %}

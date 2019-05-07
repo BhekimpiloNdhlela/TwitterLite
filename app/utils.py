@@ -182,13 +182,16 @@ def process_picture(forminput, status):
     return True
 
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Test client for models. [NOTE used during development stage]
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if __name__ == '__main__':
     print('PASSWORD VALIDATOR ')
     print("Bhesdafsdfasdfki", validate_password("Bhesdafsdfasdfki")) # false
     print("B1jfd!", validate_password("B1jfd!")) # false
     print("B@1jfd!sd", validate_password("B@1jfd!sd"))  # true
     print("Bhek1jhfd#i", validate_password("Bhek1jhfd#i")) #true
-    
+
     hashtags0 = '#his #cool-kid dhsbhasjbf #cool-kid sadkjfsjkadf kdjsfhakjf\n\
                 #kjhf dsakjfh\n dsjkafh dsajfh    hdskjafhjk\t #ndsjfhsd#kjsouthafric'
     hashtags1 = "Hey # guys! #sta3ckoverflow really #rocks #ro_cks #announ!cement"

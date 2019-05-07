@@ -9,6 +9,15 @@
         <p><i class="fa fa-home fa-fw w3-margin-right w3-text-theme"></i> {{ user['location'] }}</p>
         <p><i class="fa fa-birthday-cake fa-fw w3-margin-right w3-text-theme"></i> {{ user['dob'] }}</p>
         <p><i class="fa fa-birthday-cake fa-fw w3-margin-right w3-text-theme"></i> {{ user['gender'] }}</p>
+        <div class="w3-card w3-round w3-white">
+            <p class="w3-center"> <strong>Biography:</strong><br>{{ user['bio'] }} </p>
+        </div>
+            <a href="/profile/{{ user['username'] }}" style="width: 100%;" class="fa fa-user w3-button w3-theme-d1 w3-margin-bottom"
+                title="Profile Activity"> View Profile
+            </a>
+            <a href="/account" style="width: 100%;" class="fa fa-cog w3-button w3-theme-d1 w3-margin-bottom"
+                title="Profile Activity"> Account Settings
+            </a>
     </div>
 </div>
 <br>

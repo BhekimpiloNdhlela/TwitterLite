@@ -15,8 +15,8 @@ nessary code (views) in the run.py script to **views.py** and also move the nece
 - [x] Create Forgot-Password Form ***Frontend*** Still needs to be changed.
 - [x] Registration page for first time users.
 - [x] Login with username and password.
-- [ ] Validate the password strength with an appropriate	regular	expression.
-- [ ] Profile	page where you can add your photo, write a short bio about yourself that people
+- [x] Validate the password strength with an appropriate	regular	expression.
+- [x] Profile	page where you can add your photo, write a short bio about yourself that people
 following	you, or who would like to follow you, can see, and where you can change	your password.
 - [ ] Be able to suggest people to follow. This must be a list of people followed	by those you are
 following and that	you	are	not	already	following, ordered based on total number of likes they have 
