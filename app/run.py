@@ -128,6 +128,18 @@ def account():
         return render_template('login.html')
 
 
+@app.route('/tag')
+def tag():
+    template = env.get_template("tag.html")
+    user = User(session['username']).get_json_user()
+    return template.render(
+        user=user,
+        tweets=mock_tweets,
+        treading=mock_treading,
+        messages=mock_messages,
+        fsuggestions=mock_fsuggestions
+    )
+
 @app.route('/messages')
 def messages():
     """ sumary_line """
