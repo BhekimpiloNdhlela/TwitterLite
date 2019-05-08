@@ -46,7 +46,7 @@
         {% endfor %}
     </div>
     <i class="fa fa-heart" onclick="getLikes('{{ tweet[1]['id']| safe }}');"> {{ tweet[1]["likes"] }} </i>
-    <i class="fa fa-retweet"> {{ tweet[1]["retweets"] }} </i>
+    <i class="fa fa-retweet" onclick="getRetweetUsers('{{ tweet[1]['id']| safe }}');"> {{ tweet[1]["retweets"] }} </i>
     <br /><br />
     <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"
         onclick="likePost('{{ tweet[1]['id'] | safe }}', this)" title="Like Tweet">
