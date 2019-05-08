@@ -10,6 +10,47 @@ from itsdangerous import URLSafeTimedSerializer
 from datetime import date, datetime
 
 
+def set_message(message, type):
+    """
+    Sets the globals message and message type
+    @params message The message to set to the global buffer
+    @params type The type of the message for the buffer
+    """
+    global MESSAGE, TYPE
+    MESSAGE = message
+    TYPE = ''
+
+
+def get_message():
+    """
+    Sets the globals message to null and return the message
+    @return message The message in the global buffer
+    """
+    global MESSAGE
+    msg = MESSAGE
+    MESSAGE = ''
+    return msg
+
+
+def get_type():
+    """
+    Sets the globals message type to null and return the message type
+    @return type The message type in the global buffer
+    """
+    global TYPE
+    ty = TYPE
+    TYPE = ''
+    return ty
+
+
+def is_logged_in():
+    """
+    Checks if user is logged in
+    @return bool True if logged in and false if not
+    """
+    return bool(session.get('username'))
+
+
 def get_time_stamp():
     """
     used to get the now's time stamp, this is done when a user is creating a
@@ -34,7 +75,7 @@ def get_date_string():
     the user is creating an account. Essentially this function is used for anything
     that needs today's date.
     """
-    return  date.today().strftime('%d-%m-%Y')
+    return date.today().strftime('%d-%m-%Y')
 
 
 def get_timestamp_seconds():
@@ -114,10 +155,10 @@ def __send_email(fromemail, toemail, subject, htmlcontent):
     {__send_email} notation.
     """
     msg = Mail(
-            from_email=fromemail,
-            to_emails=toemail,
-            subject=subject,
-            html_content=htmlcontent
+        from_email=fromemail,
+        to_emails=toemail,
+        subject=subject,
+        html_content=htmlcontent
     )
     try:
         sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
@@ -187,10 +228,10 @@ Test client for models. [NOTE used during development stage]
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if __name__ == '__main__':
     print('PASSWORD VALIDATOR ')
-    print("Bhesdafsdfasdfki", validate_password("Bhesdafsdfasdfki")) # false
-    print("B1jfd!", validate_password("B1jfd!")) # false
+    print("Bhesdafsdfasdfki", validate_password("Bhesdafsdfasdfki"))  # false
+    print("B1jfd!", validate_password("B1jfd!"))  # false
     print("B@1jfd!sd", validate_password("B@1jfd!sd"))  # true
-    print("Bhek1jhfd#i", validate_password("Bhek1jhfd#i")) #true
+    print("Bhek1jhfd#i", validate_password("Bhek1jhfd#i"))  # true
 
     hashtags0 = '#his #cool-kid dhsbhasjbf #cool-kid sadkjfsjkadf kdjsfhakjf\n\
                 #kjhf dsakjfh\n dsjkafh dsajfh    hdskjafhjk\t #ndsjfhsd#kjsouthafric'
@@ -214,4 +255,3 @@ if __name__ == '__main__':
     print('HASHTAGS')
     print(get_hashtags(hashtags0))
     print(get_hashtags(hashtags1))
-

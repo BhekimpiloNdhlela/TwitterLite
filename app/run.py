@@ -31,13 +31,8 @@ UPLOAD_FOLDER = 'app/static/img/useravatar/'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-
-def is_logged_in():
-    """
-    Checks if user is logged in
-    @return bool
-    """
-    return bool(session.get('username'))
+MESSAGE = ''
+TYPE = ''
 
 
 @app.route('/',  methods=['GET', 'POST'])
@@ -54,14 +49,18 @@ def home():
     tweets = session_user.get_timeline_posts()
     friend_suggestions = session_user.get_recommended_users()
 
+    msg = get_message()
+    alert = get_type()
+
     return render_template(
         'index.html',
         session_user=session_user.get_json_user(),
         user=user,
         tweets=tweets,
         treading=mock_treading,
-        account=True,
-        fsuggestions=friend_suggestions
+        fsuggestions=friend_suggestions,
+        message=msg,
+        alert=alert
     )
 
 
@@ -126,6 +125,7 @@ def account():
 def messages():
     """ sumary_line """
     if is_logged_in() == False:
+        set_message('Please Login', 'danger')
         return redirect('/login', '302')
 
     template = env.get_template("messages.html")
@@ -140,6 +140,7 @@ def messages():
         messages=mock_messages,
         fsuggestions=friend_suggestions
     )
+
 
 @app.route('/profile/<username>')
 def view_user_bio(username):
@@ -228,7 +229,7 @@ def add_tweet():
         tweet = request.form['tweet']
         hashtags, taggedusers = get_hashtags(tweet),  get_tagged(tweet)
         User(session['username']).add_post(tweet, hashtags, taggedusers)
-        flash('Post posted')
+        set_message('Post posted', 'success')
         return redirect('/', '302')
 
 
