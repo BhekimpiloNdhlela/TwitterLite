@@ -367,6 +367,15 @@ def retweet_post(postid):
     return 'True'  # this should be a template
 
 
+@app.route('/retweeters/<postid>', methods=['GET'])
+def get_retweeters(postid):
+    if request.method == 'GET':
+        if False == is_logged_in():
+            flash('Login to retweet a post')
+            return render_template('login.html')
+        return jsonify(users=get_tweet_retweets_usernames(postid))
+
+
 @app.route('/follow/<username>', methods=['GET'])
 def follow_user(username):
     """
