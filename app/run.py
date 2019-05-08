@@ -79,20 +79,16 @@ def login():
         user = User(username)
         login_status = user.user_login(password)
         if login_status == -1:
-            msg, type = 'Invalid user account please check your username.', 'danger'
+            msg, type = 'Invalid user account please check your username', 'danger'
         elif login_status == -2:
-            msg = 'Account not verified, please check you email to verify account.', ''
-            return ()
+            msg, type = 'Account not verified, please check your  email', 'warning'
+        elif login_status == False:
+            msg, type = 'Wrong password', 'danger'
         elif login_status == True:
             session['username'] = username
-            msg, type = 'logged in as {}'.format(username), ''
             return redirect('/', 302)
-        elif login_status == False:
-            msg, type = 'Wrong password, please check your password or change it if you forgot the password.', ''
         return render_template('login.html', message=msg, alert=type)
-
-    template = env.get_template("login.html")
-    return template.render()
+    return render_template('login.html')
 
 
 @app.route('/about')
