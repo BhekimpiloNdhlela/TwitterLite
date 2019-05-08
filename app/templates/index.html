@@ -5,29 +5,17 @@
             <form action="/post" method="post">
                 <div style="display: block;">
                     <br />
-                    <textarea
-                        name="tweet"
-                        class="w3-border w3-padding w3-opacity w3-animate-input"
+                    <textarea name="tweet" class="w3-border w3-padding w3-opacity w3-animate-input"
                         style="width: 100%; min-height: 120px;color:black;"
-                        placeholder="What's on your mind, {{ user['name'] }}?"
-                        required
-                    ></textarea>
+                        placeholder="What's on your mind, {{ user['name'] }}?" required></textarea>
                     <div id="picturesDisplay" style="display: block"></div>
                 </div>
                 <br />
                 <div style="margin-top:1rem;">
-                    <button
-                        type="submit"
-                        class="w3-button w3-theme"
-                        value="tweet"
-                    >
+                    <button type="submit" class="w3-button w3-theme" value="tweet">
                         <i class="fa fa-pencil"></i> Tweet
                     </button>
-                    <button
-                        type="button"
-                        class="w3-button w3-theme"
-                        id="imageUpload"
-                    >
+                    <button type="button" class="w3-button w3-theme" id="imageUpload">
                         <i class="fa fa-image"></i> Add Image
                     </button>
                     <div id="pictures" style="display: none;"></div>
@@ -39,21 +27,12 @@
 {% endif %} {% for tweet in tweets %}
 <div class="w3-container w3-card w3-white w3-round w3-margin">
     <br />
-    <img
-        src="{{ tweet[0]['useravatar'] }}"
-        alt="Avatar"
-        class="w3-left w3-circle w3-margin-right"
-        style="width:60px"
-    />
+    <img src="{{ tweet[0]['useravatar'] }}" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px" />
     <span class="w3-right w3-opacity timestamp">{{
         tweet[1]["timestamp"]
     }}</span>
     <h3>
-        <a
-            href="/profile/{{ tweet[0]['username'] }}"
-            style="text-decoration: none;"
-            >@{{ tweet[0]["username"] }}</a
-        >
+        <a href="/profile/{{ tweet[0]['username'] }}" style="text-decoration: none;">@{{ tweet[0]["username"] }}</a>
     </h3>
     <hr class="w3-clear" />
     <p>{{ tweet[1]["tweet"] }}</p>
@@ -61,31 +40,19 @@
     <div class="w3-row-padding" style="margin:0 -16px">
         {% for photo in tweet[1]['photos'] %}
         <div class="w3-half">
-            <img
-                src="/static/img/photos/{{ photo }}"
-                style="width:100%"
-                alt="Northern Lights"
-                class="w3-margin-bottom"
-            />
+            <img src="/static/img/photos/{{ photo }}" style="width:100%" alt="Northern Lights"
+                class="w3-margin-bottom" />
         </div>
         {% endfor %}
     </div>
-    <i class="fa fa-heart"> {{ tweet[1]["likes"] }} </i>
+    <i class="fa fa-heart" onclick="getLikes('{{ tweet[1]['id']| safe }}');"> {{ tweet[1]["likes"] }} </i>
     <i class="fa fa-retweet"> {{ tweet[1]["retweets"] }} </i>
     <br /><br />
-    <button
-        type="button"
-        class="w3-button w3-theme-d2 w3-margin-bottom"
-        onclick="likePost('{{ tweet[1]['id'] | safe }}', this)"
-        title="Like Tweet"
-    >
+    <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"
+        onclick="likePost('{{ tweet[1]['id'] | safe }}', this)" title="Like Tweet">
         <i class="fa fa-thumbs-up"></i> Like
     </button>
-    <button
-        type="button"
-        class="w3-button w3-theme-d2 w3-margin-bottom"
-        title="Retweet"
-    >
+    <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom" title="Retweet">
         <i class="fa fa-retweet"></i> Retweet
     </button>
 </div>

@@ -2,7 +2,7 @@
 
 # TODO: All the sectret keys, salts should be placed in a config
 from utils import *
-from flask import Flask, request, session, redirect, url_for, render_template, flash
+from flask import Flask, request, session, redirect, url_for, render_template, flash, jsonify
 from itsdangerous import URLSafeTimedSerializer
 from itsdangerous.exc import SignatureExpired
 from jinja2 import Environment, select_autoescape, FileSystemLoader
@@ -46,15 +46,22 @@ def home():
     if is_logged_in() == False:
         return redirect('/login', '302')
 
-    user = User(session['username'])
+    # Must always be there
+    session_user = User(session['username'])
+
+    # if not visiting another persons profile
+    user = session_user.get_json_user()
+    tweets = session_user.get_timeline_posts()
+    friend_suggestions = session_user.get_recommended_users()
 
     return render_template(
         'index.html',
-        user=user.get_json_user(),
-        tweets=user.get_timeline_posts(),
+        session_user=session_user.get_json_user(),
+        user=user,
+        tweets=tweets,
         treading=mock_treading,
         account=True,
-        fsuggestions=user.get_recommended_users()
+        fsuggestions=friend_suggestions
     )
 
 
@@ -324,6 +331,19 @@ def like_post(postid):
         User(session['username']).like_post(postid)
         flash('Liked post.')
         return 'liked post'  # this should be a template
+
+
+@app.route('/likers/<postid>', methods=['GET'])
+def get_likers(postid):
+    """
+    Likes a users post
+    @params postid Postid of the post to like
+    """
+    if request.method == 'GET':
+        if False == is_logged_in():
+            flash('Login to like a post')
+            return render_template('login.html')
+        return jsonify(users=get_tweet_likes_usernames(postid))
 
 
 @app.route('/retweet/<postid>', methods=['GET'])
