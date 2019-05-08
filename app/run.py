@@ -78,20 +78,16 @@ def login():
         user = User(username)
         login_status = user.user_login(password)
         if login_status == -1:
-            msg, type = 'Invalid user account please check your username.', 'danger'
+            msg, type = 'Invalid user account please check your username', 'danger'
         elif login_status == -2:
-            msg = 'Account not verified, please check you email to verify account.', ''
-            return ()
+            msg, type = 'Account not verified, please check your email', 'warning'
+        elif login_status == False:
+            msg, type = 'Wrong password, Please try signing in again.', 'danger'
         elif login_status == True:
             session['username'] = username
-            msg, type = 'logged in as {}'.format(username), ''
             return redirect('/', 302)
-        elif login_status == False:
-            msg, type = 'Wrong password, please check your password or change it if you forgot the password.', ''
         return render_template('login.html', message=msg, alert=type)
-
-    template = env.get_template("login.html")
-    return template.render()
+    return render_template('login.html')
 
 
 @app.route('/about')
@@ -186,8 +182,7 @@ def logout():
     id attached to the user is deleted.
     """
     session.pop('username', None)
-    flash('Logged out.')
-    return render_template('login.html')
+    return render_template('login.html', message='Logged out', alert='primary')
 
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -292,20 +287,18 @@ def set_new_password():
     """
     if is_logged_in() == False:
         return redirect('/login', '302')
-
     if request.method == 'POST':
         if request.form['newpassword0'] == request.form['newpassword1']:
             if validate_password(request.form['newpassword0']):
                 oldpassword = request.form['oldpassword']
                 user = User(session['username'])
                 if get_password_verification(user.get_password_hash(), oldpassword):
-                    newpasswordhash = get_password_hash(
-                        request.form['newpassword1'])
+                    newpasswordhash = get_password_hash(request.form['newpassword1'])
                     user.update_password_hash(newpasswordhash)
                     send_resset_password_email(user.get_user_email())
                     return ('Password updated.')
                 return ('Wrong password, please try again.')
-            return ('Password should be at least 9 chars, A-Za-z0-9 with atleast one special char.')
+            return ('Password should be at least 9 chars, [A-Za-z0-9@#$%^&+!=.]')
         return ('Password do not match, please try again.')
     return render_template('account.html')
 
@@ -325,7 +318,7 @@ def search_user():
             user = user.get_json_user()
             # return the user profile page with an option of following
             return view_user_bio(request.form['search'])
-        return " user not found"
+        return "user not found"
     return "nothing"
 
 
@@ -363,8 +356,8 @@ def retweet_post(postid):
     used to retweet a tweet
     """
     if False == is_logged_in():
-        flash('Login to retweet a post')
-        return render_template('login.html')
+        msg, alert = 'Login to retweet a post', 'warning'
+        return render_template('login.html', message=msg, alert=alert)
     User(session['username']).retweet_post(postid)
     return 'True'  # this should be a template
 
