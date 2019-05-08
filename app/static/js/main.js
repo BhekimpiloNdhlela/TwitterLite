@@ -84,6 +84,25 @@ const likePost = (tweetID, thisElement) => {
     });
 }
 
+
+const getLikes = (tweetID, thisElement) => {
+    $.get(("/likers/" + tweetID)).then((response) => {
+
+        response['users'].forEach(element => {
+            console.log(element);
+        });
+    });
+}
+
+const getRetweetsUsers = (tweetID, thisElement) => {
+    $.get(("/retweeters/" + tweetID)).then((response) => {
+
+        response['users'].forEach(element => {
+            console.log(element);
+        });
+    });
+}
+
 /**
  * Makes a AJAX get request to follow a user
  * @param {String} username Username of the user to follow
