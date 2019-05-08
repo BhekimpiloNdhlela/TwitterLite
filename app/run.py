@@ -27,9 +27,9 @@ env = Environment(
     loader=FileSystemLoader('templates'),
     autoescape=select_autoescape(['html'])
 )
-UPLOAD_FOLDER                       =   'app/static/img/useravatar/'
-ALLOWED_EXTENSIONS                  =   set(['png', 'jpg', 'jpeg', 'gif'])
-app.config['UPLOAD_FOLDER']         =   UPLOAD_FOLDER
+UPLOAD_FOLDER = 'app/static/img/useravatar/'
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 def is_logged_in():
@@ -47,13 +47,14 @@ def home():
         return redirect('/login', '302')
 
     user = User(session['username'])
+
     return render_template(
         'index.html',
         user=user.get_json_user(),
-        tweets=mock_tweets,
+        tweets=user.get_timeline_posts(),
         treading=mock_treading,
         account=True,
-        fsuggestions=mock_fsuggestions
+        fsuggestions=user.get_recommended_users()
     )
 
 
@@ -143,12 +144,15 @@ def view_user_bio(username):
     """ sumary_line """
     template = env.get_template("friends.html")
 
-    user, vuser  = User(username), User(session['username'])
+    user, vuser = User(username), User(session['username'])
 
-    following  = [User(uname).get_json_user() for uname in user.get_user_following()]
-    vfollowing = [User(uname).get_json_user() for uname in vuser.get_user_following()]
-    followers  = [User(uname).get_json_user() for uname in user.get_user_followers()]
-    tweets     = [user.get_json_post(tweetid) for tweetid in user.get_user_posts()]
+    following = [User(uname).get_json_user()
+                 for uname in user.get_user_following()]
+    vfollowing = [User(uname).get_json_user()
+                  for uname in vuser.get_user_following()]
+    followers = [User(uname).get_json_user()
+                 for uname in user.get_user_followers()]
+    tweets = [user.get_json_post(tweetid) for tweetid in user.get_user_posts()]
 
     activeunfollowbtn = True if session['username'] == username else False
     for f in followers:
@@ -198,7 +202,7 @@ def register():
         user = User(username)
         if not user.get_this_user_data():
             user.add_user(firstname, lastname, email, dob,
-                        gender, get_password_hash(password0))
+                          gender, get_password_hash(password0))
             token = salt.dumps(username, salt='email-confirm')
             send_account_verification_email(email, token)
             return ('a verification Email Has been sent please check you email inbox')
@@ -248,11 +252,11 @@ def update_user_profile():
     sumary_line
     """
     if request.method == 'POST' and is_logged_in():
-        newlastname  = request.form['lastname']
+        newlastname = request.form['lastname']
         newfirstname = request.form['firstname']
-        newdob       = request.form['dob']
-        newtitle     = request.form['title']
-        newbio       = request.form['bio']
+        newdob = request.form['dob']
+        newtitle = request.form['title']
+        newbio = request.form['bio']
 
         user = User(session['username'])
         user.update_user_bio(newbio)
@@ -280,7 +284,8 @@ def set_new_password():
                 oldpassword = request.form['oldpassword']
                 user = User(session['username'])
                 if get_password_verification(user.get_password_hash(), oldpassword):
-                    newpasswordhash = get_password_hash(request.form['newpassword1'])
+                    newpasswordhash = get_password_hash(
+                        request.form['newpassword1'])
                     user.update_password_hash(newpasswordhash)
                     send_resset_password_email(user.get_user_email())
                     return ('Password updated.')
@@ -300,7 +305,8 @@ def search_user():
         useravailability = user.get_this_user_data()
         if bool(useravailability):
             user = user.get_json_user()
-            return view_user_bio(request.form['search']) # return the user profile page with an option of following
+            # return the user profile page with an option of following
+            return view_user_bio(request.form['search'])
         return " user not found"
     return "nothing"
 
@@ -317,7 +323,7 @@ def like_post(postid):
             return render_template('login.html')
         User(session['username']).like_post(postid)
         flash('Liked post.')
-        return 'liked post' # this should be a template
+        return 'liked post'  # this should be a template
 
 
 @app.route('/retweet/<postid>', methods=['GET'])
@@ -330,7 +336,7 @@ def retweet_post(postid):
         return render_template('login.html')
     User(session['username']).retweet_post(postid)
     flash('retweed post')
-    return 'retweed post' # this should be a template
+    return 'retweed post'  # this should be a template
 
 
 @app.route('/follow/<username>', methods=['GET'])
@@ -344,7 +350,7 @@ def follow_user(username):
         return render_template('login.html')
     User(session['username']).follow_user(username)
     flash('Following user')
-    return 'followed user' # this should be a template
+    return 'followed user'  # this should be a template
 
 
 if __name__ == '__main__':

@@ -28,6 +28,7 @@ DEFAULT_AVATAR = "/static/img/default.png"
 
 class User:
     """ doc-string """
+
     def __init__(self, username):
         """
         constructor of the user object or instance, used to create an instance
@@ -35,7 +36,6 @@ class User:
         of the user created by the client.
         """
         self.username = username
-
 
     def user_login(self, password):
         """
@@ -57,7 +57,6 @@ class User:
             return get_password_verification(this['passwordhash'], password)
         return -2
 
-
     def add_user(self, firstname, lastname, email, dob, gender, passwordhash):
         """
         this is a function used only once, that is if the user is creating
@@ -71,47 +70,46 @@ class User:
         # else add the user to the db
         usernode = Node(
             'User',
-            username         = self.username,
-            useremail        = email,
-            firstname        = firstname,
-            lastname         = lastname,
-            gender           = gender,
-            passwordhash     = passwordhash,
-            dob              = dob,
-            useravatar       = DEFAULT_AVATAR,
-            accountverrified = False,
-            bio              = 'Hi I just started using Bootleg Twitter!',
-            title            = 'Title not set.',
-            createdate       = get_time_stamp(),
-            notifications    = [
+            username=self.username,
+            useremail=email,
+            firstname=firstname,
+            lastname=lastname,
+            gender=gender,
+            passwordhash=passwordhash,
+            dob=dob,
+            useravatar=DEFAULT_AVATAR,
+            accountverrified=False,
+            bio='Hi I just started using Bootleg Twitter!',
+            title='Title not set.',
+            createdate=get_time_stamp(),
+            notifications=[
                 'welcome to bootleg twitter, enjoy.',
                 'edit your details',
                 'enjoy the stay'
             ],
-            notification     = 2
+            notification=2
         )
         graph.create(usernode)
         usernode.labels.add(self.username)
         return True
 
-
     def get_json_user(self):
         """ Json data """
         user = self.get_this_user_data()
         return {
-            "name"          : user['firstname'],
-            "surname"       : user['lastname'],
-            "username"      : user['username'],
-            "picture"       : user['useravatar'],
-            "dob"           : user['dob'],
-            "title"         : user['title'],
-            "avatar"        : user['useravatar'],
-            "bio"           : user['bio'],
-            "gender"        : user['gender'],
-            "notification"  : user['notification'],
-            "notifications" : user['notifications'],
-            "location"      : "Your mom's house",
-            "photos"        : [
+            "name": user['firstname'],
+            "surname": user['lastname'],
+            "username": user['username'],
+            "picture": user['useravatar'],
+            "dob": user['dob'],
+            "title": user['title'],
+            "avatar": user['useravatar'],
+            "bio": user['bio'],
+            "gender": user['gender'],
+            "notification": user['notification'],
+            "notifications": user['notifications'],
+            "location": "Your mom's house",
+            "photos": [
                     "1.jpg",
                     "2.jpg",
                     "3.jpg",
@@ -123,7 +121,6 @@ class User:
             ]
         }
 
-
     def get_this_user_data(self):
         """
         used to get me, the user that was created with the constructor of
@@ -132,7 +129,6 @@ class User:
         Returns -> this: if found else None
         """
         return graph.find_one('User', 'username', self.username)
-
 
     def update_user_title(self, newtitle):
         """
@@ -143,7 +139,6 @@ class User:
         this['title'] = newtitle
         this.push()
 
-
     def verify_user_account(self):
         """
         used to update the users account verification status
@@ -152,7 +147,6 @@ class User:
         graph.merge(this)
         this['accountverrified'] = True
         this.push()
-
 
     def update_user_dob(self, newdob):
         """
@@ -163,7 +157,6 @@ class User:
         this['dob'] = newdob
         this.push()
 
-
     def update_user_firstname(self, newfirstname):
         """
         used to update the users first name
@@ -172,7 +165,6 @@ class User:
         graph.merge(this)
         this['firstname'] = newfirstname
         this.push()
-
 
     def update_user_lastname(self, newlastname):
         """
@@ -183,7 +175,6 @@ class User:
         this['lastname'] = newlastname
         this.push()
 
-
     def update_user_bio(self, newbio):
         """
         used to update the users bio
@@ -192,7 +183,6 @@ class User:
         graph.merge(this)
         this['bio'] = newbio
         this.push()
-
 
     def update_user_avatar(self, newavatar):
         """
@@ -203,7 +193,6 @@ class User:
         this['useravatar'] = newavatar
         this.push()
 
-
     def update_password_hash(self, newhash):
         """
         used to update the users password hash
@@ -213,7 +202,6 @@ class User:
         this['passwordhash'] = newhash
         this.push()
 
-
     def get_account_veriffication_status(self):
         """
         used to obtain a users account status False if not verified and the
@@ -221,7 +209,6 @@ class User:
         """
         this = self.get_this_user_data()
         return this['accountverrified']
-
 
     def get_password_hash(self):
         """
@@ -231,7 +218,6 @@ class User:
         this = self.get_this_user_data()
         return this['passwordhash']
 
-
     def get_user_name(self):
         """
         gets the user name of the user that this object's instance was created
@@ -239,7 +225,6 @@ class User:
         """
         this = self.get_this_user_data()
         return this['username']
-
 
     def get_user_firstname(self):
         """
@@ -249,7 +234,6 @@ class User:
         this = self.get_this_user_data()
         return this['firstname']
 
-
     def get_user_lastname(self):
         """
         gets the user last name of the user that this object's instance was
@@ -257,7 +241,6 @@ class User:
         """
         this = self.get_this_user_data()
         return this['lastname']
-
 
     def get_user_email(self):
         """
@@ -267,7 +250,6 @@ class User:
         this = self.get_this_user_data()
         return this['useremail']
 
-
     def get_user_DOB(self):
         """
         gets the user date of birth of the user that this object's
@@ -275,7 +257,6 @@ class User:
         """
         this = self.get_this_user_data()
         return this['dob']
-
 
     def get_user_bio(self):
         """
@@ -285,7 +266,6 @@ class User:
         this = self.get_this_user_data()
         return this['bio']
 
-
     def get_user_avatar(self):
         """
         gets the user avatar/ profile picture  of the user that this object's
@@ -294,14 +274,12 @@ class User:
         this = self.get_this_user_data()
         return this['avatar']
 
-
     def get_location_coordinates(self, user_name):
         """
         doc-string
         """
         this = self.get_this_user_data()
         return this['location']
-
 
     def update_location_coords(self, latitude, longtitude):
         this = self.get_this_user_data()
@@ -310,23 +288,21 @@ class User:
             'longtitude': longtitude
         }
 
-
     def get_json_post(self, postid):
         """
         used to return a posts details in jason format, this is unnecessary but
         Klensch insisted i do this.
         """
-        post = graph.find_one('Post','id', postid)
+        post = graph.find_one('Post', 'id', postid)
         return {
-            'id'        : post['id'],
-            'tweet'     : post['tweet'],
-            'timestamp' : post['timestamp'],
-            'date'      : post['date'],
-            'retweets'  : post['retweets'],
-            'likes'     : post['likes'],
-            'photos'    : post['photos']
+            'id': post['id'],
+            'tweet': post['tweet'],
+            'timestamp': post['timestamp'],
+            'date': post['date'],
+            'retweets': post['retweets'],
+            'likes': post['likes'],
+            'photos': post['photos']
         }
-
 
     def add_post(self, tweet, hashtags, taggedusers):
         """
@@ -336,16 +312,16 @@ class User:
         user = self.get_this_user_data()
         post = Node(
                     'Post',
-                    id          = str(uuid.uuid4()),
-                    tweet       = tweet,
-                    timestamp   = get_timestamp_seconds(),
-                    date        = get_time_stamp(),
-                    hashtags    = hashtags,
-                    taggedusers = taggedusers,
-                    retweets    = 0,
-                    likes       = 0,
-                    comments    = 0,
-                    photos      = []
+                    id=str(uuid.uuid4()),
+                    tweet=tweet,
+                    timestamp=get_timestamp_seconds(),
+                    date=get_time_stamp(),
+                    hashtags=hashtags,
+                    taggedusers=taggedusers,
+                    retweets=0,
+                    likes=0,
+                    comments=0,
+                    photos=[]
         )
         rel = Relationship(user, 'PUBLISHED', post)
         graph.create(rel)
@@ -363,17 +339,15 @@ class User:
                 graph.create(Relationship(post, 'TAGGED', taggeduser))
             # else we ignore t`he non existing tagged user
 
-
     def like_post(self, postid):
         """
         used to like a post, also increments the like field by one.
         """
         user = self.get_this_user_data()
-        post = graph.find_one('Post','id', postid)
+        post = graph.find_one('Post', 'id', postid)
         post['likes'] = int(post['likes']) + 1
         post.push()
         graph.merge(Relationship(user, 'LIKES', post))
-
 
     def follow_user(self, username):
         """
@@ -383,7 +357,6 @@ class User:
         usertofollow = graph.find_one('User', 'username', username)
         userfollowing = self.get_this_user_data()
         graph.merge(Relationship(userfollowing, 'FOLLOWING', usertofollow))
-
 
     def get_user_followers(self):
         """
@@ -397,7 +370,6 @@ class User:
         queryresults = graph.run(query, username=self.username)
         return [result['user.username'] for result in queryresults]
 
-
     def get_user_following(self):
         """
         used to get the user names that this user is following
@@ -409,7 +381,6 @@ class User:
         '''
         queryresults = graph.run(query, username=self.username)
         return [result['following.username'] for result in queryresults]
-
 
     def get_user_posts(self):
         """
@@ -423,20 +394,51 @@ class User:
         queryresults = graph.run(query, username=self.username)
         return [result['post.id'] for result in queryresults]
 
-
     def get_recent_posts(self):
         """
         return the most recent posts id of a users followers functionailty-10
         """
         query = '''
-        MATCH (user:User)-[:PUBLISHED]->(post:Post)
-        WHERE user.username = {username}
+        MATCH (user:User {username: {username}})-[:PUBLISHED]->(post:Post)
         RETURN post
         ORDER BY post.timestamp ASC LIMIT 6
         '''
-        queryresults =  graph.run(query, username=self.username)
+        queryresults = graph.run(query, username=self.username)
         return [result['post']['id'] for result in queryresults]
 
+    def get_timeline_posts(self, interation=0):
+        """
+        return the most recent Tweets for the user for their timeline
+        @params self Intstance of itself
+        @params interation Skips over this number of post for dynamic loading
+        @return posts An Array of the posts
+        """
+        query = '''
+        MATCH (user:User)-[:FOLLOWING]->(users:User)-[:PUBLISHED]->(posts:Post)
+        WHERE user.username = {username}
+        RETURN users, posts
+        ORDER BY posts.timestamp ASC 
+        SKIP toInt(20*{interation})
+        LIMIT 20
+        '''
+        queryresults =  graph.run(query, username=self.username, interation=interation)
+        return [(results['users'], results['posts']) for results in queryresults]
+
+    def get_recommended_users(self):
+        """
+        return recommend users for the logged in user
+        @params self Intstance of itself
+        @return posts An Array of the users
+        """
+        query = '''
+        MATCH (users:User) 
+        WHERE NOT (:User {username: {username}})-[*1..6]->(users:User)
+        RETURN users
+        LIMIT 5
+        '''
+        queryresults = graph.run(
+            query, username=self.username)
+        return [results['users'] for results in queryresults]
 
     def retweet_post(self, postid):
         """
@@ -533,13 +535,13 @@ if __name__ == '__main__':
     user = User('klensch_the_machine').follow_user('Corban')
     user = User('keanudamon123').follow_user('klensch_the_machine')
 
-    #get the usernames of people that like the post with post id:
+    # get the usernames of people that like the post with post id:
     # '250f2a79-59ee-4700-aa1e-b2c7594cedb2'
     print("\n\nPOST LIKERS")
     postlikers = get_tweet_likes_usernames('250f2a79-59ee-4700-aa1e-b2c7594cedb2')
     [print(postliker) for postliker in postlikers]
 
-    #get the usernames of people that retweeted a post with postid:
+    # get the usernames of people that retweeted a post with postid:
     # '250f2a79-59ee-4700-aa1e-b2c7594cedb2'
     print("\n\nPOST RETWEETERS")
     postretweeters = get_tweet_retweets_usernames('250f2a79-59ee-4700-aa1e-b2c7594cedb2')
