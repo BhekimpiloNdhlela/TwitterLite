@@ -92,22 +92,6 @@ def login():
     return template.render()
 
 
-@app.route('/friends')
-def friends():
-    """ sumary_line """
-    template = env.get_template("friends.html")
-    user = User(session['username']).get_json_user()
-    return template.render(
-        user=user,
-        tweets=mock_tweets,
-        treading=mock_treading,
-        fsuggestions=mock_fsuggestions,
-        following=mock_following,
-        followers=mock_followers,
-        personaltweets=mock_personal
-    )
-
-
 @app.route('/about')
 def about():
     """ sumary_line """
@@ -118,30 +102,40 @@ def about():
 @app.route('/account')
 def account():
     """ sumary_line """
-    try:
-        template = env.get_template("account.html")
-        user = User(session['username']).get_json_user()
-        return template.render(
-            user=user,
-            tweets=mock_tweets,
-            treading=mock_treading,
-            fsuggestions=mock_fsuggestions
-        )
-    except KeyError:
-        return render_template('login.html')
+    if is_logged_in() == False:
+        return redirect('/login', '302')
+
+    template = env.get_template("account.html")
+    session_user = User(session['username'])
+    user = session_user.get_json_user()
+    tweets = session_user.get_timeline_posts()
+    friend_suggestions = session_user.get_recommended_users()
+    return template.render(
+        session_user=session_user.get_json_user(),
+        user=user,
+        tweets=tweets,
+        treading=mock_treading,
+        fsuggestions=friend_suggestions
+    )
 
 
 @app.route('/messages')
 def messages():
     """ sumary_line """
+    if is_logged_in() == False:
+        return redirect('/login', '302')
+
     template = env.get_template("messages.html")
-    user = User(session['username']).get_json_user()
+    session_user = User(session['username'])
+    user = session_user.get_json_user()
+    tweets = session_user.get_timeline_posts()
+    friend_suggestions = session_user.get_recommended_users()
     return template.render(
+        session_user=session_user.get_json_user(),
         user=user,
-        tweets=mock_tweets,
         treading=mock_treading,
         messages=mock_messages,
-        fsuggestions=mock_fsuggestions
+        fsuggestions=friend_suggestions
     )
 
 
@@ -149,14 +143,17 @@ def messages():
 @app.route('/profile/<username>')
 def view_user_bio(username):
     """ sumary_line """
+    if is_logged_in() == False:
+        return redirect('/login', '302')
+
     template = env.get_template("friends.html")
 
-    user, vuser = User(username), User(session['username'])
+    user, session_user = User(username), User(session['username'])
 
     following = [User(uname).get_json_user()
                  for uname in user.get_user_following()]
     vfollowing = [User(uname).get_json_user()
-                  for uname in vuser.get_user_following()]
+                  for uname in session_user.get_user_following()]
     followers = [User(uname).get_json_user()
                  for uname in user.get_user_followers()]
     tweets = [user.get_json_post(tweetid) for tweetid in user.get_user_posts()]
@@ -165,11 +162,14 @@ def view_user_bio(username):
     for f in followers:
         f['following'] = f in vfollowing or f['username'] == session['username']
 
+    friend_suggestions = session_user.get_recommended_users()
+
     return template.render(
+        session_user=session_user.get_json_user(),
         user=user.get_json_user(),
         tweets=mock_tweets,
         treading=mock_treading,
-        fsuggestions=mock_fsuggestions,
+        fsuggestions=friend_suggestions,
         following=following,
         followers=followers,
         personaltweets=tweets,
@@ -221,11 +221,14 @@ def register():
 
 @app.route('/post', methods=['POST'])
 def add_tweet():
+    if is_logged_in() == False:
+        return redirect('/login', '302')
     if request.method == 'POST' and is_logged_in():
         tweet = request.form['tweet']
         hashtags, taggedusers = get_hashtags(tweet),  get_tagged(tweet)
-        user = User(session['username']).add_post(tweet, hashtags, taggedusers)
-        return '<h1>Post posted<h1>'
+        User(session['username']).add_post(tweet, hashtags, taggedusers)
+        flash('Post posted')
+        return redirect('/', '302')
 
 
 @app.route('/verify-email/<token>')
@@ -285,7 +288,10 @@ def set_new_password():
     """
     doc-string
     """
-    if request.method == 'POST' and is_logged_in():
+    if is_logged_in() == False:
+        return redirect('/login', '302')
+
+    if request.method == 'POST':
         if request.form['newpassword0'] == request.form['newpassword1']:
             if validate_password(request.form['newpassword0']):
                 oldpassword = request.form['oldpassword']
@@ -307,7 +313,10 @@ def search_user():
     """
     doc - string
     """
-    if request.method == 'POST' and is_logged_in():
+    if is_logged_in() == False:
+        return redirect('/login', '302')
+
+    if request.method == 'POST':
         user = User(request.form['search'])
         useravailability = user.get_this_user_data()
         if bool(useravailability):
@@ -324,13 +333,12 @@ def like_post(postid):
     Likes a users post
     @params postid Postid of the post to like
     """
+    if is_logged_in() == False:
+        return redirect('/login', '302')
+
     if request.method == 'GET':
-        if False == is_logged_in():
-            flash('Login to like a post')
-            return render_template('login.html')
         User(session['username']).like_post(postid)
-        flash('Liked post.')
-        return 'liked post'  # this should be a template
+        return 'Unliked'  # this should be a template
 
 
 @app.route('/likers/<postid>', methods=['GET'])
@@ -339,10 +347,11 @@ def get_likers(postid):
     Likes a users post
     @params postid Postid of the post to like
     """
+    if is_logged_in() == False:
+        flash('Login to like a post')
+        return redirect('/login', '302')
+
     if request.method == 'GET':
-        if False == is_logged_in():
-            flash('Login to like a post')
-            return render_template('login.html')
         return jsonify(users=get_tweet_likes_usernames(postid))
 
 
@@ -355,8 +364,7 @@ def retweet_post(postid):
         flash('Login to retweet a post')
         return render_template('login.html')
     User(session['username']).retweet_post(postid)
-    flash('retweed post')
-    return 'retweed post'  # this should be a template
+    return 'True'  # this should be a template
 
 
 @app.route('/follow/<username>', methods=['GET'])
@@ -366,11 +374,11 @@ def follow_user(username):
     @params username Username of the user to follow
     """
     if False == is_logged_in():
-        flash('Login to like a post')
+        flash('Login to follow a user')
         return render_template('login.html')
+
     User(session['username']).follow_user(username)
-    flash('Following user')
-    return 'followed user'  # this should be a template
+    return 'Unfollow'
 
 
 if __name__ == '__main__':
