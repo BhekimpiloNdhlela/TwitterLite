@@ -79,14 +79,17 @@ def login():
         user = User(username)
         login_status = user.user_login(password)
         if login_status == -1:
-            return ('Invalid user account please check your username.')
+            msg, type = 'Invalid user account please check your username.', 'danger'
         elif login_status == -2:
-            return ('Account not verified, please check you email to verify account.')
+            msg = 'Account not verified, please check you email to verify account.', ''
+            return ()
         elif login_status == True:
             session['username'] = username
+            msg, type = 'logged in as {}'.format(username), ''
             return redirect('/', 302)
         elif login_status == False:
-            return ('Wrong password, please check your password or change it if you forgot the password.')
+            msg, type = 'Wrong password, please check your password or change it if you forgot the password.', ''
+        return render_template('login.html', message=msg, alert=type)
 
     template = env.get_template("login.html")
     return template.render()
@@ -120,8 +123,10 @@ def account():
     """ sumary_line """
     try:
         template = env.get_template("account.html")
-        user = User(session['username']).get_json_user()
+        session_user = User(session['username']).get_json_user()
+        user = session_user
         return template.render(
+            session_user=session_user,
             user=user,
             tweets=mock_tweets,
             treading=mock_treading,
@@ -144,28 +149,27 @@ def messages():
         fsuggestions=mock_fsuggestions
     )
 
-
-# TODO: Must implement - Get user data from db
 @app.route('/profile/<username>')
 def view_user_bio(username):
     """ sumary_line """
     template = env.get_template("friends.html")
 
-    user, vuser = User(username), User(session['username'])
+    user, session_user = User(username), User(session['username'])
 
     following = [User(uname).get_json_user()
                  for uname in user.get_user_following()]
     vfollowing = [User(uname).get_json_user()
-                  for uname in vuser.get_user_following()]
+                  for uname in session_user.get_user_following()]
     followers = [User(uname).get_json_user()
                  for uname in user.get_user_followers()]
     tweets = [user.get_json_post(tweetid) for tweetid in user.get_user_posts()]
 
-    activeunfollowbtn = True if session['username'] == username else False
+    activeunfollow = True if session['username'] == username else False
     for f in followers:
         f['following'] = f in vfollowing or f['username'] == session['username']
 
     return template.render(
+        session_user=session_user.get_json_user(),
         user=user.get_json_user(),
         tweets=mock_tweets,
         treading=mock_treading,
@@ -173,7 +177,7 @@ def view_user_bio(username):
         following=following,
         followers=followers,
         personaltweets=tweets,
-        activeunfollowbtn=activeunfollowbtn
+        activeunfollow=activeunfollow
     )
 
 

@@ -1,10 +1,11 @@
 {% extends 'base-2.html' %}
-
 {% block title%}Signin{% endblock %}
+
 
 {% block content %}
 <h1 class="w3-center">Signin</h1>
 <br>
+
 <form action="/login" method="POST">
     <input type="text" class="w3-input w3-large w3-animate-input" placeholder="Username" name="username" required>
     <input type="password" class="w3-input w3-large w3-animate-input" placeholder="Password" name="password" required>
@@ -14,4 +15,10 @@
     <a href="/password" class="w3-btn w3-blue w3-input w3-large w3-animate-input">Forgot Password</a>
 </form>
 <br>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+{% if message %}
+    <div class="w3-center alert alert-{{ alert }}" role=alert>
+        {{ message }}
+    </div>
+{% endif %}
 {% endblock %}
