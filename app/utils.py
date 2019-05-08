@@ -10,6 +10,10 @@ from itsdangerous import URLSafeTimedSerializer
 from datetime import date, datetime
 
 
+MESSAGE = ''
+TYPE = ''
+
+
 def set_message(message, type):
     """
     Sets the globals message and message type
@@ -41,14 +45,6 @@ def get_type():
     ty = TYPE
     TYPE = ''
     return ty
-
-
-def is_logged_in():
-    """
-    Checks if user is logged in
-    @return bool True if logged in and false if not
-    """
-    return bool(session.get('username'))
 
 
 def get_time_stamp():

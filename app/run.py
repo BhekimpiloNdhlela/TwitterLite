@@ -31,8 +31,13 @@ UPLOAD_FOLDER = 'app/static/img/useravatar/'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-MESSAGE = ''
-TYPE = ''
+
+def is_logged_in():
+    """
+    Checks if user is logged in
+    @return bool True if logged in and false if not
+    """
+    return bool(session.get('username'))
 
 
 @app.route('/',  methods=['GET', 'POST'])
@@ -293,7 +298,8 @@ def set_new_password():
                 oldpassword = request.form['oldpassword']
                 user = User(session['username'])
                 if get_password_verification(user.get_password_hash(), oldpassword):
-                    newpasswordhash = get_password_hash(request.form['newpassword1'])
+                    newpasswordhash = get_password_hash(
+                        request.form['newpassword1'])
                     user.update_password_hash(newpasswordhash)
                     send_resset_password_email(user.get_user_email())
                     return ('Password updated.')
