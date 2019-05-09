@@ -30,10 +30,8 @@ const openNav = () => {
 const hashtag = /(\#\w+)/g;
 const atUser = /(\@\w+)/g;
 const timestamp = /(\d*\.\d*)/
- 
 $(document).ready(function () {
     $(".main").html(function (_, html) {
-        var jy = $1.replace('#','');
         return html.replace(hashtag,
             '<a style="color: blue;" href="/tag/$1">$1</a>');
     });
@@ -86,11 +84,7 @@ const likePost = (tweetID, thisElement) => {
     });
 }
 
-/**
- * Makes a AJAX get request to get users who liked a tweet
- * @param {String} tweetID ID of the tweet
- * @param {this} thisElement A clone of the button from which it called
- */
+
 const getLikes = (tweetID, thisElement) => {
     $.get(("/likers/" + tweetID)).then((response) => {
 
@@ -100,12 +94,7 @@ const getLikes = (tweetID, thisElement) => {
     });
 }
 
-/**
- * Makes a AJAX get request to get users who retweeted a post
- * @param {String} tweetID ID of the tweet
- * @param {this} thisElement A clone of the button from which it called
- */
-const getRetweets = (tweetID, thisElement) => {
+const getRetweetsUsers = (tweetID, thisElement) => {
     $.get(("/retweeters/" + tweetID)).then((response) => {
 
         response['users'].forEach(element => {
