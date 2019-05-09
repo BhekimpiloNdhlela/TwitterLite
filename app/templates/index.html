@@ -11,6 +11,7 @@
                     <div id="picturesDisplay" style="display: block"></div>
                 </div>
                 <br />
+                {% include 'partials/flash.html' %}
                 <div style="margin-top:1rem;">
                     <button type="submit" class="w3-button w3-theme" value="tweet">
                         <i class="fa fa-pencil"></i> Tweet
@@ -24,7 +25,8 @@
         </div>
     </div>
 </div>
-{% endif %} {% for tweet in tweets %}
+{% endif %}
+{% for tweet in tweets %}
 <div class="w3-container w3-card w3-white w3-round w3-margin">
     <br />
     <img src="{{ tweet[0]['useravatar'] }}" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px" />
@@ -46,7 +48,7 @@
         {% endfor %}
     </div>
     <i class="fa fa-heart" onclick="getLikes('{{ tweet[1]['id']| safe }}');"> {{ tweet[1]["likes"] }} </i>
-    <i class="fa fa-retweet" onclick="getRetweetUsers('{{ tweet[1]['id']| safe }}');"> {{ tweet[1]["retweets"] }} </i>
+    <i class="fa fa-retweet" onclick="getRetweets('{{ tweet[1]['id']| safe }}');"> {{ tweet[1]["retweets"] }} </i>
     <br /><br />
     <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"
         onclick="likePost('{{ tweet[1]['id'] | safe }}', this)" title="Like Tweet">

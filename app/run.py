@@ -35,7 +35,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 def is_logged_in():
     """
     Checks if user is logged in
-    @return bool
+    @return bool True if logged in and false if not
     """
     return bool(session.get('username'))
 
@@ -54,14 +54,18 @@ def home():
     tweets = session_user.get_timeline_posts()
     friend_suggestions = session_user.get_recommended_users()
 
+    msg = get_message()
+    alert = get_type()
+
     return render_template(
         'index.html',
         session_user=session_user.get_json_user(),
         user=user,
         tweets=tweets,
         treading=mock_treading,
-        account=True,
-        fsuggestions=friend_suggestions
+        fsuggestions=friend_suggestions,
+        message=msg,
+        alert=alert
     )
 
 
@@ -81,9 +85,9 @@ def login():
         if login_status == -1:
             msg, type = 'Invalid user account please check your username', 'danger'
         elif login_status == -2:
-            msg, type = 'Account not verified, please check your  email', 'warning'
+            msg, type = 'Account not verified, please check your email', 'warning'
         elif login_status == False:
-            msg, type = 'Wrong password', 'danger'
+            msg, type = 'Wrong password, Please try signing in again.', 'danger'
         elif login_status == True:
             session['username'] = username
             return redirect('/', 302)
@@ -134,6 +138,7 @@ def tag():
 def messages():
     """ sumary_line """
     if is_logged_in() == False:
+        set_message('Please Login', 'danger')
         return redirect('/login', '302')
 
     template = env.get_template("messages.html")
@@ -148,6 +153,7 @@ def messages():
         messages=mock_messages,
         fsuggestions=friend_suggestions
     )
+
 
 @app.route('/profile/<username>')
 def view_user_bio(username):
@@ -193,8 +199,7 @@ def logout():
     id attached to the user is deleted.
     """
     session.pop('username', None)
-    flash('Logged out.')
-    return render_template('login.html')
+    return render_template('login.html', message='Logged out', alert='primary')
 
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -236,7 +241,7 @@ def add_tweet():
         tweet = request.form['tweet']
         hashtags, taggedusers = get_hashtags(tweet),  get_tagged(tweet)
         User(session['username']).add_post(tweet, hashtags, taggedusers)
-        flash('Post posted')
+        set_message('Post posted', 'success')
         return redirect('/', '302')
 
 
@@ -299,7 +304,6 @@ def set_new_password():
     """
     if is_logged_in() == False:
         return redirect('/login', '302')
-
     if request.method == 'POST':
         if request.form['newpassword0'] == request.form['newpassword1']:
             if validate_password(request.form['newpassword0']):
@@ -312,7 +316,7 @@ def set_new_password():
                     send_resset_password_email(user.get_user_email())
                     return ('Password updated.')
                 return ('Wrong password, please try again.')
-            return ('Password should be at least 9 chars, A-Za-z0-9 with atleast one special char.')
+            return ('Password should be at least 9 chars, [A-Za-z0-9@#$%^&+!=.]')
         return ('Password do not match, please try again.')
     return render_template('account.html')
 
@@ -332,7 +336,7 @@ def search_user():
             user = user.get_json_user()
             # return the user profile page with an option of following
             return view_user_bio(request.form['search'])
-        return " user not found"
+        return "user not found"
     return "nothing"
 
 
@@ -370,8 +374,8 @@ def retweet_post(postid):
     used to retweet a tweet
     """
     if False == is_logged_in():
-        flash('Login to retweet a post')
-        return render_template('login.html')
+        msg, alert = 'Login to retweet a post', 'warning'
+        return render_template('login.html', message=msg, alert=alert)
     User(session['username']).retweet_post(postid)
     return 'True'  # this should be a template
 
