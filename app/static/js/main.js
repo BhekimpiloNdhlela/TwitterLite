@@ -30,14 +30,16 @@ const openNav = () => {
 const hashtag = /(\#\w+)/g;
 const atUser = /(\@\w+)/g;
 const timestamp = /(\d*\.\d*)/
+ 
 $(document).ready(function () {
     $(".main").html(function (_, html) {
+        var jy = $1.replace('#','');
         return html.replace(hashtag,
             '<a style="color: blue;" href="/tag/$1">$1</a>');
     });
     $(".main").html(function (_, html) {
         return html.replace(atUser,
-            '<a style="color: red;" href="/profile/$1">$1</a>');
+            '<a style="color: #1c94e0;" href="/profile/$1">$1</a>');
     });
     $(".timestamp").html(function (_, html) {
         let time = moment(html.match(timestamp)[0], "x");
