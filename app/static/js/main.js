@@ -29,11 +29,13 @@ const openNav = () => {
 // used to make @'s of users anchor tags to view users profile
 const hashtag = /(\#\w+)/g;
 const atUser = /(\@\w+)/g;
-const timestamp = /(\d*\.\d*)/
+const timestamp = /(\d*\.\d*)/;
 $(document).ready(function () {
+   
     $(".main").html(function (_, html) {
         return html.replace(hashtag,
-            '<a style="color: blue;" href="/tag/$1">$1</a>');
+          '<a style="color: blue;" href="/tag/$1">$1.</a>');
+  
     });
     $(".main").html(function (_, html) {
         return html.replace(atUser,
@@ -46,6 +48,21 @@ $(document).ready(function () {
     $(".tweetbox").on("change", (e) => {
         console.log(e);
     });
+    
+    $(document).ready(function()
+{
+    var i=0,j='',val='';
+    var list = document.getElementsByTagName("a");
+    for(i;i<list.length;i++)
+    {
+      j=$(list[i]).attr('href');
+      valHash = j.replace('#','');
+      valName = j.replace('@','');
+      $(list[i]).attr('href',valHash);
+      $(list[i]).attr('href',valName);
+    }
+});
+
 });
 
 
