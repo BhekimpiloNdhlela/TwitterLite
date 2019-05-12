@@ -34,6 +34,7 @@ def is_logged_in():
 @app.route('/home',  methods=['GET', 'POST'])
 def home():
     if is_logged_in() == False:
+        set_message("Please Login", "danger")
         return redirect('/login', '302')
 
     # Must always be there
@@ -65,6 +66,7 @@ def login():
     """ sumary_line """
     # Redirect User if the user is logged already
     if is_logged_in():
+        set_message("Please Login", "danger")
         return redirect('/', 302)
     if request.method == 'POST':
         # TODO: user regualr expression to validate user input
@@ -73,16 +75,18 @@ def login():
         user = User(username)
         login_status = user.user_login(password)
         if login_status == -1:
-            msg, type = 'Invalid user account please check your username', 'danger'
+            set_message(
+                'Invalid user account please check your username', 'danger')
         elif login_status == -2:
-            msg, type = 'Account not verified, please check your email', 'warning'
+            set_message(
+                'Account not verified, please check your email', 'warning')
         elif login_status == False:
-            msg, type = 'Wrong password, Please try signing in again.', 'danger'
+            set_message(
+                'Wrong password, Please try signing in again.', 'danger')
         elif login_status == True:
             session['username'] = username
             return redirect('/', 302)
-        return render_template('login.html', message=msg, alert=type)
-    return render_template('login.html')
+    return render_template('login.html', message=get_message(), alert=get_type())
 
 
 @app.route('/about')
@@ -103,12 +107,15 @@ def account():
     user = session_user.get_json_user()
     tweets = session_user.get_timeline_posts()
     friend_suggestions = session_user.get_recommended_users()
+
     return template.render(
         session_user=session_user.get_json_user(),
         user=user,
         tweets=tweets,
         treading=mock_treading,
-        fsuggestions=friend_suggestions
+        fsuggestions=friend_suggestions,
+        message=get_message(),
+        alert=get_type()
     )
 
 
@@ -123,6 +130,7 @@ def tag():
         messages=mock_messages,
         fsuggestions=mock_fsuggestions
     )
+
 
 @app.route('/messages')
 def messages():
@@ -149,6 +157,7 @@ def messages():
 def view_user_bio(username):
     """ sumary_line """
     if is_logged_in() == False:
+        set_message("Please Login", "danger")
         return redirect('/login', '302')
 
     template = env.get_template("friends.html")
@@ -189,7 +198,8 @@ def logout():
     id attached to the user is deleted.
     """
     session.pop('username', None)
-    return render_template('login.html', message='Logged out', alert='primary')
+    set_message('Logged out', 'primary')
+    return redirect('/login')
 
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -226,13 +236,14 @@ def register():
 @app.route('/post', methods=['POST'])
 def add_tweet():
     if is_logged_in() == False:
+        set_message("Please Login to post", "danger")
         return redirect('/login', '302')
     if request.method == 'POST' and is_logged_in():
         tweet = request.form['tweet']
         hashtags, taggedusers = get_hashtags(tweet),  get_tagged(tweet)
         User(session['username']).add_post(tweet, hashtags, taggedusers)
-        set_message('Post posted', 'success')
-        return redirect('/', '302')
+        set_message('Post posted', 'primary')
+    return redirect('/', '302')
 
 
 @app.route('/verify-email/<token>')
@@ -293,6 +304,7 @@ def set_new_password():
     doc-string
     """
     if is_logged_in() == False:
+        set_message("Please Login", "danger")
         return redirect('/login', '302')
     if request.method == 'POST':
         if request.form['newpassword0'] == request.form['newpassword1']:
@@ -304,11 +316,16 @@ def set_new_password():
                         request.form['newpassword1'])
                     user.update_password_hash(newpasswordhash)
                     send_resset_password_email(user.get_user_email())
-                    return ('Password updated.')
-                return ('Wrong password, please try again.')
-            return ('Password should be at least 9 chars, [A-Za-z0-9@#$%^&+!=.]')
-        return ('Password do not match, please try again.')
-    return render_template('account.html')
+                    set_message("Password updated", "primary")
+                    return redirect('/account', '302')
+                set_message('Wrong password, please try again.', 'warning')
+                return redirect('/account', '302')
+            set_message(
+                'Password should be at least 9 chars, [A-Za-z0-9@#$%^&+!=.]', 'warning')
+            return redirect('/account', '302')
+
+        set_message('Password do not match, please try again.', 'warning')
+    return redirect('/account', '302')
 
 
 @app.route('/search', methods=['POST'])
@@ -317,6 +334,7 @@ def search_user():
     doc - string
     """
     if is_logged_in() == False:
+        set_message("Please Login", "danger")
         return redirect('/login', '302')
 
     if request.method == 'POST':
@@ -337,6 +355,7 @@ def like_post(postid):
     @params postid Postid of the post to like
     """
     if is_logged_in() == False:
+        set_message("Please Login to like tweets", "danger")
         return redirect('/login', '302')
 
     if request.method == 'GET':
@@ -351,7 +370,7 @@ def get_likers(postid):
     @params postid Postid of the post to like
     """
     if is_logged_in() == False:
-        flash('Login to like a post')
+        set_message("Please Login", "danger")
         return redirect('/login', '302')
 
     if request.method == 'GET':
@@ -364,8 +383,8 @@ def retweet_post(postid):
     used to retweet a tweet
     """
     if False == is_logged_in():
-        msg, alert = 'Login to retweet a post', 'warning'
-        return render_template('login.html', message=msg, alert=alert)
+        set_message("Login to retweet a post", "danger")
+        return redirect('/login', 302)
     User(session['username']).retweet_post(postid)
     return 'True'  # this should be a template
 
@@ -386,8 +405,8 @@ def follow_user(username):
     @params username Username of the user to follow
     """
     if False == is_logged_in():
-        flash('Login to follow a user')
-        return render_template('login.html')
+        set_message("Login to follow a user", "danger")
+        return redirect('/login', 302)
 
     User(session['username']).follow_user(username)
     return 'Unfollow'

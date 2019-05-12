@@ -435,7 +435,7 @@ class User:
         WHERE user.username = {username}
         RETURN users, posts
         ORDER BY posts.timestamp ASC 
-        SKIP toInt(20*{interation})
+        SKIP toInteger(20*{interation})
         LIMIT 20
         '''
         queryresults =  graph.run(query, username=self.username, interation=interation)
@@ -450,7 +450,7 @@ class User:
         """
         query = '''
         MATCH (users:User) 
-        WHERE NOT (:User {username: {username}})-[*1..6]->(users:User)
+        WHERE NOT (:User {username: {username}})-[*1..3]->(users:User)
         RETURN users
         LIMIT 5
         '''
