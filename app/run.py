@@ -10,10 +10,9 @@ from models import *
 import os
 
 app = Flask(__name__)
-app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
-salt = URLSafeTimedSerializer(
-    'ThisIsASecretSaltStringURLSafeTimedSerializerURLSafeTimedSerializer'
-)
+app.secret_key = os.environ.get('SECRET_KEY')
+salt = URLSafeTimedSerializer(os.environ.get('SALT'))
+
 env = Environment(
     loader=FileSystemLoader('templates'),
     autoescape=select_autoescape(['html'])
