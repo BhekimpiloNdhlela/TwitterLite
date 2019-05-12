@@ -371,16 +371,6 @@ class User:
         graph.merge(Relationship(user, 'LIKES', post))
 
 
-    def follow_user(self, username):
-        """
-        used to follow a user, @param username   the username of the user i would
-        like to follow
-        """
-        usertofollow = graph.find_one('User', 'username', username)
-        userfollowing = self.get_this_user_data()
-        graph.merge(Relationship(userfollowing, 'FOLLOWING', usertofollow))
-
-
     def get_user_followers(self):
         """
         used to get the users that are following this user
@@ -392,6 +382,7 @@ class User:
         '''
         queryresults = graph.run(query, username=self.username)
         return [result['user.username'] for result in queryresults]
+
 
     def get_user_following(self):
         """
@@ -405,6 +396,7 @@ class User:
         queryresults = graph.run(query, username=self.username)
         return [result['following.username'] for result in queryresults]
 
+
     def get_user_posts(self):
         """
         used to get all the post id a user has posted
@@ -416,6 +408,7 @@ class User:
         '''
         queryresults = graph.run(query, username=self.username)
         return [result['post.id'] for result in queryresults]
+
 
     def get_recent_posts(self):
         """
@@ -472,6 +465,7 @@ class User:
         """
         retweetinguser = self.get_this_user_data()
         retweetingpost = graph.find_one('Post','id', postid)
+
         retweetingpost['retweets'] = int(retweetingpost['retweets']) + 1
         retweetingpost.push()
         graph.merge(Relationship(retweetinguser, 'RETWEET', retweetingpost))
@@ -484,6 +478,44 @@ class User:
         pass
 
 
+    def follow_user(self, username):
+        """
+        used to follow a user, @param username   the username of the user i would
+        like to follow
+        """
+        usertofollow = graph.find_one('User', 'username', username)
+        userfollowing = self.get_this_user_data()
+        graph.merge(Relationship(userfollowing, 'FOLLOWING', usertofollow))
+
+
+    def unfollow_user(self, username):
+        """
+        """
+        query = '''
+        MATCH (user:User)-[r:FOLLOWING]->(following:User)
+        WHERE user.username = {myusername} AND following.username = {username}
+        DELETE r
+        '''
+        queryresults = graph.run(query, myusername=self.username, username=username)
+
+
+    def unlike_tweet(self, postid):
+        """
+        doc-string
+        """
+        query = '''
+        '''
+        pass
+
+
+    def unretweet_tweet(self, postid):
+        """
+        """
+        query = '''
+        '''
+        pass
+
+
     def is_following(self, username):
         """
         check if this user is following the other user
@@ -491,14 +523,14 @@ class User:
         pass
 
 
-    def user_post_like(self, postid):
+    def check_post_like(self, postid):
         """
         check if there is a user post LIKE relationship
         """
         pass
 
 
-    def user_post_tweet(self, postid):
+    def check_post_retweet(self, postid):
         """
         check if there is a user post RETWEET relationship
         """
@@ -540,6 +572,18 @@ def get_tweet_retweets_usernames(postid):
 Test client for models. [NOTE used during development stage]
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if __name__ == '__main__':
+    user_following_users = User('HexDEADBEEF').get_user_following()
+    print("\n\nUSERS THAT I AM FOLLOWING")
+    [print(following) for following in user_following_users]
+
+    # unfollow Corban
+    me = User('HexDEADBEEF').unfollow_user('Corban')
+
+    user_following_users = User('HexDEADBEEF').get_user_following()
+    print("\n\nUSERS THAT I AM FOLLOWING")
+    [print(following) for following in user_following_users]
+
+    '''
     # get all the posts that HexDEADBEEF has posted
     user_recent_posts = User('HexDEADBEEF').get_user_posts()
     print("\ALL MY POSTS ID")
@@ -593,3 +637,4 @@ if __name__ == '__main__':
     print("\n\nPOST RETWEETERS")
     postretweeters = get_tweet_retweets_usernames('250f2a79-59ee-4700-aa1e-b2c7594cedb2')
     [print(postretweeter) for postretweeter in postretweeters]
+    '''
