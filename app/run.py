@@ -26,7 +26,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 def is_logged_in():
     """
     Checks if user is logged in
-    @return bool
+    @return bool True if logged in and false if not
     """
     return bool(session.get('username'))
 
@@ -45,14 +45,18 @@ def home():
     tweets = session_user.get_timeline_posts()
     friend_suggestions = session_user.get_recommended_users()
 
+    msg = get_message()
+    alert = get_type()
+
     return render_template(
         'index.html',
         session_user=session_user.get_json_user(),
         user=user,
         tweets=tweets,
         treading=mock_treading,
-        account=True,
-        fsuggestions=friend_suggestions
+        fsuggestions=friend_suggestions,
+        message=msg,
+        alert=alert
     )
 
 
@@ -109,10 +113,23 @@ def account():
     )
 
 
+@app.route('/tag')
+def tag():
+    template = env.get_template("tag.html")
+    user = User(session['username']).get_json_user()
+    return template.render(
+        user=user,
+        tweets=mock_tweets,
+        treading=mock_treading,
+        messages=mock_messages,
+        fsuggestions=mock_fsuggestions
+    )
+
 @app.route('/messages')
 def messages():
     """ sumary_line """
     if is_logged_in() == False:
+        set_message('Please Login', 'danger')
         return redirect('/login', '302')
 
     template = env.get_template("messages.html")
@@ -127,6 +144,7 @@ def messages():
         messages=mock_messages,
         fsuggestions=friend_suggestions
     )
+
 
 @app.route('/profile/<username>')
 def view_user_bio(username):
@@ -214,7 +232,7 @@ def add_tweet():
         tweet = request.form['tweet']
         hashtags, taggedusers = get_hashtags(tweet),  get_tagged(tweet)
         User(session['username']).add_post(tweet, hashtags, taggedusers)
-        flash('Post posted')
+        set_message('Post posted', 'success')
         return redirect('/', '302')
 
 
@@ -283,7 +301,8 @@ def set_new_password():
                 oldpassword = request.form['oldpassword']
                 user = User(session['username'])
                 if get_password_verification(user.get_password_hash(), oldpassword):
-                    newpasswordhash = get_password_hash(request.form['newpassword1'])
+                    newpasswordhash = get_password_hash(
+                        request.form['newpassword1'])
                     user.update_password_hash(newpasswordhash)
                     send_resset_password_email(user.get_user_email())
                     return ('Password updated.')
