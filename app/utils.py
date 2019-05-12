@@ -14,15 +14,15 @@ MESSAGE = ''
 TYPE = ''
 
 
-def set_message(message, type):
+def set_message(message, message_type):
     """
     Sets the globals message and message type
     @params message The message to set to the global buffer
-    @params type The type of the message for the buffer
+    @params message_type The type of the message for the buffer
     """
     global MESSAGE, TYPE
     MESSAGE = message
-    TYPE = ''
+    TYPE = message_type
 
 
 def get_message():
@@ -42,9 +42,9 @@ def get_type():
     @return type The message type in the global buffer
     """
     global TYPE
-    ty = TYPE
+    message_type = TYPE
     TYPE = ''
-    return ty
+    return message_type
 
 
 def get_time_stamp():
