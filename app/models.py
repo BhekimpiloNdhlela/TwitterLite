@@ -451,7 +451,7 @@ class User:
         query = '''
         MATCH (users:User) 
         WHERE NOT (:User {username: {username}})-[*1..3]->(users:User) 
-        AND NOT users.username = username)
+        AND NOT users.username = {username}
         RETURN users
         LIMIT 5
         '''
