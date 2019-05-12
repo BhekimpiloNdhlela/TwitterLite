@@ -1,6 +1,4 @@
 #!usr/bin/python3
-
-# TODO: All the sectret keys, salts should be placed in a config
 from utils import *
 from flask import Flask, request, session, redirect, url_for, render_template, flash, jsonify
 from itsdangerous import URLSafeTimedSerializer
@@ -11,15 +9,8 @@ from mock_data import *
 from models import *
 import os
 
-
-# TODO: remains in the run.py when moving goes down
 app = Flask(__name__)
-# TODO: add this to the config file
-
-# TODO: this has to be changed. the salt should be set in a config file
-
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
-
 salt = URLSafeTimedSerializer(
     'ThisIsASecretSaltStringURLSafeTimedSerializerURLSafeTimedSerializer'
 )

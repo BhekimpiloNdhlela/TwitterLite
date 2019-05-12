@@ -457,6 +457,24 @@ class User:
         """
         pass
 
+    def is_following(self, username):
+        """"
+        check if this user is following the other user
+        """"
+        pass
+
+    def user_post_like(self, postid):
+        """
+        check if there is a user post LIKE relationship
+        """
+        pass
+
+    def user_post_tweet(self, postid):
+        """
+        check if there is a user post RETWEET relationship
+        """
+        pass
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Graph Database functions that are not related to creating a user instance
