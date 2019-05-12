@@ -4,7 +4,7 @@
     <p><img src="{{ friend['useravatar'] }}" alt="Avatar" class="w3-left w3-circle" style="width:50px; margin:0.5rem;">
         @{{ friend['username'] }}</p>
     <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"
-        onclick='followUser({{ friend['username'] | safe}}, this);'><i class="fa fa-user"></i>
+        onclick='followUser("{{ friend['username'] | safe}}", this);'><i class="fa fa-user"></i>
         Follow</button>
     {% endfor %}
 </div>
