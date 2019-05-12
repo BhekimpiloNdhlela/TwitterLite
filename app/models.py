@@ -1,16 +1,11 @@
 import uuid
 from py2neo import authenticate, Graph, Node, Relationship
 from utils import get_time_stamp, get_timestamp_seconds, get_password_hash, get_time_stamp, get_password_verification
+import os
 
-"""
-TODO: db credentials(username, password, http_port, https_port, http_port and host_port)
-should be made enviroment variables or should be stored in the config file. for good
-practice and safety reasons.
-"""
-
-DB_USERNAME = '405-found'
-DB_PASSWORD = 'b.W3k0rCRmt6Cm.dxDei5UcxeeS6aTP'
-DB_HOST_PORT = 'hobby-jieinjmgjfpbgbkecpnglccl.dbs.graphenedb.com:24780'
+DB_USERNAME = os.environ.get('DB_USERNAME')
+DB_PASSWORD = os.environ.get('DB_PASSWORD')
+DB_HOST_PORT = os.environ.get('DB_HOST_PORT')
 DB_HTTP_PORT, DB_HTTPS_PORT = 24789, 24780
 
 # authenticate before creating the Graph instance
