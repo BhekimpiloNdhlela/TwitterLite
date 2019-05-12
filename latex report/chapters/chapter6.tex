@@ -1,0 +1,22 @@
+As mentioned earlier, the use of ChestX-ray14 has been a polarising topic. According to \cite{16} ChestX-ray14 is not a suitable dataset for training. \newline
+\\
+The radiologist who made this statement elaborated, saying various images in the dataset did not clearly show signs or symptoms of the disease/s with which they were labelled. In \cite{27} it is stated that the patients were diagnosed by alternative methods, specifically, these labels were automatically extracted from radiology reports. It is possible that a radiologist did not go through each image to ensure that the pathology is visible. That would explain how these images remained in the system even though the symptoms are not visible. \newline
+\\
+Additionally some of the images for curable diseases show cured lungs even though the images are still in the dataset for the particular pathology. In the dataset for a pneumothorax image, certain images contained a clear indication that the patient had received a chest drain. This could teach the system to consider a chest drain a main symptom of a pneumothorax and to only diagnose a pneumothorax if a chest drain is present. This is pointless since that patient has already been diagnosed, and it is the more subtle symptoms that need to be focused on.\newline
+\\
+Furthermore some of the diseases such as pneumonia and emphysema are mostly diagnosed clinically, not solely by imaging since it is not always visually clear using x-rays. \newline
+\\
+Despite these issues, the case study reviewed regarding CheXNet reported impressive results. The argument made by \cite{16} would explain why three of the radiologists’ F1 scores were significantly lower than CheXNet’s. The symptoms in the images may not have been clear or even present, had the images been of patients who had already received treatment. \newline
+\\
+It is speculated that CheXNet performed well during testing, because the problems in the training set were likely still present in the test set. CheXNet could have occasionally learned to look for irrelevant features that were common in the training and the test data. These additional features may not have been symptomatic, thus making them irrelevant to the radiologists. This could lead to misdiagnoses even though the AUC values indicate that the model classified images according to their labels.\newline
+\\
+Once again, these labels were automatically extracted from radiology reports. Using automatic methods to extract text could lead to structured noise in images \cite{16}. This could teach a classifier to see patterns that aren’t symptomatic, they just predict according to unrelated coincidences in the dataset.\newline
+\\
+These problems could be minimised with the help of an experienced radiologist willing to analyse a few thousand images from ChestX-ray14. They could select images with visually present pathologies and an output could be created for images that don’t have any clear pathologies.  This way images from ChestX-ray14 could still be used to train a model, without the issue of the irrelevant features.
+
+
+
+
+
+
+

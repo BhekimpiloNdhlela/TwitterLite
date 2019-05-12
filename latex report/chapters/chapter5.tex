@@ -1,0 +1,83 @@
+\section{Deep Learning for Abnormality Detection in Chest X-Ray images \cite{8}}
+
+This study was published in 2017 and performed by students at Stanford University. The goal was to focus radiologists on high risk tuberculosis cases and correct their misdiagnoses. A neural network was developed that classified images as normal, non-normal, high risk and/or more scans needed. 50 000 labelled chest x-ray images, .tiff format, were chosen from Stanford’s database.\newline
+\\
+The study compared the performance of GoogLeNet, InceptioNet and ResNet. Neural Network visualisation was used to investigate the algorithm’s classification method.\newline
+\\
+Images were labelled 0, 1 or 2 meaning normal, abnormal or emergent respectively. Each image was originally $3000\times3000$ pixels but they were downsized to $512\times512$ and $224\times224$ by the random selection of pixels. Images were pre-processed using histogram equalization to increase contrast \cite{15} and enhance the difference between bone, empty space and tissue. This was done using Python’s scikit image library.\newline
+\\
+For data augmentation, the images were flipped 0, 90, 180 or 270 degrees and flipped left to right or not and a random small amount of Gaussian noise added to each pixel. It is of utmost importance that the noise is random, not structured, and that it is added to all the training data and not solely to one classification since the neural network could learn to look for structured noise as a symptom in its classification \cite{16}.\newline
+\\
+The CNN models ran on a server with four Nvidia Tesla P40s. These are Graphics Processing Unit accelerators used for visual computing. The training data to test data had a 90:10 ratio. The training data normal to abnormal ratio was about 65:35.\newline
+\\
+Overfitting occurs when the classifier learns the training data too well, performing well during training, but poorly during testing \cite{17}. Overfitting was evaluated by the comparison of cross entropy loss (measures performance \cite{18}) and accuracy on training data vs. test data. \newline
+\\
+Default parameters were used, with the learning rate set to 0.001, the regularization set to L2, with drop out set to 0,5 and the batch size set to 256. Batch size refers to the number of images the network trains on at a time. Regularization prevents overfitting by decreasing the weights, improving the model's ability to generalize \cite{19}. Drop out is a regularization technique that forces the model to randomly skip neurons, forcing other neurons to learn what the skipped neuron learned \cite{20}. Nodes were randomly skipped with a probability of 0,5. The parameters were previously optimized on ImageNet.\newline
+\\
+The models being compared included GoogLeNet, Inception V3 and ResNet. Both GoogLeNet and Inception V3 rely on inception modules, but GoogLeNet consists of only 22 layers while Inception V3 consists of 48 layers. Inception modules take an input of an image. Instead of the programmer choosing a filter size or whether they want to add an extra pooling layer, the inception module chooses various sizes simultaneously and can add a pooling layer too. Finally it concatenates the results. It learns to search for small features and large features simultaneously. This results in higher accuracy. \cite{21} \newline
+\\
+GoogLeNet implements a dimensionality reduction step which effectively saves computational power. Inception V3 uses factorized convolutions and aggressive regularization. ResNet relies on residual networks which allows it to contain 152 layers without encountering problems. Essentially, they skip steps in the layers, taking shortcuts to decrease error rate and maintain accuracy \cite{20}. They are therefore easier to optimise than traditional networks. Factorized convolutions reduce 3D convolutions to 2D convolutions in convolutional layers. Essentially, it preserves spatial information and maintains accuracy with less computation. \newline
+\\
+For GoogLeNet, the results showed that the complexity and depth of the network didn’t improve performance. As anticipated, using a larger dataset increased training accuracy, however it hardly affected validation accuracy, which was 0,8. The larger dataset trained the model after fewer iterations and resulted in a relatively constant validation accuracy which can be attributed to the larger batch sizes. Finally, the image resolution did not play a role in prediction accuracy.\newline
+\\
+It was found that GoogLeNet performed significantly better on 50 000 images with dimensions of $224\times224$. It was marginally biased to predicting normal, this was probably due to imbalances in the training data. When the networks methods were investigated, it was found that the system was basing its classification on symmetry. Therefore the conclusion was drawn that the macroscopic features were learned. To this end, it was proposed that segmentation could be used to recognize small features.\newline
+\\
+It is notable that training a deep learning network using thousands of training images can be risky since it is not always predictable what the classifier will base its classifications on. This could lead to classifications that seem to exhibit relatively good diagnoses even though the classifier is not looking for symptomatic signs. In this case, the classifier's accuracy during testing will not reflect its accuracy in real life.
+
+\newpage
+\section{Deep learning at Chest Radiography: Automated Classification  of Pulmonary Tuberculosis by using Convolutional Neural Networks \cite{3}}
+
+The second study looks at the use of ensembles to improve performance. This was done at Thomas Jefferson University in 2017. 1007 postero-anterior chest x-rays were used and the deep convolutional neural networks compared and combined were AlexNet and GoogLeNet, pre-trained on 1.2 million colour images in 1000 categories on ImageNet. The performance of these networks when they were untrained was also evaluated in this study.\newline
+\\
+This study involved four datasets, two from the National Institute of Health from Maryland and China, one from Thomas Jefferson University in Philadelphia, consisting of only healthy cases, and one from Belarus Tuberculosis Portal, consisting of only TB cases. Positive cases were confirmed using sputum tests and radiology reports and an independent radiologist.\newline
+\\
+Images were resized to $256\times256$ pixels and converted to .png format. The computer used was installed with Ubuntu 14.04. The Caffe Model Zoo is an open source repository for pre-trained networks, where the Caffe deep learning framework is implemented to train the network. This is where pre-trained AlexNet and GoogLeNet was found.\newline
+\\
+The computer had CUDA 7.5/cuDNN 5.0 dependencies for GPU acceleration. It also included an Intel i5 3570k 3.4 gHz processor with 4 TB of hard disk space, 32 GB of RAM and a CUDA-enabled Nvidia Titan $\times12$ GB GPU.\newline
+\\
+The solver parameters set during training on the postero-anterior chest radiographs included 120 epochs, stochastic gradient descent, step down set to 33\% and $\gamma$ set to 0,1. An epoch is one complete run through of the dataset to be learned. Neural networks that use iterative algorithms need many epochs during training \cite{22}. Stochastic gradient descent is a method used to save computational cost due to back propagation through the entire training set \cite{19}.  \newline 
+\\
+The base learning rate for pre-trained models was set to 0,001 and for untrained models it was set to 0,01.\newline
+\\
+For data preparation, the augmentation included cropping the images randomly to $227\times227$ pixels, mean subtraction of each pixel and mirroring of images. As an additional test, the performance of AlexNet and GoogLeNet was also tested when the images were augmented further by Contrast Limited Adaptive Histogram Equalization and rotated by 90, 180 and 270 degrees. The Histogram Equalization was done using ImageJ v. 1.50i.\newline
+\\
+75 healthy and 75 TB images were randomly selected for testing from 1007 images using pseudorandom numbers from Python 2.7.13. The 75 TB images were assessed by a cardiothoracic radiologist for degree of pulmonary parenchymal involvement and they were then classified as subtle, intermediate and readily apparent.\newline
+\\
+Once these testing images were excluded, the remaining 857 images were randomly split according to a 80:20 ratio so that there were 685 training images and 172 validation images.\newline
+\\
+The results were analysed using statistical analysis performed by MedCalc v.16.8. ROC and AUC curves were determined on the results from the test dataset. An ROC curve is a Receiver Operating Characteristic curve. It is a plot of the true positive rate against the false positive rate. It shows the relationship between sensitivity and specificity \cite{24}.An AUC is the area under a ROC curve, measuring accuracy \cite{25}. \newline
+\\
+Contingency tables, accuracy, sensitivity and specificity were determined from the Youden Index. The Youden Index gives the maximum potential effectiveness for a particular biomarker to indicate the presence of a disease. It provides a summary of the information contained in the ROC curve \cite{26}. The adjusted Wald method was used to determine 95\% confidence intervals on the accuracy, sensitivity and specificity from the contingency tables. \newline
+\\
+Ensembles were built by taking varying weighted averages of the probability (of tuberculosis) scores generated by the AlexNet and GoogLeNet. The weighting varied from equal weighting to ten-fold weighting in either direction. ROC curves, AUC, sensitivity and specificity values were determined for these ensemble approaches. Finally, if AlexNet and GoogLeNet disagreed, an independent cardiothoracic radiologist with over 18 years of experience blindly classified the images as healthy or as having TB.\newline
+\\
+For both AlexNet and GoogLeNet, the AUCs of the pre-trained models surpassed that of the untrained models. Further augmentation using Histogram equalization and rotations increased accuracy for both models over their untrained versions.\newline
+\\
+The best performing ensemble had an AUC of 0,99 which significantly surpassed the AUC of the untrained models individually, with AlexNet’s 0,90 and GoogLeNet’s 0,88. The Classifiers disagreed on 13 of the 150 test cases which were then analysed by the radiologist who correctly classified all 13. This is the radiologist augmented approach. There were, however, 2 false negatives which were dismissed by both systems and therefore never assessed by the radiologist.\newline
+\\
+Ensemble methods in this study significantly improved performance because they were essentially a blend of multiple algorithms that removed uncorrelated errors of individual classifiers using averaging. Weighted averages of probability scores for AlexNet and GoogLeNet were used and a 10-fold weighting toward GoogLeNet provided the best accuracy. The accuracy was then improved by the radiologist augmented approach. To make up for the false positives, a larger training set could be used as well as more augmentation methods with additional machine learning approaches.
+
+\newpage
+\section{CheXNet: Radiologist-Level Pneumonia Detection on Chest X-Rays with Deep Learning \cite{27}}
+
+The third case study is quite interesting and has been a polarising topic; the use of ChestX-ray14, an open source data base with over 100 000 frontal view chest x-rays labelled with up to 14 diseases.\newline
+\\
+The CheXNet model was designed at Stanford University in 2017 for the diagnosis of pneumonia. It was trained on ChestX-ray14. It was then extended to diagnose all 14 diseases. The model’s performance was compared to the performance of 4 practising academic radiologists.\newline
+\\
+CheXNet takes an X-ray image as input and outputs the probability of pneumonia with a heat map of indicative areas. Pneumonia’s appearance in chest x-rays can be ambiguous, overlap with other diagnoses and resemble benign abnormalities.\newline
+\\
+CheXNet is a 121 layer CNN called a DenseNet. DenseNets improve information flow through the network. The standard parameters were set. Stochastic gradient descent was used with $\beta$1 set to 0,9 and $\beta$2 set to 0,999. The model was trained using mini-batches of 16 and an initial learning rate of 0,001.\newline
+\\
+All 112120 frontal view images from ChestX-ray14 were used. Each image in Chest X-ray 14 is labelled with up to 14 pathology labels. Images that were labelled with pneumonia were marked as positive and without pneumonia as negative. In total, 98637 images were used for training (93.6\% of the total), 6351 images were used for validation (6\%) and 420 images were used for testing (0.4\%).\newline
+\\
+The images were downsized to $224\times224$ pixels and normalized, based on the mean and standard deviation of images in ImageNet. The training data was augmented using random horizontal flipping of images. The performance of 4 radiologists at Stanford University was also measured, by their annotations on each image. The radiologists had 4, 7, 25 and 28 years of experience, with one of them being a specialized cardiothoracic radiologist.\newline
+\\
+For the detection of pneumonia, each image in the test dataset was subsequently assigned 5 labels, 4 from the radiologists and 1 from CheXNet. The F1 score was calculated to indicate the precision for each radiologist and finally for CheXNet. It was found that CheXNet obtained a significantly higher F1 score than 3 of the radiologists. The confidence intervals were determined using a statistical technique called bootstrapping.\newline
+\\
+The average radiologist score was 0.387 (95\% confidence interval of (0.330, 0.442)) the highest F1 score obtained was by the fourth radiologist with 0.442 (CI: 0.390, 0.492) and the F1 score for CheXNet was 0.435 (CI: 0.387, 0.481) which was higher than the average radiologist F1 score.\newline
+\\
+Certain limitations clearly exist, the model and the radiologists were not permitted to view patient history, which hinders performance. Additionally, the unavailability of lateral view images makes it more difficult to diagnose.\newline
+\\
+For the extension of CheXNet for detection of all 14 diseases, the algorithm was altered to include 3 changes. Firstly, instead of a binary label, CheXNet was altered to output a vector indicating the absence or presence of all 14 diseases. Secondly, the fully connected layer was substituted with a fully connected layer with a 14 dimensional output, where the final output is a probability of the presence of each of the 14 diseases. Finally the loss function was modified to optimize cross entropy losses.\newline
+\\
+This time the dataset was indiscriminately split into training (70\%), validation (10\%) and test (20\%). It was found that CheXNet obtained state of the art results on the 14 classes. It was important to understand exactly what the model was basing its classifications on, therefore feature maps were extracted from the final convolutional layer to clearly visualize the areas that the classifier considered to be indicative of the assigned pathologies.

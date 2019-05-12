@@ -30,16 +30,16 @@ const openNav = () => {
 const hashtag = /(\#\w+)/g;
 const atUser = /(\@\w+)/g;
 const timestamp = /(\d*\.\d*)/;
-$(document).ready(function () {
+$(document.body).ready(function () {
    
     $(".main").html(function (_, html) {
         return html.replace(hashtag,
-          '<a style="color: blue;" href="/tag/$1">$1.</a>');
+          '<a style="color: blue;" href="/tag/$1">$1</a>');
   
     });
     $(".main").html(function (_, html) {
         return html.replace(atUser,
-            '<a style="color: #1c94e0;" href="/profile/$1">$1</a>');
+          '<a style="color: #1c94e0;" href="/profile/$1">$1</a>');
     });
     $(".timestamp").html(function (_, html) {
         let time = moment(html.match(timestamp)[0], "x");
@@ -49,7 +49,7 @@ $(document).ready(function () {
         console.log(e);
     });
     
-    $(document).ready(function()
+    $(document.body).ready(function()
 {
     var i=0,j='',val='';
     var list = document.getElementsByTagName("a");
@@ -57,7 +57,7 @@ $(document).ready(function () {
     {
       j=$(list[i]).attr('href');
       valHash = j.replace('#','');
-      valName = j.replace('@','');
+      valName = valHash.replace('@','');
       $(list[i]).attr('href',valHash);
       $(list[i]).attr('href',valName);
     }
