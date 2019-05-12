@@ -523,13 +523,7 @@ class User:
         """
         check if this user is following the other user
         """
-        query = '''
-        MATCH (user:User)-[r:FOLLOWING]->(isfollowing:User)
-        WHERE user.username = {myusername} AND isfollowing.username = {username}
-        RETURN r
-        '''
-        result = graph.run(query, myusername=self.username, username=username)
-        return 
+        return username in self.get_user_following()
 
 
     def check_post_like(self, postid):
@@ -588,7 +582,9 @@ def get_tweet_retweets_usernames(postid):
 Test client for models. [NOTE used during development stage]
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if __name__ == '__main__':
-    print(User('HexDEADBEEF').is_following('tahirss'))
+    print (User('HexDEADBEEF').is_following('nish'))
+    print(User('HexDEADBEEF').is_following('tahir'))
+
     """
     user_following_users = User('HexDEADBEEF').get_user_following()
     print("\n\nUSERS THAT I AM FOLLOWING")
