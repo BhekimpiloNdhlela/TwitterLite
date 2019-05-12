@@ -458,9 +458,9 @@ class User:
         pass
 
     def is_following(self, username):
-        """"
+        """
         check if this user is following the other user
-        """"
+        """
         pass
 
     def user_post_like(self, postid):
