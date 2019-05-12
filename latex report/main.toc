@@ -1,0 +1,9 @@
+\contentsline {chapter}{\numberline {1}Introduction}{2}{chapter.1}
+\contentsline {chapter}{\numberline {2}Modern Day Ventures}{3}{chapter.2}
+\contentsline {chapter}{\numberline {3}Computer Vision}{5}{chapter.3}
+\contentsline {chapter}{\numberline {4}Machine Learning and Artificial Intelligence}{7}{chapter.4}
+\contentsline {chapter}{\numberline {5}Case Studies}{9}{chapter.5}
+\contentsline {section}{\numberline {5.1}Deep Learning for Abnormality Detection in Chest X-Ray images \cite {8}}{9}{section.5.1}
+\contentsline {section}{\numberline {5.2}Deep learning at Chest Radiography: Automated Classification of Pulmonary Tuberculosis by using Convolutional Neural Networks \cite {3}}{11}{section.5.2}
+\contentsline {section}{\numberline {5.3}CheXNet: Radiologist-Level Pneumonia Detection on Chest X-Rays with Deep Learning \cite {27}}{13}{section.5.3}
+\contentsline {chapter}{\numberline {6}ChestX-ray14}{14}{chapter.6}

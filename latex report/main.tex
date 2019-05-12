@@ -1,0 +1,120 @@
+\documentclass[15pt]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[version=4]{mhchem}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\graphicspath{{images/}}
+\usepackage{siunitx}
+\usepackage{amsmath}
+\usepackage[a4paper, width=150mm,top=25mm,bottom=25mm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[R]{\thechapter}
+\fancyfoot{}
+\fancyfoot[R]{\thepage}
+\fancyfoot[C]{Chapter \thechapter}
+\usepackage{hyperref}
+
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+
+
+
+\title{
+        {405-found}\\
+        {\large Stellenbosch University}\\
+        {\includegraphics{symbol.jpg}}
+      }
+\author{Bheki 1999999 \\ Klensch Lucas 118181818 \\ David Williams 19869355 \\ Keanu 611515\\ Teacher: Dr. Brink van der Merwe\\}
+
+\date{May 2019}
+
+\begin{document}
+
+\input{chapters/titlepage}
+
+
+\tableofcontents
+
+\chapter{Introduction}
+\input{chapters/introduction}
+
+\chapter{Modern Day Ventures}
+\input{chapters/chapter2}
+
+\chapter{Computer Vision}
+\input{chapters/chapter3}
+
+\chapter{Machine Learning and Artificial Intelligence}
+\input{chapters/chapter4}
+
+\chapter{Case Studies}
+\input{chapters/chapter5}
+
+\chapter{ChestX-ray14}
+\input{chapters/chapter6}
+
+\begin{thebibliography}{cc}
+\bibitem{1} Fullstack Academy.  Introduction to Computer-Aided Diagnosis in Medical Imaging (Radiology) [Online] 2016 [access 2018, April 30]; Avaliable: https://www.youtube.com/watch?v=46Oz5JNFR24 
+
+\bibitem{2} Chabat F, Hansell DM, Yang GZ. Computerized decision support in medical imaging. IEEE Engineering in Medicine and Biology Magazine 2000;19(5):89-96.
+
+
+\bibitem{3} Lakhani P, Sundaram B. Deep Learning at Chest Radiography: Automated Classification of Pulmonary Tuberculosis by Using Convolutional Neural Networks. Radiology. 2017;284(2):574-582.
+
+\bibitem{4}Deep learning.ai. What is end-to-end deep learning? (C3W2L09). [online video] 2017 [access 2018, April 12]; Available: https://www.youtube.com/watch?v=ImUoubi\_t7s
+
+\bibitem{5}  Computer-Aided Detection for Tuberculosis (CAD4TB) [Online][s.a][access 2018, September 1]; Available: https://www.delft.care/cad4tb/
+
+\bibitem{6} Melendez J, Sánchez CI, Philipsen RH, Maduskar P, Dawson R, Theron G, Dheda K, Van Ginneken B. An automated tuberculosis screening strategy combining X-ray-based computer-aided detection and clinical information. Scientific reports 2016;6:25265
+
+\bibitem{7} Wozniak M, Pola D, Kosmider L, Napoli C, Tramontana E. A novel approach toward X-ray images classifier in Computational Intelligence. IEEE Symposium Series 2015;1635-1641.
+
+\bibitem{8} Tataru C, Yi D, Shenoyas A, Ma A. Deep Learning for abnormality detection in Chest X-Ray images [Online] 2017 [access 2018, April 25]; Available: http://cs231n.stanford.edu/reports/2017/pdfs/527.pdf
+
+\bibitem{9} CrashCourse. Computer Vision: Crash Course Computer Science \#35. [Online video] 2017 [access 2018, July 29] Available: https://www.youtube.com/watch?v=-4E2-0sxVUM\&t=21s
+
+\bibitem{10} Edureka! Convolutional Neural Network (CNN) | Convolutional Neural Networks with TensorFlow |Edureka. [Online video] 2017 [access 2018, April 12]; Available: https://www.youtube.com/watch?v=umGJ30-15\_A
+
+\bibitem{11} Rohrer B. How Convolutional Neural Networks work. [Online video] 2016 [access 2018, April 13]; Available: https://www.youtube.com/watch?v=FmpDIaiMIeA
+
+\bibitem{12} Android Authority. What is machine learning? [online video] 2015 [access 2018, July 30]; Available: https://www.youtube.com/watch?v=WXHM\_i-fgGo
+
+\bibitem{13} CrashCourse. Machine Learning and Artificial Intelligence: Crash Course Computer Science \#34. [online video] 2017 [access 2018, July 30]; Available: https://www.youtube.com/watch?v=z-EtmaFJieY\&t=1s
+
+\bibitem{14} Google Cloud Platform. The 7 Steps of Machine Learning. [online video] 2017 [2018, July 30]; Available: https://www.youtube.com/watch?v=nKW8Ndu7Mjw\&t=14s
+
+\bibitem{15} Histogram Equalization [Online][s.a][access 2018, August 1]; Available: https://www.tutorialspoint.com/dip/histogram\_equalization.htm
+
+\bibitem{16} Oakden-Rayner L. Exploring the ChestX-ray14 dataset: problems [Online] 2017 [access 2018, August 25]; Avaliable: https://lukeoakdenrayner.wordpress.com/2017/12/18/the-chestxray14-dataset-problems/
+
+\bibitem{17} Overfitting  in Machine Learning: What It Is and How to Prevent It [Online][s.a.][access 2018, August 1]; Available:https://elitedatascience.com/overfitting-in-machine-learning
+
+\bibitem{18} Loss Functions [Online][s.a.][access 2018, August 1]; Available:http://ml-cheatsheet.readthedocs.io/en/latest/loss\_functions.html
+
+\bibitem{19} Understanding regularization for image classification and machine learning [Online][s.a.][access 2018, August 1]; Available: https://www.pyimagesearch.com/2016/09/19/understanding-regularization-for-image-classification-and-machine-learning/
+
+\bibitem{20} Brownlee J. Dropout Regularization in Deep Learning Models with Keras [Online] 2016 [access 2018, August 1]; Available: https://machinelearningmastery.com/dropout-regularization-deep-learning-models-keras/
+
+\bibitem{21} Mathew J. Inception of the Deep Learning World! [Online] 2017 [access 2018 August 1]; Available: https://becominghuman.ai/inception-of-the-deep-learning-world-b1b6889cbdc1
+
+\bibitem{22} Epoch [Online][s.a.][access 2018, August 12]; Available: http://www.fon.hum.uva.nl/praat/manual/epoch.html
+
+\bibitem{23} Optimization: Stochastic Gradient Descent [Online][s.a.][acccess 2018, August 12]; Available: http://ufldl.stanford.edu/tutorial/supervised/OptimizationStochasticGradientDescent/
+
+\bibitem{24}  Receiver Operating Characteristic (ROC) Curve: Definition, Example, statisticshowto [Online][s.a.][access 2018, August 12]; Available: http://www.statisticshowto.com/receiver-operating-characteristic-roc-curve/ 
+
+\bibitem{25} Area under curve (AUC) [Online][s.a.][access 2018, August 12]; Available: https://analyse-it.com/docs/user-guide/diagnosticperformance/auc
+
+\bibitem{26} Ruopp MD, Perkins NJ, Whitcomb BW, Schisterman ER. Youden Index and Optimal Cut-Point Estimated from Observations Affected by Lower Limit of Detection. Wiley Online Library 2008;50(3):327-452
+
+\bibitem{27} Rajpurkar P, Irvin J, Zhu K, Yang B, Mehta H, Duan T, Ding D, Bagul A, Langlotz C, Shpanskaya K, Lungren MP. Chexnet: Radiologist-level pneumonia detection on chest x-rays with deep learning. arXiv preprint arXiv 2017:1711.05225.
+
+\end{thebibliography}
+
+\end{document}

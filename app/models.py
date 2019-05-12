@@ -434,7 +434,7 @@ class User:
         MATCH (user:User)-[:FOLLOWING]->(users:User)-[:PUBLISHED]->(posts:Post)
         WHERE user.username = {username}
         RETURN users, posts
-        ORDER BY posts.timestamp ASC
+        ORDER BY posts.timestamp DESC, posts.likes DESC
         SKIP toInteger(20*{interation})
         LIMIT 20
         '''
@@ -451,6 +451,7 @@ class User:
         query = '''
         MATCH (users:User)
         WHERE NOT (:User {username: {username}})-[*1..3]->(users:User)
+        AND NOT users.username = {username}
         RETURN users
         LIMIT 5
         '''
