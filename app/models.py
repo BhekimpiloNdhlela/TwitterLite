@@ -434,11 +434,11 @@ class User:
         MATCH (user:User)-[:FOLLOWING]->(users:User)-[:PUBLISHED]->(posts:Post)
         WHERE user.username = {username}
         RETURN users, posts
-        ORDER BY posts.timestamp ASC 
+        ORDER BY posts.timestamp ASC
         SKIP toInteger(20*{interation})
         LIMIT 20
         '''
-        queryresults =  graph.run(query, username=self.username, interation=interation)
+        queryresults = graph.run(query, username=self.username, interation=interation)
         return [(results['users'], results['posts']) for results in queryresults]
 
 
@@ -449,13 +449,12 @@ class User:
         @return posts An Array of the users
         """
         query = '''
-        MATCH (users:User) 
+        MATCH (users:User)
         WHERE NOT (:User {username: {username}})-[*1..3]->(users:User)
         RETURN users
         LIMIT 5
         '''
-        queryresults = graph.run(
-            query, username=self.username)
+        queryresults = graph.run(query, username=self.username)
         return [results['users'] for results in queryresults]
 
 
@@ -471,13 +470,6 @@ class User:
         graph.merge(Relationship(retweetinguser, 'RETWEET', retweetingpost))
 
 
-    def get_user_suggestions(self):
-        """
-        doc-string
-        """
-        pass
-
-
     def follow_user(self, username):
         """
         used to follow a user, @param username   the username of the user i would
@@ -490,37 +482,54 @@ class User:
 
     def unfollow_user(self, username):
         """
+        delete a FOLLOWING relationation that exist between a this and the other
+        user given a username of the user to unfollow.
         """
         query = '''
         MATCH (user:User)-[r:FOLLOWING]->(following:User)
         WHERE user.username = {myusername} AND following.username = {username}
         DELETE r
         '''
-        queryresults = graph.run(query, myusername=self.username, username=username)
+        graph.run(query, myusername=self.username, username=username)
 
 
     def unlike_tweet(self, postid):
         """
-        doc-string
+        delete a LIKES relationation that exist between a user and a post
+        given a post id
         """
         query = '''
+        MACTH (user:User)-[r:LIKES]->(post:Post)
+        WHERE user.username = {username} AND post.id = {postid}
+        DELETE r
         '''
-        pass
+        graph.run(query, username=self.username, postid=postid)
 
 
     def unretweet_tweet(self, postid):
         """
+        delete a RETWEET relationation that exist between a user and a post
+        given a post id
         """
         query = '''
+        MATCH (user:User)-[r:RETWEET]->(post:Post)
+        WHERE user.username = {username} AND post.id = {postid}
+        DELETE r
         '''
-        pass
+        graph.run(query, username=self.username, postid=postid)
 
 
     def is_following(self, username):
         """
         check if this user is following the other user
         """
-        pass
+        query = '''
+        MATCH (user:User)-[r:FOLLOWING]->(isfollowing:User)
+        WHERE user.username = {myusername} AND isfollowing.username = {username}
+        RETURN r
+        '''
+        result = graph.run(query, myusername=self.username, username=username)
+        return 
 
 
     def check_post_like(self, postid):
@@ -533,6 +542,13 @@ class User:
     def check_post_retweet(self, postid):
         """
         check if there is a user post RETWEET relationship
+        """
+        pass
+
+
+    def get_user_suggestions(self):
+        """
+        doc-string
         """
         pass
 
@@ -572,6 +588,8 @@ def get_tweet_retweets_usernames(postid):
 Test client for models. [NOTE used during development stage]
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if __name__ == '__main__':
+    print(User('HexDEADBEEF').is_following('tahirss'))
+    """
     user_following_users = User('HexDEADBEEF').get_user_following()
     print("\n\nUSERS THAT I AM FOLLOWING")
     [print(following) for following in user_following_users]
@@ -583,7 +601,7 @@ if __name__ == '__main__':
     print("\n\nUSERS THAT I AM FOLLOWING")
     [print(following) for following in user_following_users]
 
-    '''
+
     # get all the posts that HexDEADBEEF has posted
     user_recent_posts = User('HexDEADBEEF').get_user_posts()
     print("\ALL MY POSTS ID")
@@ -637,4 +655,4 @@ if __name__ == '__main__':
     print("\n\nPOST RETWEETERS")
     postretweeters = get_tweet_retweets_usernames('250f2a79-59ee-4700-aa1e-b2c7594cedb2')
     [print(postretweeter) for postretweeter in postretweeters]
-    '''
+    """
