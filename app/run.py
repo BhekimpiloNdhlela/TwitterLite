@@ -30,6 +30,45 @@ def is_logged_in():
     return bool(session.get('username'))
 
 
+@app.route('/profile/<username>')
+def view_user_bio(username):
+    """ sumary_line """
+    if is_logged_in() == False:
+        set_message("Please Login", "danger")
+        return redirect('/login', '302')
+
+    template = env.get_template("friends.html")
+
+    user, session_user = User(username), User(session['username'])
+    following = user.get_user_following()
+    vfollowing = session_user.get_user_following()
+    followers = user.get_user_followers()
+
+    tweets = user.get_user_posts()
+    for tweet in tweets:
+        tweet['likers'] = get_tweet_likes_usernames(tweet['id'])
+        tweet['retweeters'] = get_tweet_retweets_usernames(tweet['id'])
+
+    activeunfollow = True if session['username'] == username else False
+
+    for f in followers:
+        f['following'] = f in vfollowing or f['username'] == session['username']
+
+    friend_suggestions = session_user.get_recommended_users()
+
+    return template.render(
+        session_user=session_user.get_json_user(),
+        user=user.get_json_user(),
+        tweets=mock_tweets,
+        treading=mock_treading,
+        fsuggestions=friend_suggestions,
+        following=following,
+        followers=followers,
+        personaltweets=tweets,
+        activeunfollow=activeunfollow
+    )
+
+
 @app.route('/',  methods=['GET', 'POST'])
 @app.route('/home',  methods=['GET', 'POST'])
 def home():
@@ -153,41 +192,6 @@ def messages():
         treading=mock_treading,
         messages=mock_messages,
         fsuggestions=friend_suggestions
-    )
-
-
-@app.route('/profile/<username>')
-def view_user_bio(username):
-    """ sumary_line """
-    if is_logged_in() == False:
-        set_message("Please Login", "danger")
-        return redirect('/login', '302')
-
-    template = env.get_template("friends.html")
-
-    user, session_user = User(username), User(session['username'])
-    following = user.get_user_following()
-    vfollowing = session_user.get_user_following()
-    followers = user.get_user_followers()
-    tweets = [user.get_json_post(tweetid) for tweetid in user.get_user_posts()]
-
-    activeunfollow = True if session['username'] == username else False
-
-    for f in followers:
-        f['following'] = f in vfollowing or f['username'] == session['username']
-
-    friend_suggestions = session_user.get_recommended_users()
-
-    return template.render(
-        session_user=session_user.get_json_user(),
-        user=user.get_json_user(),
-        tweets=mock_tweets,
-        treading=mock_treading,
-        fsuggestions=friend_suggestions,
-        following=following,
-        followers=followers,
-        personaltweets=tweets,
-        activeunfollow=activeunfollow
     )
 
 

@@ -25,7 +25,7 @@
         {% for tweet in personaltweets %}
         <div class="w3-container w3-card w3-white w3-round w3-margin">
             <br>
-            <img src="/static/img/default.png" alt="Avatar" class="w3-left w3-circle w3-margin-right"
+            <img src="{{ user['avatar'] }}" alt="Avatar" class="w3-left w3-circle w3-margin-right"
                 style="width:60px">
             <span class="w3-right w3-opacity timestamp">{{ tweet['date'] }}</span>
             <h3><a href="/profile/{{ user['username'] }}" style="text-decoration: none;">@{{ user['username'] }}</a>
@@ -40,8 +40,30 @@
                 </div>
                 {% endfor %}
             </div>
-            <i class="fa fa-heart"> {{ tweet['likes'] }} </i>
-            <i class="fa fa-retweet"> {{ tweet['retweets'] }} </i>
+
+            <div class="w3-dropdown-hover w3-hide-small">
+                <button class="w3-button w3-padding-small" title="Notifications"></button>
+                    <i class="fa fa-heart">{{ tweet["likes"] }} </i>
+                </button>
+                <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:auto;">
+                    {% for liker in tweet['likers'] %}
+                    <a href="/profile/{{ liker }}" class="w3-bar w3-button">{{ liker }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="w3-dropdown-hover w3-hide-small">
+                <button class="w3-button w3-padding-small" title="Notifications"></button>
+                    <i class="fa fa-retweet">{{ tweet["retweets"] }}</i>
+                </button>
+                <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:auto;">
+                    {% for retweeter in tweet['retweeters'] %}
+                    <a href="/profile/{{ retweeter }}" class="w3-bar w3-button">{{ retweeter }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+
+
             <br><br>
             <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"
                 onclick="likePost('{{tweet['id']|safe}}', this)" title="Like Tweet"><i class="fa fa-thumbs-up"></i>

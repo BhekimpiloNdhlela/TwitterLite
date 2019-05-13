@@ -338,10 +338,10 @@ class User:
         query = '''
         MATCH (user:User)-[:PUBLISHED]->(post:Post)
         WHERE user.username = {username}
-        RETURN post.id
+        RETURN post
         '''
         queryresults = graph.run(query, username=self.username)
-        return [result['post.id'] for result in queryresults]
+        return [result['post'] for result in queryresults]
 
 
     def get_recent_posts(self):
@@ -518,7 +518,7 @@ def get_tweet_likes_usernames(postid):
     RETURN user.username
     '''
     queryresults = graph.run(query, postid=postid)
-    return [result['user.username'] for result in queryresults]
+    return set([result['user.username'] for result in queryresults])
 
 
 def get_tweet_retweets_usernames(postid):
@@ -533,13 +533,14 @@ def get_tweet_retweets_usernames(postid):
     RETURN user.username
     '''
     queryresults = graph.run(query, postid=postid)
-    return [result['user.username'] for result in queryresults]
+    return set([result['user.username'] for result in queryresults])
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Test client for models. [NOTE used during development stage]
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if __name__ == '__main__':
+    """
     print("Retweeting")
     # test retweeting, make Corban retweet the post
     User('Corban').retweet_post('e48c3d0a-66f7-48ea-a069-d98ca6e02216')
@@ -570,13 +571,13 @@ if __name__ == '__main__':
     print("\n\nUSERS THAT I AM FOLLOWING")
     user_following_users = User('HexDEADBEEF').get_user_following()
     [print(following) for following in user_following_users]
-
+    """
 
     # get all the posts that HexDEADBEEF has posted
     print("\ALL MY POSTS ID")
     user_recent_posts = User('HexDEADBEEF').get_user_posts()
-    [print(post) for post in user_recent_posts]
-
+    [print(post['hashtags']) for post in user_recent_posts]
+    """
     # get the users that are following HexDEADBEEF
     print("\n\nUSERS THAT I AM FOLLOWING")
     user_following_users = User('HexDEADBEEF').get_user_following()
@@ -616,3 +617,4 @@ if __name__ == '__main__':
     print("\n\nPOST RETWEETERS")
     postretweeters = get_tweet_retweets_usernames('250f2a79-59ee-4700-aa1e-b2c7594cedb2')
     [print(postretweeter) for postretweeter in postretweeters]
+    """
