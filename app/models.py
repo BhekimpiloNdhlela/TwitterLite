@@ -429,13 +429,14 @@ class User:
         used to follow a user, @param username the username of the user i would
         like to follow
         """
-        query = '''
-        MATCH (user:User),(following:User)
-        WHERE user.username = {username} AND following.username = {fusername}
-        CREATE (user)-[r:FOLLOWING]->(following)
-        RETURN r
-        '''
-        graph.run(query, username=self.username, fusername=username)
+        if self.is_following(username) == False:
+            query = '''
+            MATCH (user:User),(following:User)
+            WHERE user.username = {username} AND following.username = {fusername}
+            CREATE (user)-[r:FOLLOWING]->(following)
+            RETURN r
+            '''
+            graph.run(query, username=self.username, fusername=username)
 
 
     def unfollow_user(self, username):
@@ -559,26 +560,28 @@ if __name__ == '__main__':
     print(User('HexDEADBEEF').is_following('nish'), "True following Nish")
     print(User('HexDEADBEEF').is_following('tahir'), "False not following Tahir")
 
+
+    User('HexDEADBEEF').follow_user('Corban')
     user_following_users = User('HexDEADBEEF').get_user_following()
     print("\n\nUSERS THAT I AM FOLLOWING")
     [print(following) for following in user_following_users]
 
     # unfollow Corban
-    me = User('HexDEADBEEF').unfollow_user('Corban')
+    User('HexDEADBEEF').unfollow_user('Corban')
 
-    user_following_users = User('HexDEADBEEF').get_user_following()
     print("\n\nUSERS THAT I AM FOLLOWING")
+    user_following_users = User('HexDEADBEEF').get_user_following()
     [print(following) for following in user_following_users]
 
 
     # get all the posts that HexDEADBEEF has posted
-    user_recent_posts = User('HexDEADBEEF').get_user_posts()
     print("\ALL MY POSTS ID")
+    user_recent_posts = User('HexDEADBEEF').get_user_posts()
     [print(post) for post in user_recent_posts]
 
     # get the users that are following HexDEADBEEF
-    user_following_users = User('HexDEADBEEF').get_user_following()
     print("\n\nUSERS THAT I AM FOLLOWING")
+    user_following_users = User('HexDEADBEEF').get_user_following()
     [print(following) for following in user_following_users]
 
     # get users that are following nish
