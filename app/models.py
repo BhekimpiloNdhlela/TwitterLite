@@ -315,7 +315,7 @@ class User:
         RETURN user
         '''
         queryresults = graph.run(query, username=self.username)
-        return [result['user'] for result in queryresults]
+        return set([result['user'] for result in queryresults])
 
 
     def get_user_following(self):
@@ -328,7 +328,7 @@ class User:
         RETURN following
         '''
         queryresults = graph.run(query, username=self.username)
-        return [result['following'] for result in queryresults]
+        return set([result['following'] for result in queryresults])
 
 
     def get_user_posts(self):
@@ -426,8 +426,8 @@ class User:
 
     def follow_user(self, username):
         """
-        used to follow a user, @param username the username of the user i would
-        like to follow
+        used to follow a user
+        @param username the username of the user to follow
         """
         if self.is_following(username) == False:
             query = '''

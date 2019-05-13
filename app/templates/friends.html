@@ -59,7 +59,7 @@
     <div id="Following" class="w3-container tab" style="display:none">
         {% for follow in following %}
         <br>
-        <img src="{{ follow['avatar'] }}" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
+        <img src="{{ follow['useravatar'] }}" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
         <h3><a href="/profile/{{ follow['username'] }}" style="text-decoration: none;">@{{ follow['username'] }}</a>
         </h3>
         {% if activeunfollowbtn == True %}
@@ -67,7 +67,7 @@
                     class="fa fa-user"></i>
                 Unfollow</button></h4>
         {% endif %}
-        <h4>{{ follow['name'] }} {{ follow['surname']}}</h4>
+        <h4>{{ follow['firstname'] }} {{ follow['lastname']}}</h4>
         <hr class="w3-clear">
         {% endfor %}
     </div>
@@ -75,7 +75,7 @@
     <div id="Followers" class="w3-container tab" style="display:none">
         {% for follow in followers %}
         <br>
-        <img src="{{ follow['avatar'] }}" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
+        <img src="{{ follow['useravatar'] }}" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
         <h3><a href="/profile/{{ follow['username'] }}" style="text-decoration: none;">@{{ follow['username'] }}</a>
         </h3>
         {% if follow['following'] == False %}
@@ -83,7 +83,7 @@
                 onclick='followUser({{  follow['username'] | safe }});'><i class="fa fa-user"></i>Follow</button>
         </h4>
         {% endif %}
-        <h4>{{ follow['name'] }} {{ follow['surname']}}</h4>
+        <h4>{{ follow['firstname'] }} {{ follow['lastname']}}</h4>
         <hr class="w3-clear">
         {% endfor %}
     </div>

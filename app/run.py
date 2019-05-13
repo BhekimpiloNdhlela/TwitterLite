@@ -166,16 +166,13 @@ def view_user_bio(username):
     template = env.get_template("friends.html")
 
     user, session_user = User(username), User(session['username'])
-
-    following = [User(uname).get_json_user()
-                 for uname in user.get_user_following()]
-    vfollowing = [User(uname).get_json_user()
-                  for uname in session_user.get_user_following()]
-    followers = [User(uname).get_json_user()
-                 for uname in user.get_user_followers()]
+    following = user.get_user_following()
+    vfollowing = session_user.get_user_following()
+    followers = user.get_user_followers()
     tweets = [user.get_json_post(tweetid) for tweetid in user.get_user_posts()]
 
     activeunfollow = True if session['username'] == username else False
+
     for f in followers:
         f['following'] = f in vfollowing or f['username'] == session['username']
 
@@ -194,15 +191,15 @@ def view_user_bio(username):
     )
 
 
-@app.route('/logout')
-def logout():
-    """
-    functionality used to log out/ sigout a user, the existing session token/
-    id attached to the user is deleted.
-    """
-    session.pop('username', None)
-    set_message('Logged out', 'primary')
-    return redirect('/login')
+# @app.route('/logout')
+# def logout():
+#     """
+#     functionality used to log out/ sigout a user, the existing session token/
+#     id attached to the user is deleted.
+#     """
+#     session.pop('username', None)
+#     set_message('Logged out', 'primary')
+#     return redirect('/login')
 
 
 @app.route('/signup', methods=['GET', 'POST'])
