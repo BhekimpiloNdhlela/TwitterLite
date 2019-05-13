@@ -222,8 +222,14 @@ def register():
             return ('Password should be at least 9 chars, A-Za-z0-9 with atleast one special char.')
         user = User(username)
         if not user.get_this_user_data():
-            user.add_user(firstname, lastname, email, dob,
-                          gender, get_password_hash(password0))
+            user.add_user(
+                firstname,
+                lastname,
+                email,
+                dob,
+                gender,
+                get_password_hash(password0)
+            )
             token = salt.dumps(username, salt='email-confirm')
             send_account_verification_email(email, token)
             return ('a verification Email Has been sent please check you email inbox')
@@ -284,14 +290,17 @@ def update_user_profile():
         newbio = request.form['bio']
 
         user = User(session['username'])
-        user.update_user_bio(newbio)
-        user.update_user_title(newtitle)
-        user.update_user_dob(newdob)
-        user.update_user_firstname(newfirstname)
-        user.update_user_lastname(newlastname)
+        user.update_user_details(
+            newfirstname,
+            newlastname,
+            newdob,
+            newtitle,
+            newbio
+        )
         f = request.files['avatar']
         filepath = os.path.abspath("../"+UPLOAD_FOLDER+f.filename)
-        # this is not safe in practise you need to secure the file before an upload
+        # this is not safe in practise you need to secure the file
+        # before an upload
         f.save(filepath)
         user.update_user_avatar('/static/img/useravatar/'+f.filename)
         return 'Your Details have been updated.'
@@ -356,7 +365,6 @@ def like_post(postid):
     if is_logged_in() == False:
         set_message("Please Login to like tweets", "danger")
         return redirect('/login', '302')
-
     if request.method == 'GET':
         User(session['username']).like_post(postid)
         return 'Unliked'  # this should be a template

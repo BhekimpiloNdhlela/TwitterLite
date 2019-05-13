@@ -61,10 +61,9 @@ class User:
 
         Returns -> False if the user exists else a new user is created
         """
-        # check if user is in the db return if False
-        if graph.find_one('User', 'username', self.username):
-            return False
-        # else add the user to the db
+        # check if user is in the db return False if found
+        if graph.find_one('User', 'username', self.username): return False
+        # else add the user to the db and return True
         usernode = Node(
             'User',
             username=self.username,
@@ -129,16 +128,6 @@ class User:
         return graph.find_one('User', 'username', self.username)
 
 
-    def update_user_title(self, newtitle):
-        """
-        used to update the users title
-        """
-        this = self.get_this_user_data()
-        graph.merge(this)
-        this['title'] = newtitle
-        this.push()
-
-
     def verify_user_account(self):
         """
         used to update the users account verification status
@@ -149,43 +138,17 @@ class User:
         this.push()
 
 
-    def update_user_dob(self, newdob):
+    def update_user_details(self, firstname, lastname, dob, title, bio):
         """
-        used to update the users date of birth
-        """
-        this = self.get_this_user_data()
-        graph.merge(this)
-        this['dob'] = newdob
-        this.push()
-
-
-    def update_user_firstname(self, newfirstname):
-        """
-        used to update the users first name
+        used to update the users details: firstname, lastname, bio, title, dob
         """
         this = self.get_this_user_data()
         graph.merge(this)
-        this['firstname'] = newfirstname
-        this.push()
-
-
-    def update_user_lastname(self, newlastname):
-        """
-        used to update the users last name
-        """
-        this = self.get_this_user_data()
-        graph.merge(this)
-        this['lastname'] = newlastname
-        this.push()
-
-
-    def update_user_bio(self, newbio):
-        """
-        used to update the users bio
-        """
-        this = self.get_this_user_data()
-        graph.merge(this)
-        this['bio'] = newbio
+        this['firstname'] = firstname
+        this['lastname']  = lastname
+        this['newdob']    = dob
+        this['title']     = title
+        this['bio']       = bio
         this.push()
 
 
@@ -265,8 +228,8 @@ class User:
 
     def get_user_DOB(self):
         """
-        gets the user date of birth of the user that this object's
-        instance was created for
+        gets the user date of birth of the user that this object's instance
+        was created for
         """
         this = self.get_this_user_data()
         return this['dob']
@@ -297,13 +260,13 @@ class User:
         """
         post = graph.find_one('Post', 'id', postid)
         return {
-            'id': post['id'],
-            'tweet': post['tweet'],
-            'timestamp': post['timestamp'],
-            'date': post['date'],
-            'retweets': post['retweets'],
-            'likes': post['likes'],
-            'photos': post['photos']
+            'id'        : post['id'],
+            'tweet'     : post['tweet'],
+            'timestamp' : post['timestamp'],
+            'date'      : post['date'],
+            'retweets'  : post['retweets'],
+            'likes'     : post['likes'],
+            'photos'    : post['photos']
         }
 
 
@@ -409,7 +372,11 @@ class User:
         SKIP toInteger(20*{interation})
         LIMIT 20
         '''
-        queryresults = graph.run(query, username=self.username, interation=interation)
+        queryresults = graph.run(
+            query,
+            username=self.username,
+            interation=interation
+        )
         return [(results['users'], results['posts']) for results in queryresults]
 
 
@@ -574,7 +541,6 @@ def get_tweet_retweets_usernames(postid):
 Test client for models. [NOTE used during development stage]
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if __name__ == '__main__':
-    """
     print("Retweeting")
     # test retweeting, make Corban retweet the post
     User('Corban').retweet_post('e48c3d0a-66f7-48ea-a069-d98ca6e02216')
@@ -614,12 +580,12 @@ if __name__ == '__main__':
     user_following_users = User('HexDEADBEEF').get_user_following()
     print("\n\nUSERS THAT I AM FOLLOWING")
     [print(following) for following in user_following_users]
-    """
+
     # get users that are following nish
     user_followers = User('nish').get_user_followers()
     for u in user_followers:
         print(u['username'])
-    """
+
     print("\n\nNISH's FOLLOWERS")
     [print(follower) for follower in user_followers]
 
@@ -649,4 +615,3 @@ if __name__ == '__main__':
     print("\n\nPOST RETWEETERS")
     postretweeters = get_tweet_retweets_usernames('250f2a79-59ee-4700-aa1e-b2c7594cedb2')
     [print(postretweeter) for postretweeter in postretweeters]
-    """
