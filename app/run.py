@@ -191,15 +191,15 @@ def view_user_bio(username):
     )
 
 
-# @app.route('/logout')
-# def logout():
-#     """
-#     functionality used to log out/ sigout a user, the existing session token/
-#     id attached to the user is deleted.
-#     """
-#     session.pop('username', None)
-#     set_message('Logged out', 'primary')
-#     return redirect('/login')
+@app.route('/logout')
+def logout():
+    """
+    functionality used to log out/ sigout a user, the existing session token/
+    id attached to the user is deleted.
+    """
+    session.pop('username', None)
+    set_message('Logged out', 'primary')
+    return redirect('/login')
 
 
 @app.route('/signup', methods=['GET', 'POST'])

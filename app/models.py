@@ -369,13 +369,11 @@ class User:
         WHERE user.username = {username}
         RETURN users, posts
         ORDER BY posts.timestamp DESC, posts.likes DESC
-        SKIP toInteger(20*{interation})
         LIMIT 20
         '''
         queryresults = graph.run(
             query,
-            username=self.username,
-            interation=interation
+            username=self.username
         )
         return [[results['users'], results['posts']] for results in queryresults]
 
