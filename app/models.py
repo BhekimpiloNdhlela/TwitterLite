@@ -377,7 +377,7 @@ class User:
             username=self.username,
             interation=interation
         )
-        return [(results['users'], results['posts']) for results in queryresults]
+        return [[results['users'], results['posts']] for results in queryresults]
 
 
     def get_recommended_users(self):

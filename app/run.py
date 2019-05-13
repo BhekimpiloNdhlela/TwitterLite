@@ -43,6 +43,9 @@ def home():
     # if not visiting another persons profile
     user = session_user.get_json_user()
     tweets = session_user.get_timeline_posts()
+    for tweet in tweets:
+        tweet[1]['likers'] = get_tweet_likes_usernames(tweet[1]['id'])
+        tweet[1]['retweeters'] = get_tweet_retweets_usernames(tweet[1]['id'])
     friend_suggestions = session_user.get_recommended_users()
 
     msg = get_message()

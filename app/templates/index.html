@@ -46,8 +46,29 @@
         </div>
         {% endfor %}
     </div>
-    <i class="fa fa-heart" onclick="getLikes('{{ tweet[1]['id']| safe }}');"> {{ tweet[1]["likes"] }} </i>
-    <i class="fa fa-retweet" onclick="getRetweets('{{ tweet[1]['id']| safe }}');"> {{ tweet[1]["retweets"] }} </i>
+
+    <div class="w3-dropdown-hover w3-hide-small">
+        <button class="w3-button w3-padding-small" title="Notifications"></button>
+            <i class="fa fa-heart">{{ tweet[1]["likes"] }} </i>
+        </button>
+        <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:auto;">
+            {% for liker in tweet[1]['likers'] %}
+            <a href="/profile/{{ liker }}" class="w3-bar w3-button">{{ liker }}</a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="w3-dropdown-hover w3-hide-small">
+        <button class="w3-button w3-padding-small" title="Notifications"></button>
+            <i class="fa fa-retweet">{{ tweet[1]["retweets"] }}</i>
+        </button>
+        <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:auto;">
+            {% for retweeter in tweet[1]['retweeters'] %}
+            <a href="/profile/{{ retweeter }}" class="w3-bar w3-button">{{ retweeter }}</a>
+            {% endfor %}
+        </div>
+    </div>
+
     <br /><br />
     <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"
         onclick="likePost('{{ tweet[1]['id'] | safe }}', this)" title="Like Tweet">
