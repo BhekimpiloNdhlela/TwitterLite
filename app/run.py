@@ -323,7 +323,6 @@ def set_new_password():
             set_message(
                 'Password should be at least 9 chars, [A-Za-z0-9@#$%^&+!=.]', 'warning')
             return redirect('/account', '302')
-
         set_message('Password do not match, please try again.', 'warning')
     return redirect('/account', '302')
 

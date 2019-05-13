@@ -1,6 +1,6 @@
 import uuid
 from py2neo import authenticate, Graph, Node, Relationship
-from utils import get_time_stamp, get_timestamp_seconds, get_password_hash, get_time_stamp, get_password_verification
+from utils import get_time_stamp, get_password_hash, get_time_stamp, get_password_verification
 import os
 
 DB_USERNAME = os.environ.get('DB_USERNAME')
@@ -87,7 +87,6 @@ class User:
             notification=2
         )
         graph.create(usernode)
-        usernode.labels.add(self.username)
         return True
 
 
@@ -291,22 +290,6 @@ class User:
         return this['avatar']
 
 
-    def get_location_coordinates(self, user_name):
-        """
-        doc-string
-        """
-        this = self.get_this_user_data()
-        return this['location']
-
-
-    def update_location_coords(self, latitude, longtitude):
-        this = self.get_this_user_data()
-        this['location'] = {
-            'latitude': latitude,
-            'longtitude': longtitude
-        }
-
-
     def get_json_post(self, postid):
         """
         used to return a posts details in jason format, this is unnecessary but
@@ -334,7 +317,6 @@ class User:
                     'Post',
                     id=str(uuid.uuid4()),
                     tweet=tweet,
-                    timestamp=get_timestamp_seconds(),
                     date=get_time_stamp(),
                     hashtags=hashtags,
                     taggedusers=taggedusers,
@@ -360,17 +342,6 @@ class User:
             # else we ignore t`he non existing tagged user
 
 
-    def like_post(self, postid):
-        """
-        used to like a post, also increments the like field by one.
-        """
-        user = self.get_this_user_data()
-        post = graph.find_one('Post', 'id', postid)
-        post['likes'] = int(post['likes']) + 1
-        post.push()
-        graph.merge(Relationship(user, 'LIKES', post))
-
-
     def get_user_followers(self):
         """
         used to get the users that are following this user
@@ -378,10 +349,10 @@ class User:
         query = '''
         MATCH (user:User)-[:FOLLOWING]->(follower:User)
         WHERE follower.username = {username}
-        RETURN user.username
+        RETURN user
         '''
         queryresults = graph.run(query, username=self.username)
-        return [result['user.username'] for result in queryresults]
+        return [result['user'] for result in queryresults]
 
 
     def get_user_following(self):
@@ -391,10 +362,10 @@ class User:
         query = '''
         MATCH (user:User)-[:FOLLOWING]->(following:User)
         WHERE user.username = {username}
-        RETURN following.username
+        RETURN following
         '''
         queryresults = graph.run(query, username=self.username)
-        return [result['following.username'] for result in queryresults]
+        return [result['following'] for result in queryresults]
 
 
     def get_user_posts(self):
@@ -415,9 +386,9 @@ class User:
         return the most recent posts id of a users followers functionailty-10
         """
         query = '''
-        MATCH (user:User {username: {username}})-[:PUBLISHED]->(post:Post)
+        MATCH (:User {username: {username}})-[:PUBLISHED]->(post:Post)
         RETURN post
-        ORDER BY post.timestamp ASC LIMIT 6
+        ORDER BY post.date DESC LIMIT 6
         '''
         queryresults = graph.run(query, username=self.username)
         return [result['post']['id'] for result in queryresults]
@@ -463,22 +434,41 @@ class User:
         """
         used to retweet a tweet or post with the aid of an postid
         """
-        retweetinguser = self.get_this_user_data()
-        retweetingpost = graph.find_one('Post','id', postid)
+        query = '''
+        MATCH (user:User),(post:Post)
+        WHERE user.username = {username} AND post.id = {postid}
+        CREATE (user)-[r:RETWEETED]->(post)
+        RETURN r
+        '''
+        graph.run(query, username=self.username, postid=postid)
 
-        retweetingpost['retweets'] = int(retweetingpost['retweets']) + 1
-        retweetingpost.push()
-        graph.merge(Relationship(retweetinguser, 'RETWEET', retweetingpost))
+
+    def like_post(self, postid):
+        """
+        used to like a post, also increments the like field by one.
+        """
+        query = '''
+        MATCH (user:User),(post:Post)
+        WHERE user.username = {username} AND post.id = {postid}
+        SET post.likes = toInteger(post.likes + 1)
+        CREATE (user)-[r:LIKES]->(post)
+        RETURN r
+        '''
+        graph.run(query, username=self.username, postid=postid)
 
 
     def follow_user(self, username):
         """
-        used to follow a user, @param username   the username of the user i would
+        used to follow a user, @param username the username of the user i would
         like to follow
         """
-        usertofollow = graph.find_one('User', 'username', username)
-        userfollowing = self.get_this_user_data()
-        graph.merge(Relationship(userfollowing, 'FOLLOWING', usertofollow))
+        query = '''
+        MATCH (user:User),(following:User)
+        WHERE user.username = {username} AND following.username = {fusername}
+        CREATE (user)-[r:FOLLOWING]->(following)
+        RETURN r
+        '''
+        graph.run(query, username=self.username, fusername=username)
 
 
     def unfollow_user(self, username):
@@ -548,9 +538,9 @@ class User:
         pass
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Graph Database functions that are not related to creating a user instance
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 def get_tweet_likes_usernames(postid):
     """
     get all the usernames of users that liked a tweet, make use of the tweetid
@@ -567,8 +557,9 @@ def get_tweet_likes_usernames(postid):
 
 def get_tweet_retweets_usernames(postid):
     """
-    get all the usernames of users that retweeded a tweet, make use of the tweetid
-    or postid to search for the usernames that retweeted a post or tweet
+    get all the usernames of users that retweeded a tweet, make use of the
+    tweetid or postid to search for the usernames that retweeted a post or
+    tweet
     """
     query = '''
     MATCH (post:Post)-[:RETWEET]-(user:User)
@@ -579,14 +570,29 @@ def get_tweet_retweets_usernames(postid):
     return [result['user.username'] for result in queryresults]
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Test client for models. [NOTE used during development stage]
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if __name__ == '__main__':
-    print (User('HexDEADBEEF').is_following('nish'))
-    print(User('HexDEADBEEF').is_following('tahir'))
-
     """
+    print("Retweeting")
+    # test retweeting, make Corban retweet the post
+    User('Corban').retweet_post('e48c3d0a-66f7-48ea-a069-d98ca6e02216')
+    User('keanud').retweet_post('2a73d1c0-4546-46e1-adcd-dd37d91da15f')
+    User('Corban').retweet_post('250f2a79-59ee-4700-aa1e-b2c7594cedb2')
+    User('keanudamon123').retweet_post('250f2a79-59ee-4700-aa1e-b2c7594cedb2')
+    User('nish').retweet_post('250f2a79-59ee-4700-aa1e-b2c7594cedb2')
+    User('keanud').retweet_post('250f2a79-59ee-4700-aa1e-b2c7594cedb2')
+    User('nish').like_post('250f2a79-59ee-4700-aa1e-b2c7594cedb2')
+    User('Corban').like_post('250f2a79-59ee-4700-aa1e-b2c7594cedb2')
+    User('keanudamon123').like_post('250f2a79-59ee-4700-aa1e-b2c7594cedb2')
+    User('Corban').retweet_post('e48c3d0a-66f7-48ea-a069-d98ca6e02216')
+    print("done retweeting")
+
+    # check if i am following nish and tahir
+    print(User('HexDEADBEEF').is_following('nish'), "True following Nish")
+    print(User('HexDEADBEEF').is_following('tahir'), "False not following Tahir")
+
     user_following_users = User('HexDEADBEEF').get_user_following()
     print("\n\nUSERS THAT I AM FOLLOWING")
     [print(following) for following in user_following_users]
@@ -608,24 +614,15 @@ if __name__ == '__main__':
     user_following_users = User('HexDEADBEEF').get_user_following()
     print("\n\nUSERS THAT I AM FOLLOWING")
     [print(following) for following in user_following_users]
-
+    """
     # get users that are following nish
     user_followers = User('nish').get_user_followers()
+    for u in user_followers:
+        print(u['username'])
+    """
     print("\n\nNISH's FOLLOWERS")
     [print(follower) for follower in user_followers]
 
-    # test retweeting, make Corban retweet the post
-    User('Corban').retweet_post('e48c3d0a-66f7-48ea-a069-d98ca6e02216')
-    User('keanud').retweet_post('2a73d1c0-4546-46e1-adcd-dd37d91da15f')
-
-    User('Corban').retweet_post('250f2a79-59ee-4700-aa1e-b2c7594cedb2')
-    User('keanudamon123').retweet_post('250f2a79-59ee-4700-aa1e-b2c7594cedb2')
-    User('nish').retweet_post('250f2a79-59ee-4700-aa1e-b2c7594cedb2')
-    User('keanud').retweet_post('250f2a79-59ee-4700-aa1e-b2c7594cedb2')
-
-    User('nish').like_post('250f2a79-59ee-4700-aa1e-b2c7594cedb2')
-    User('Corban').like_post('250f2a79-59ee-4700-aa1e-b2c7594cedb2')
-    User('keanudamon123').like_post('250f2a79-59ee-4700-aa1e-b2c7594cedb2')
 
     print('\n\nMY RECENT POSTS')
     users_recent_posts = User('HexDEADBEEF').get_recent_posts()
