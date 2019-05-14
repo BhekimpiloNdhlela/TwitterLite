@@ -538,6 +538,12 @@ def get_tweet_retweets_usernames(postid):
     return [result['user.username'] for result in queryresults]
 
 
+
+def get_tweets_with_hashtag(user, hashtag):
+    query = '''
+    MATCH (:User {user})-[:FOLLOWING]->(users:User)-[:PUBLISHED]->(posts:Post)<-[HASHTAG]-(tag:Tag {hastag})
+    '''
+    
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Test client for models. [NOTE used during development stage]
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
