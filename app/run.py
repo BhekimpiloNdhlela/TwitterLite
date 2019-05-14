@@ -7,7 +7,7 @@ from jinja2 import Environment, select_autoescape, FileSystemLoader
 from werkzeug.utils import secure_filename
 from mock_data import *
 from models import *
-from nltk_model import *
+#from nltk_model import *
 import os
 
 app = Flask(__name__)
@@ -38,8 +38,12 @@ def view_user_bio(username):
         set_message("Please Login", "danger")
         return redirect('/login', '302')
     template = env.get_template("friends.html")
+    # NOTE: KINDA SHITY WAY OF DOING IT FIX THIS
+    if username == session['username']:
+        user = session_user = User(username)
+    else:
+        user, session_user = User(username), User(session['username'])
 
-    user, session_user = User(username), User(session['username'])
     following = user.get_user_following()
     vfollowing = session_user.get_user_following()
     followers = user.get_user_followers()
@@ -51,6 +55,9 @@ def view_user_bio(username):
     for tweet in tweets:
         tweet['likers'] = get_tweet_likes_usernames(tweet['id'])
         tweet['retweeters'] = get_tweet_retweets_usernames(tweet['id'])
+        tweet['likebtnactive'] = session['username'] in tweet['likers']
+        tweet['retweetbtnactive'] = session['username'] in tweet['retweeters']
+        
     # deactivate unfollow button for me while viewing a guest account
     for f in followers:
         f['following'] = f in vfollowing or f['username'] == session['username']
@@ -84,6 +91,9 @@ def home():
     for tweet in tweets:
         tweet[1]['likers'] = get_tweet_likes_usernames(tweet[1]['id'])
         tweet[1]['retweeters'] = get_tweet_retweets_usernames(tweet[1]['id'])
+        tweet[1]['likebtnactive'] = session['username'] in tweet[1]['likers']
+        tweet[1]['retweetbtnactive'] = session['username'] in tweet[1]['retweeters']
+        
     friend_suggestions = session_user.get_recommended_users()
 
     msg = get_message()
@@ -151,17 +161,20 @@ def account():
 
     user_tweets = [session_user.get_user_posts()]
 
-    train_data = train_model("train.csv")
-    topics = []
-    test_tweet = "This tweet about weather and the solar eclipse"
+    """
+    TODO: uncomment the analytics code after Keanu freezes to the dependency file
+    """
+    #train_data = train_model("train.csv")
+    #topics = []
+    #test_tweet = "This tweet about weather and the solar eclipse"
     # for tweet in tweets:
-    topics.append(get_topics(test_tweet, train_data))
+    #topics.append(get_topics(test_tweet, train_data))
 
     return template.render(
         session_user=session_user.get_json_user(),
         user=user,
         tweets=tweets,
-        topics=topics,
+        #topics=topics,
         treading=mock_treading,
         fsuggestions=friend_suggestions,
         message=get_message(),
@@ -262,6 +275,7 @@ def forgot_password():
     sumary_line
     """
     if request.method == 'POST':
+        # TODO: forgot password functionality
         pass
     template = env.get_template("forgot-password.html")
     return template.render()
@@ -346,20 +360,6 @@ def search_user():
     return "nothing"
 
 
-@app.route('/like/<postid>', methods=['GET'])
-def like_post(postid):
-    """
-    Likes a users post
-    @params postid Postid of the post to like
-    """
-    if is_logged_in() == False:
-        set_message("Please Login to like tweets", "danger")
-        return redirect('/login', '302')
-    if request.method == 'GET':
-        User(session['username']).like_post(postid)
-        return 'Unliked'  # this should be a template
-
-
 @app.route('/likers/<postid>', methods=['GET'])
 def get_likers(postid):
     """
@@ -369,21 +369,8 @@ def get_likers(postid):
     if is_logged_in() == False:
         set_message("Please Login", "danger")
         return redirect('/login', '302')
-
     if request.method == 'GET':
         return jsonify(users=get_tweet_likes_usernames(postid))
-
-
-@app.route('/retweet/<postid>', methods=['GET'])
-def retweet_post(postid):
-    """
-    used to retweet a tweet
-    """
-    if False == is_logged_in():
-        set_message("Login to retweet a post", "danger")
-        return redirect('/login', 302)
-    User(session['username']).retweet_post(postid)
-    return 'True'  # this should be a template
 
 
 @app.route('/retweeters/<postid>', methods=['GET'])
@@ -404,7 +391,6 @@ def follow_user(username):
     if False == is_logged_in():
         set_message("you should be loged in to follow a user", "danger")
         return redirect('/login', 302)
-    set_message('followed, @'+username,  'primary')
     User(session['username']).follow_user(username)
     return redirect('/profile/'+username, 302)
 
@@ -420,6 +406,60 @@ def unfollow_user(username):
         return redirect('/login', 302)
     User(session['username']).unfollow_user(username)
     return redirect('/profile/'+username, 302)
+
+
+@app.route('/retweet/<postid>', methods=['GET'])
+def retweet_post(postid):
+    """
+    used to retweet a tweet
+    """
+    if False == is_logged_in():
+        set_message("Login to retweet a post", "danger")
+        return redirect('/login', 302)
+    User(session['username']).retweet_post(postid)
+    return 'retweeted'  # this should be a template
+
+
+@app.route('/unretweet/<postid>', methods=['GET'])
+def unretweet_post(postid):
+    """
+    used to retweet a tweet
+    """
+    if False == is_logged_in():
+        set_message("Login to retweet a post", "danger")
+        return redirect('/login', 302)
+    User(session['username']).unretweet_tweet(postid)
+    return 'unretweeted'  # this should be a template
+
+
+
+@app.route('/like/<postid>', methods=['GET'])
+def like_post(postid):
+    """
+    Likes a users post
+    @params postid Postid of the post to like
+    """
+    if is_logged_in() == False:
+        set_message("Please Login to like tweets", "danger")
+        return redirect('/login', '302')
+    if request.method == 'GET':
+        User(session['username']).like_post(postid)
+        return 'unlike'  # this should be a template
+
+
+@app.route('/unlike/<postid>', methods=['GET'])
+def unlike_post(postid):
+    """
+    Likes a users post
+    @params postid Postid of the post to like
+    """
+    if is_logged_in() == False:
+        set_message("Please Login to like tweets", "danger")
+        return redirect('/login', '302')
+    if request.method == 'GET':
+        User(session['username']).unlike_tweet(postid)
+        return 'like'  # this should be a template
+
 
 if __name__ == '__main__':
     app.run(debug=True)

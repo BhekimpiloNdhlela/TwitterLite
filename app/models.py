@@ -402,6 +402,7 @@ class User:
         query = '''
         MATCH (user:User),(post:Post)
         WHERE user.username = {username} AND post.id = {postid}
+        SET post.retweets = post.retweets + 1
         CREATE (user)-[r:RETWEETED]->(post)
         RETURN r
         '''
@@ -456,8 +457,9 @@ class User:
         given a post id
         """
         query = '''
-        MACTH (user:User)-[r:LIKES]->(post:Post)
+        MATCH (user:User)-[r:LIKES]->(post:Post)
         WHERE user.username = {username} AND post.id = {postid}
+        SET post.likes = post.likes - 1
         DELETE r
         '''
         graph.run(query, username=self.username, postid=postid)
@@ -469,8 +471,9 @@ class User:
         given a post id
         """
         query = '''
-        MATCH (user:User)-[r:RETWEET]->(post:Post)
+        MATCH (user:User)-[r:RETWEETED]->(post:Post)
         WHERE user.username = {username} AND post.id = {postid}
+        SET post.retweets = post.retweets - 1
         DELETE r
         '''
         graph.run(query, username=self.username, postid=postid)
@@ -538,7 +541,7 @@ def get_tweet_retweets_usernames(postid):
     tweet
     """
     query = '''
-    MATCH (post:Post)-[:RETWEET]-(user:User)
+    MATCH (post:Post)-[:RETWEETED]-(user:User)
     WHERE post.id = {postid}
     RETURN user.username
     '''
@@ -550,6 +553,12 @@ def get_tweet_retweets_usernames(postid):
 Test client for models. [NOTE used during development stage]
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if __name__ == '__main__':
+
+    
+    User('keanudamon123').retweet_post('27f017b8-32a0-4b0b-a301-dcc3bba8c57f')
+    User('nish').retweet_post('27f017b8-32a0-4b0b-a301-dcc3bba8c57f')
+    User('keanud').retweet_post('27f017b8-32a0-4b0b-a301-dcc3bba8c57f')
+    
     """
     print("Retweeting")
     # test retweeting, make Corban retweet the post
@@ -578,14 +587,16 @@ if __name__ == '__main__':
     # unfollow Corban
     User('HexDEADBEEF').unfollow_user('Corban')
     """
+    """
     print("\n\nUSERS THAT I AM FOLLOWING")
     user_following_users = User('HexDEADBEEF').get_user_following()
     print("following")
     [print(following['username']) for following in user_following_users]
-
+    """
+    """
     print(User('HexDEADBEEF').is_following('nish'), "am i following nish")
     print(User('HexDEADBEEF').is_following('tahir'), 'am i following tahir')
-
+    """
     """
     # get all the posts that HexDEADBEEF has posted
 

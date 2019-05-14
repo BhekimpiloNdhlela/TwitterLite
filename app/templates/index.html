@@ -70,12 +70,27 @@
     </div>
 
     <br /><br />
+    {% if tweet[1]['likebtnactive'] == false %}
     <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"
         onclick="likePost('{{ tweet[1]['id'] | safe }}', this)" title="Like Tweet">
         <i class="fa fa-thumbs-up"></i> Like
     </button>
-    <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom" title="Retweet">
+    {% else %}
+        <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"
+        onclick="unlikePost('{{ tweet[1]['id'] | safe }}', this)" title="Like Tweet">
+        <i class="fa fa-thumbs-down"></i> unlike
+        </button>
+    {% endif %}
+
+    {% if tweet[1]['retweetbtnactive'] == false %}
+        <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom" title="Retweet">
         <i class="fa fa-retweet"></i> Retweet
-    </button>
+        </button>
+    {% else %}
+        <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom" title="Retweet">
+        <i class="fa fa-retweet"></i> unretweet
+        </button>
+    {% endif %}
+
 </div>
 {% endfor %} {% endblock %}

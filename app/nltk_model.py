@@ -1,7 +1,7 @@
 import nltk
 import spacy
 from spacy.lang.en import English
-from nltk.corpus import wordnet as wn    
+from nltk.corpus import wordnet as wn
 from nltk.stem.wordnet import WordNetLemmatizer
 import random
 import gensim
@@ -55,17 +55,17 @@ def prepare_tweet(text):
         # text_data.append(tokens)
     return tokens
 
-def unique(list1): 
-    unique_list = []  
-    for x in list1:  
-        if x not in unique_list: 
-            unique_list.append(x) 
+def unique(list1):
+    unique_list = []
+    for x in list1:
+        if x not in unique_list:
+            unique_list.append(x)
     return unique_list
 
 def get_topics(tweet, train_data):
     dictionary = corpora.Dictionary(train_data)
     tokens = prepare_tweet(tweet)
-    corpus = [dictionary.doc2bow(tokens)]  
+    corpus = [dictionary.doc2bow(tokens)]
     pickle.dump(corpus, open('corpus.pkl', 'wb'))
     dictionary.save('dictionary.gensim')
 
@@ -80,7 +80,7 @@ def get_topics(tweet, train_data):
         topics.append(split[1])
         topics.append(split[3])
         topics.append(split[5])
-        # print(split[1])  
+        # print(split[1])
     return unique(topics)
 
 def train_model(text):
@@ -94,7 +94,7 @@ def train_model(text):
     return train_data
 
 
-# USE pyLDAvis    
+# USE pyLDAvis
 # topics = get_topics("test", train_model("test"))
 
 # ldamodel = gensim.models.ldamodel.LdaModel(corpus, num_topics = 3, id2word=dictionary, passes=15)

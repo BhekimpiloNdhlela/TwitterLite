@@ -103,6 +103,12 @@ const likePost = (tweetID, thisElement) => {
     });
 }
 
+const unlikePost = (tweetID, thisElement) => {
+    $.get(("/unlike/" + tweetID)).then((response) => {
+        $(thisElement).text(response);
+    });
+}
+
 
 const getLikes = (tweetID, thisElement) => {
     $.get(("/likers/" + tweetID)).then((response) => {
