@@ -72,13 +72,18 @@
     <br /><br />
     {% if tweet[1]['likebtnactive'] == false %}
     <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"
-        onclick="likePost('{{ tweet[1]['id'] | safe }}', this)" title="Like Tweet">
-        <i class="fa fa-thumbs-up"></i> Like
+        onclick="likePost('{{ tweet[1]['id'] | safe }}', this);" id="like{{ tweet[1]['id'] | safe }}"
+        title="Like Tweet">
+        <span id="like{{ tweet[1]['id'] | safe }}like"><i class="fa fa-thumbs-up"></i> Like</span>
+        <span id="like{{ tweet[1]['id'] | safe }}unlike" style="display:none;"><i class="fa fa-thumbs-down like"></i>
+            Unlike</span>
     </button>
     {% else %}
     <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"
-        onclick="unlikePost('{{ tweet[1]['id'] | safe }}', this)" title="Like Tweet">
-        <i class="fa fa-thumbs-down like"></i> Unlike
+        onclick="unlikePost('{{ tweet[1]['id'] | safe }}', this);" title="Like Tweet">
+        <span id="like{{ tweet[1]['id'] | safe }}like" style="display:none;"><i class="fa fa-thumbs-up"></i> Like</span>
+        <span id="like{{ tweet[1]['id'] | safe }}unlike"><i class="fa fa-thumbs-down like"></i>
+            Unlike</span>
     </button>
     {% endif %}
 

@@ -101,18 +101,25 @@ const likePost = (tweetID, thisElement) => {
     $.get(("/like/" + tweetID)).then((response) => {
 
         if (response == 'Unlike') {
-            $(thisElement).text('Unlike');
-            $(thisElement).attr('onclick', 'unlikePost("' + tweetID + '")');
+            console.log(response);
+            $('#like' + tweetID).attr('onclick', 'unlikePost(\'' + tweetID + '\');');
+            $('#like' + tweetID + 'unlike').show();
+            $('#like' + tweetID + 'like').hide();
+            console.log($('#like' + tweetID))
+
         }
-        console.log($(thisElement))
     });
 }
 
 const unlikePost = (tweetID, thisElement) => {
     $.get(("/unlike/" + tweetID)).then((response) => {
+
         if (response == 'Like') {
-            $(thisElement).text('Like');
-            $(thisElement).attr('onclick', 'likePost("' + tweetID + '")');
+            console.log(response);
+            $('#like' + tweetID).attr('onclick', 'likePost(\'' + tweetID + '\');');
+            $('#like' + tweetID + 'like').show();
+            $('#like' + tweetID + 'unlike').hide();
+            console.log($('#like' + tweetID))
         }
     });
 }
@@ -143,7 +150,7 @@ const getRetweetsUsers = (tweetID, thisElement) => {
  */
 const followUser = (username, thisElement) => {
     $.get(("/follow/" + username)).then((response) => {
-        $(thisElement).replace('Follow', response);
+        $(thisElement).text(response);
         $(thisElement).attr('href', '/unfollow/' + username);
     });
 }
