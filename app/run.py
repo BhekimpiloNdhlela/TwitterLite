@@ -7,6 +7,7 @@ from jinja2 import Environment, select_autoescape, FileSystemLoader
 from werkzeug.utils import secure_filename
 from mock_data import *
 from models import *
+from nltk_model import *
 import os
 
 app = Flask(__name__)
@@ -150,10 +151,19 @@ def account():
     tweets = session_user.get_timeline_posts()
     friend_suggestions = session_user.get_recommended_users()
 
+    user_tweets = [session_user.get_user_posts()]
+
+    train_data = train_model("train.csv")
+    topics = []
+    for tweet in tweets:
+        # print(tweet)
+        # topics.append(get_topics(user_tweets[i], train_data))
+
     return template.render(
         session_user=session_user.get_json_user(),
         user=user,
         tweets=tweets,
+        topic=topics,
         treading=mock_treading,
         fsuggestions=friend_suggestions,
         message=get_message(),
