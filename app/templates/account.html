@@ -8,13 +8,13 @@
     <br>
     <div class="w3-row">
         <a href="javascript:void(0)" onclick="openCity(event, 'Basic Details');">
-            <div class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding w3-border-red">Basic Details</div>
+            <div class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding w3-border-blue" style="text-align: center;">Basic Details</div>
         </a>
         <a href="javascript:void(0)" onclick="openCity(event, 'Security');">
-            <div class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding">Security</div>
+            <div class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding" style="text-align: center;">Security</div>
         </a>
         <a href="javascript:void(0)" onclick="openCity(event, 'Tab 3');">
-            <div class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding">My Network Visualization</div>
+            <div class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding" style="text-align: center;">Analystics</div>
         </a>
     </div>
 
@@ -79,12 +79,18 @@
     </div>
 
     <div id="Tab 3" class="w3-container tab" style="display:none">
-        <h2>My Network Visualization</h2>
-        <p>
-            Add a tab that can be used to see a <strong>D3.js</strong> visualization of
-            the network of users, with follow relationships indicated,
-            and each user also labelled by username and total number of
-            likes of tweets</p>
+        <br>
+        <h3 style="text-align: center;">Top topics</h3>
+        
+        {% for topic in topics %}
+        <div class="w3-container w3-card w3-white w3-round w3-margin" style="text-align: center;">
+            <br>
+            <p>{{ topic }}</p>
+        </div>
+        {% endfor %}
+
+
+
     </div>
 
 
@@ -97,10 +103,10 @@
             }
             tablinks = document.getElementsByClassName("tablink");
             for (i = 0; i < x.length; i++) {
-                tablinks[i].className = tablinks[i].className.replace(" w3-border-red", "");
+                tablinks[i].className = tablinks[i].className.replace(" w3-border-blue", "");
             }
             document.getElementById(cityName).style.display = "block";
-            evt.currentTarget.firstElementChild.className += " w3-border-red";
+            evt.currentTarget.firstElementChild.className += " w3-border-blue";
         }
     </script>
 

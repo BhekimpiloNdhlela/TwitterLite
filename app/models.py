@@ -315,7 +315,7 @@ class User:
         RETURN user
         '''
         queryresults = graph.run(query, username=self.username)
-        return [result['user'] for result in queryresults]
+        return set([result['user'] for result in queryresults])
 
 
     def get_user_following(self):
@@ -328,7 +328,7 @@ class User:
         RETURN following
         '''
         queryresults = graph.run(query, username=self.username)
-        return [result['following'] for result in queryresults]
+        return set([result['following'] for result in queryresults])
 
 
     def get_user_posts(self):
@@ -338,10 +338,10 @@ class User:
         query = '''
         MATCH (user:User)-[:PUBLISHED]->(post:Post)
         WHERE user.username = {username}
-        RETURN post.id
+        RETURN post
         '''
         queryresults = graph.run(query, username=self.username)
-        return [result['post.id'] for result in queryresults]
+        return [result['post'] for result in queryresults]
 
 
     def get_recent_posts(self):
@@ -369,13 +369,11 @@ class User:
         WHERE user.username = {username}
         RETURN users, posts
         ORDER BY posts.timestamp DESC, posts.likes DESC
-        SKIP toInteger(20*{interation})
         LIMIT 20
         '''
         queryresults = graph.run(
             query,
-            username=self.username,
-            interation=interation
+            username=self.username
         )
         return [[results['users'], results['posts']] for results in queryresults]
 
@@ -404,6 +402,7 @@ class User:
         query = '''
         MATCH (user:User),(post:Post)
         WHERE user.username = {username} AND post.id = {postid}
+        SET post.retweets = post.retweets + 1
         CREATE (user)-[r:RETWEETED]->(post)
         RETURN r
         '''
@@ -426,8 +425,8 @@ class User:
 
     def follow_user(self, username):
         """
-        used to follow a user, @param username the username of the user i would
-        like to follow
+        used to follow a user
+        @param username the username of the user to follow
         """
         if self.is_following(username) == False:
             query = '''
@@ -458,8 +457,9 @@ class User:
         given a post id
         """
         query = '''
-        MACTH (user:User)-[r:LIKES]->(post:Post)
+        MATCH (user:User)-[r:LIKES]->(post:Post)
         WHERE user.username = {username} AND post.id = {postid}
+        SET post.likes = post.likes - 1
         DELETE r
         '''
         graph.run(query, username=self.username, postid=postid)
@@ -471,8 +471,9 @@ class User:
         given a post id
         """
         query = '''
-        MATCH (user:User)-[r:RETWEET]->(post:Post)
+        MATCH (user:User)-[r:RETWEETED]->(post:Post)
         WHERE user.username = {username} AND post.id = {postid}
+        SET post.retweets = post.retweets - 1
         DELETE r
         '''
         graph.run(query, username=self.username, postid=postid)
@@ -482,7 +483,17 @@ class User:
         """
         check if this user is following the other user
         """
-        return username in self.get_user_following()
+        query = '''
+        MATCH (user:User)-[:FOLLOWING]->(following:User)
+        WHERE user.username = {username} AND following.username = {fusername}
+        RETURN following.username
+        '''
+        queryresults = graph.run(
+            query,
+            username=self.username,
+            fusername=username
+        )
+        return username in [res['following.username'] for res in queryresults]
 
 
     def check_post_like(self, postid):
@@ -520,7 +531,7 @@ def get_tweet_likes_usernames(postid):
     RETURN user.username
     '''
     queryresults = graph.run(query, postid=postid)
-    return [result['user.username'] for result in queryresults]
+    return set([result['user.username'] for result in queryresults])
 
 
 def get_tweet_retweets_usernames(postid):
@@ -530,12 +541,12 @@ def get_tweet_retweets_usernames(postid):
     tweet
     """
     query = '''
-    MATCH (post:Post)-[:RETWEET]-(user:User)
+    MATCH (post:Post)-[:RETWEETED]-(user:User)
     WHERE post.id = {postid}
     RETURN user.username
     '''
     queryresults = graph.run(query, postid=postid)
-    return [result['user.username'] for result in queryresults]
+    return set([result['user.username'] for result in queryresults])
 
 
 
@@ -548,6 +559,13 @@ def get_tweets_with_hashtag(user, hashtag):
 Test client for models. [NOTE used during development stage]
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if __name__ == '__main__':
+
+    
+    User('keanudamon123').retweet_post('27f017b8-32a0-4b0b-a301-dcc3bba8c57f')
+    User('nish').retweet_post('27f017b8-32a0-4b0b-a301-dcc3bba8c57f')
+    User('keanud').retweet_post('27f017b8-32a0-4b0b-a301-dcc3bba8c57f')
+    
+    """
     print("Retweeting")
     # test retweeting, make Corban retweet the post
     User('Corban').retweet_post('e48c3d0a-66f7-48ea-a069-d98ca6e02216')
@@ -574,17 +592,24 @@ if __name__ == '__main__':
 
     # unfollow Corban
     User('HexDEADBEEF').unfollow_user('Corban')
-
+    """
+    """
     print("\n\nUSERS THAT I AM FOLLOWING")
     user_following_users = User('HexDEADBEEF').get_user_following()
-    [print(following) for following in user_following_users]
-
-
+    print("following")
+    [print(following['username']) for following in user_following_users]
+    """
+    """
+    print(User('HexDEADBEEF').is_following('nish'), "am i following nish")
+    print(User('HexDEADBEEF').is_following('tahir'), 'am i following tahir')
+    """
+    """
     # get all the posts that HexDEADBEEF has posted
+
     print("\ALL MY POSTS ID")
     user_recent_posts = User('HexDEADBEEF').get_user_posts()
-    [print(post) for post in user_recent_posts]
-
+    [print(post['hashtags']) for post in user_recent_posts]
+   
     # get the users that are following HexDEADBEEF
     print("\n\nUSERS THAT I AM FOLLOWING")
     user_following_users = User('HexDEADBEEF').get_user_following()
@@ -624,3 +649,4 @@ if __name__ == '__main__':
     print("\n\nPOST RETWEETERS")
     postretweeters = get_tweet_retweets_usernames('250f2a79-59ee-4700-aa1e-b2c7594cedb2')
     [print(postretweeter) for postretweeter in postretweeters]
+    """
