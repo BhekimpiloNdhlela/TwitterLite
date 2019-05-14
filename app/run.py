@@ -155,7 +155,7 @@ def account():
 
     train_data = train_model("train.csv")
     topics = []
-    for tweet in tweets:
+    # for tweet in tweets:
         # print(tweet)
         # topics.append(get_topics(user_tweets[i], train_data))
 
