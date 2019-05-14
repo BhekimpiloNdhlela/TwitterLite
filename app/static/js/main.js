@@ -47,10 +47,6 @@ $(document.body).ready(function () {
         return html.replace(html, moment(moment(html)).twitterLong());
     });
 
-    $(".tweetbox").on("change", (e) => {
-        console.log(e);
-    });
-
     $(document.body).ready(function () {
         var i = 0,
             j = '',
