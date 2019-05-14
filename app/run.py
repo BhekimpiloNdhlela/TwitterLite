@@ -155,15 +155,15 @@ def account():
 
     train_data = train_model("train.csv")
     topics = []
+    test_tweet = "This tweet about weather and the solar eclipse"
     # for tweet in tweets:
-        # print(tweet)
-        # topics.append(get_topics(user_tweets[i], train_data))
+    topics.append(get_topics(test_tweet, train_data))
 
     return template.render(
         session_user=session_user.get_json_user(),
         user=user,
         tweets=tweets,
-        topic=topics,
+        topics=topics,
         treading=mock_treading,
         fsuggestions=friend_suggestions,
         message=get_message(),

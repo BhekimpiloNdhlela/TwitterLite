@@ -65,7 +65,7 @@ def unique(list1):
 def get_topics(tweet, train_data):
     dictionary = corpora.Dictionary(train_data)
     tokens = prepare_tweet(tweet)
-    corpus = [dictionary.doc2bow(text) for text in tokens]  
+    corpus = [dictionary.doc2bow(tokens)]  
     pickle.dump(corpus, open('corpus.pkl', 'wb'))
     dictionary.save('dictionary.gensim')
 
