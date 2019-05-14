@@ -46,7 +46,6 @@ passlib==1.6.5
 pathlib2==2.3.3
 pexpect==4.7.0
 pickleshare==0.7.5
-pkg-resources==0.0.0
 plac==0.9.6
 pluggy==0.11.0
 preshed==2.0.1
