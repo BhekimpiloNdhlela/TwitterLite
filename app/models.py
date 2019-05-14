@@ -418,9 +418,9 @@ class User:
         WHERE user.username = {username} AND post.id = {postid}
         SET post.likes = toInteger(post.likes + 1)
         CREATE (user)-[r:LIKES]->(post)
-        RETURN r
+        RETURN post.likes
         '''
-        graph.run(query, username=self.username, postid=postid)
+        return set(graph.run(query, username=self.username, postid=postid))
 
 
     def follow_user(self, username):
@@ -494,6 +494,20 @@ class User:
             fusername=username
         )
         return username in [res['following.username'] for res in queryresults]
+
+    def search(self, string):
+        """
+        return recommend users for the logged in user
+        @params self Intstance of itself
+        @return posts An Array of the users
+        """
+        query = '''
+        MATCH(users: User)
+        WHERE users.username CONTAINS {string}
+        RETURN users.username AS username
+        LIMIT 5
+        '''
+        return [results['username'] for results in graph.run(query, string=string)]
 
 
     def check_post_like(self, postid):

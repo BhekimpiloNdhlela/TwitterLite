@@ -100,46 +100,22 @@ $("#imageUpload").click(function () {
 const likePost = (tweetID, thisElement) => {
     $.get(("/like/" + tweetID)).then((response) => {
 
-        if (response == 'Unlike') {
-            console.log(response);
-            $('#like' + tweetID).attr('onclick', 'unlikePost(\'' + tweetID + '\');');
-            $('#like' + tweetID + 'unlike').show();
-            $('#like' + tweetID + 'like').hide();
-            console.log($('#like' + tweetID))
+        $('#like' + tweetID).attr('onclick', 'unlikePost(\'' + tweetID + '\');');
+        $('#like' + tweetID + 'unlike').show();
+        $('#like' + tweetID + 'like').hide();
+        console.log(response)
+        $('#like' + tweetID + 'value').text(response['likes']);
 
-        }
     });
 }
 
 const unlikePost = (tweetID, thisElement) => {
     $.get(("/unlike/" + tweetID)).then((response) => {
 
-        if (response == 'Like') {
-            console.log(response);
-            $('#like' + tweetID).attr('onclick', 'likePost(\'' + tweetID + '\');');
-            $('#like' + tweetID + 'like').show();
-            $('#like' + tweetID + 'unlike').hide();
-            console.log($('#like' + tweetID))
-        }
-    });
-}
-
-
-const getLikes = (tweetID, thisElement) => {
-    $.get(("/likers/" + tweetID)).then((response) => {
-
-        response['users'].forEach(element => {
-            console.log(element);
-        });
-    });
-}
-
-const getRetweetsUsers = (tweetID, thisElement) => {
-    $.get(("/retweeters/" + tweetID)).then((response) => {
-
-        response['users'].forEach(element => {
-            console.log(element);
-        });
+        $('#like' + tweetID).attr('onclick', 'likePost(\'' + tweetID + '\');');
+        $('#like' + tweetID + 'like').show();
+        $('#like' + tweetID + 'unlike').hide();
+        // }
     });
 }
 
@@ -166,6 +142,18 @@ const unfollowUser = (username, thisElement) => {
         $(thisElement).attr('href', '/follow/' + username);
     });
 }
+
+
+/**
+ * Makes a AJAX get search results
+ */
+$('#search').keyup(() => {
+    $.get(("/search/" + $('#search').val())).then((users) => {
+        users['username'].forEach(username => {
+            console.log(username)
+        })
+    });
+});
 
 /**
  * Switches a tab in a tabbed environment
