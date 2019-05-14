@@ -9,15 +9,19 @@
     <div class="w3-row">
         <a href="javascript:void(0)" onclick="changeTab(event, 'Your Tweets');">
             <div class="w3-third tabLink w3-bottombar w3-hover-light-grey w3-padding w3-border-blue"
-                style="text-align:center;">Your Tweets</div>
+                style="text-align:center;">
+                Your Tweets
+            </div>
         </a>
         <a href="javascript:void(0)" onclick="changeTab(event, 'Following');">
             <div class="w3-third tabLink w3-bottombar w3-hover-light-grey w3-padding" style="text-align:center;">
-                Following</div>
+                Following
+            </div>
         </a>
         <a href="javascript:void(0)" onclick="changeTab(event, 'Followers');">
             <div class="w3-third tabLink w3-bottombar w3-hover-light-grey w3-padding" style="text-align:center;">
-                Followers</div>
+                Followers
+            </div>
         </a>
     </div>
 
@@ -28,7 +32,8 @@
             <img src="{{ user['avatar'] }}" alt="Avatar" class="w3-left w3-circle w3-margin-right"
                 style="width:60px">
             <span class="w3-right w3-opacity timestamp">{{ tweet['date'] }}</span>
-            <h3><a href="/profile/{{ user['username'] }}" style="text-decoration: none;">@{{ user['username'] }}</a>
+            <h3>
+                <a href="/profile/{{ user['username'] }}" style="text-decoration: none;">@{{ user['username'] }}</a>
             </h3>
             <br>
             <p>{{ tweet['tweet'] }}</p>
@@ -40,7 +45,6 @@
                 </div>
                 {% endfor %}
             </div>
-
             <div class="w3-dropdown-hover w3-hide-small">
                 <button class="w3-button w3-padding-small" title="Notifications"></button>
                     <i class="fa fa-heart">{{ tweet["likes"] }} </i>
@@ -62,51 +66,57 @@
                     {% endfor %}
                 </div>
             </div>
-
-
             <br><br>
             <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"
                 onclick="likePost('{{tweet['id']|safe}}', this)" title="Like Tweet"><i class="fa fa-thumbs-up"></i>
-                Like</button>
+                Like
+            </button>
             <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom" title="Retweet"><i
                     class="fa fa-retweet"></i>
-                Retweet</button>
+                Retweet
+            </button>
             <hr class="w3-clear">
-
         </div>
-
         {% endfor %}
     </div>
 
     <div id="Following" class="w3-container tab" style="display:none">
         {% for follow in following %}
-        <br>
-        <img src="{{ follow['useravatar'] }}" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
-        <h3><a href="/profile/{{ follow['username'] }}" style="text-decoration: none;">@{{ follow['username'] }}</a>
-        </h3>
-        {% if activeunfollowbtn == True %}
-        <h4><button type="button" class="w3-button w3-theme-d1 w3-right" style="font-size: 0.8rem;"><i
-                    class="fa fa-user"></i>
-                Unfollow</button></h4>
-        {% endif %}
-        <h4>{{ follow['firstname'] }} {{ follow['lastname']}}</h4>
-        <hr class="w3-clear">
+            <br>
+            <img src="{{ follow['useravatar'] }}" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
+            <h3><a href="/profile/{{ follow['username'] }}" style="text-decoration: none;">@{{ follow['username'] }}</a>
+            </h3>
+            {% if activeunfollow == True %}
+                <h4>
+                    <button type="button" class="w3-button w3-theme-d1 w3-right" style="font-size: 0.8rem;">
+                    <i class="fa fa-user"></i>
+                    Unfollow
+                    </button>
+                </h4>
+            {% endif %}
+            <h4>{{ follow['firstname'] }} {{ follow['lastname']}}</h4>
+            <hr class="w3-clear">
         {% endfor %}
     </div>
 
     <div id="Followers" class="w3-container tab" style="display:none">
         {% for follow in followers %}
-        <br>
-        <img src="{{ follow['useravatar'] }}" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
-        <h3><a href="/profile/{{ follow['username'] }}" style="text-decoration: none;">@{{ follow['username'] }}</a>
-        </h3>
-        {% if follow['following'] == False %}
-        <h4><button type="button" class="w3-button w3-theme-d1 w3-right" style="font-size: 0.8rem;"
-                onclick='followUser({{  follow['username'] | safe }});'><i class="fa fa-user"></i>Follow</button>
-        </h4>
-        {% endif %}
-        <h4>{{ follow['firstname'] }} {{ follow['lastname']}}</h4>
-        <hr class="w3-clear">
+            <br>
+            <img src="{{ follow['useravatar'] }}" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
+            <h3>
+                <a href="/profile/{{ follow['username'] }}" style="text-decoration: none;">@{{ follow['username'] }}</a>
+            </h3>
+            {% if follow['following'] == False %}
+                <h4>
+                    <button type="button" class="w3-button w3-theme-d1 w3-right" style="font-size: 0.8rem;"
+                            onclick='followUser({{  follow['username'] | safe }});'>
+                            <i class="fa fa-user"></i>
+                            Follow
+                    </button>
+                </h4>
+            {% endif %}
+            <h4>{{ follow['firstname'] }} {{ follow['lastname']}}</h4>
+            <hr class="w3-clear">
         {% endfor %}
     </div>
     <br>

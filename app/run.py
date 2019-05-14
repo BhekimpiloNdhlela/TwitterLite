@@ -37,26 +37,23 @@ def view_user_bio(username):
     if is_logged_in() == False:
         set_message("Please Login", "danger")
         return redirect('/login', '302')
-
     template = env.get_template("friends.html")
 
     user, session_user = User(username), User(session['username'])
     following = user.get_user_following()
     vfollowing = session_user.get_user_following()
     followers = user.get_user_followers()
-
     tweets = user.get_user_posts()
+    activeunfollow = True if session['username'] == username else False
+    unfollowthisuser = session_user.is_following(username)
+    friend_suggestions = session_user.get_recommended_users()
+
     for tweet in tweets:
         tweet['likers'] = get_tweet_likes_usernames(tweet['id'])
         tweet['retweeters'] = get_tweet_retweets_usernames(tweet['id'])
-
-    activeunfollow = True if session['username'] == username else False
-
+    # deactivate unfollow button for me while viewing a guest account
     for f in followers:
         f['following'] = f in vfollowing or f['username'] == session['username']
-
-    friend_suggestions = session_user.get_recommended_users()
-
     return template.render(
         session_user=session_user.get_json_user(),
         user=user.get_json_user(),
@@ -66,7 +63,8 @@ def view_user_bio(username):
         following=following,
         followers=followers,
         personaltweets=tweets,
-        activeunfollow=activeunfollow
+        activeunfollow=activeunfollow,
+        unfollowthisuser=unfollowthisuser
     )
 
 
@@ -179,29 +177,7 @@ def tag():
         user=user,
         tweets=mock_tweets,
         treading=mock_treading,
-        messages=mock_messages,
         fsuggestions=mock_fsuggestions
-    )
-
-
-@app.route('/messages')
-def messages():
-    """ sumary_line """
-    if is_logged_in() == False:
-        set_message('Please Login', 'danger')
-        return redirect('/login', '302')
-
-    template = env.get_template("messages.html")
-    session_user = User(session['username'])
-    user = session_user.get_json_user()
-    tweets = session_user.get_timeline_posts()
-    friend_suggestions = session_user.get_recommended_users()
-    return template.render(
-        session_user=session_user.get_json_user(),
-        user=user,
-        treading=mock_treading,
-        messages=mock_messages,
-        fsuggestions=friend_suggestions
     )
 
 
@@ -422,16 +398,28 @@ def get_retweeters(postid):
 @app.route('/follow/<username>', methods=['GET'])
 def follow_user(username):
     """
-    Follows a user
+    follow a user
     @params username Username of the user to follow
     """
     if False == is_logged_in():
-        set_message("Login to follow a user", "danger")
+        set_message("you should be loged in to follow a user", "danger")
         return redirect('/login', 302)
-
+    set_message('followed, @'+username,  'primary')
     User(session['username']).follow_user(username)
-    return 'Unfollow'
+    return redirect('/profile/'+username, 302)
 
+
+@app.route('/unfollow/<username>', methods=['GET'])
+def unfollow_user(username):
+    """
+    Unfollow a user
+    @params username Username of the user to follow
+    """
+    if False == is_logged_in():
+        set_message("you should be logged in to unfollow a user", "danger")
+        return redirect('/login', 302)
+    User(session['username']).unfollow_user(username)
+    return redirect('/profile/'+username, 302)
 
 if __name__ == '__main__':
     app.run(debug=True)

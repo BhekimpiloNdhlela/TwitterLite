@@ -480,7 +480,17 @@ class User:
         """
         check if this user is following the other user
         """
-        return username in self.get_user_following()
+        query = '''
+        MATCH (user:User)-[:FOLLOWING]->(following:User)
+        WHERE user.username = {username} AND following.username = {fusername}
+        RETURN following.username
+        '''
+        queryresults = graph.run(
+            query,
+            username=self.username,
+            fusername=username
+        )
+        return username in [res['following.username'] for res in queryresults]
 
 
     def check_post_like(self, postid):
@@ -567,17 +577,22 @@ if __name__ == '__main__':
 
     # unfollow Corban
     User('HexDEADBEEF').unfollow_user('Corban')
-
+    """
     print("\n\nUSERS THAT I AM FOLLOWING")
     user_following_users = User('HexDEADBEEF').get_user_following()
-    [print(following) for following in user_following_users]
-    """
+    print("following")
+    [print(following['username']) for following in user_following_users]
 
+    print(User('HexDEADBEEF').is_following('nish'), "am i following nish")
+    print(User('HexDEADBEEF').is_following('tahir'), 'am i following tahir')
+
+    """
     # get all the posts that HexDEADBEEF has posted
+
     print("\ALL MY POSTS ID")
     user_recent_posts = User('HexDEADBEEF').get_user_posts()
     [print(post['hashtags']) for post in user_recent_posts]
-    """
+   
     # get the users that are following HexDEADBEEF
     print("\n\nUSERS THAT I AM FOLLOWING")
     user_following_users = User('HexDEADBEEF').get_user_following()
