@@ -7,7 +7,7 @@ from jinja2 import Environment, select_autoescape, FileSystemLoader
 from werkzeug.utils import secure_filename
 from mock_data import *
 from models import *
-from nltk_model import *
+#from nltk_model import *
 import os
 
 app = Flask(__name__)
@@ -159,24 +159,24 @@ def account():
     tweets = session_user.get_timeline_posts()
     friend_suggestions = session_user.get_recommended_users()
 
-    user_tweets = session_user.get_user_posts()
+    #user_tweets = session_user.get_user_posts()
     # for u in user_tweets:
         # print(u['tweet'])
 
     """
     TODO: uncomment the analytics code after Keanu freezes to the dependency file
     """
-    train_data = train_model("train.csv")
-    topics = []
+    #train_data = train_model("train.csv")
+    #topics = []
     # test_tweet = "This tweet about weather and the solar eclipse"
-    for tweet in user_tweets:
-        topics.append(get_topics(tweet['tweet'], train_data))
+    #for tweet in user_tweets:
+    #    topics.append(get_topics(tweet['tweet'], train_data))
 
     return template.render(
         session_user=session_user.get_json_user(),
         user=user,
         tweets=tweets,
-        topics=topics,
+    #    topics=topics,
         treading=mock_treading,
         fsuggestions=friend_suggestions,
         message=get_message(),
