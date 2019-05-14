@@ -99,13 +99,21 @@ $("#imageUpload").click(function () {
  */
 const likePost = (tweetID, thisElement) => {
     $.get(("/like/" + tweetID)).then((response) => {
-        $(thisElement).text(response);
+
+        if (response == 'Unlike') {
+            $(thisElement).text('Unlike');
+            $(thisElement).attr('onclick', 'unlikePost("' + tweetID + '")');
+        }
+        console.log($(thisElement))
     });
 }
 
 const unlikePost = (tweetID, thisElement) => {
     $.get(("/unlike/" + tweetID)).then((response) => {
-        $(thisElement).text(response);
+        if (response == 'Like') {
+            $(thisElement).text('Like');
+            $(thisElement).attr('onclick', 'likePost("' + tweetID + '")');
+        }
     });
 }
 
@@ -135,7 +143,20 @@ const getRetweetsUsers = (tweetID, thisElement) => {
  */
 const followUser = (username, thisElement) => {
     $.get(("/follow/" + username)).then((response) => {
-        $(thisElement).text(response);
+        $(thisElement).replace('Follow', response);
+        $(thisElement).attr('href', '/unfollow/' + username);
+    });
+}
+
+/**
+ * Makes a AJAX get request to unfollow a user
+ * @param {String} username Username of the user to follow
+ * @param {this} thisElement A clone of the button from which it called
+ */
+const unfollowUser = (username, thisElement) => {
+    $.get(("/follow/" + username)).then((response) => {
+        $(thisElement).replace('Unfollow', response);
+        $(thisElement).attr('href', '/follow/' + username);
     });
 }
 
