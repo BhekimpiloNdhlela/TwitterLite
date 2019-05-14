@@ -78,8 +78,8 @@ def get_topics(tweet, train_data):
     for i in prob_topics:
         split = i[1].split("\"")
         topics.append(split[1])
-        topics.append(split[3])
-        topics.append(split[5])
+        # topics.append(split[3])
+        # topics.append(split[5])
         # print(split[1])
     return unique(topics)
 
