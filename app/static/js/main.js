@@ -99,13 +99,28 @@ $("#imageUpload").click(function () {
  */
 const likePost = (tweetID, thisElement) => {
     $.get(("/like/" + tweetID)).then((response) => {
-        $(thisElement).text(response);
+
+        if (response == 'Unlike') {
+            console.log(response);
+            $('#like' + tweetID).attr('onclick', 'unlikePost(\'' + tweetID + '\');');
+            $('#like' + tweetID + 'unlike').show();
+            $('#like' + tweetID + 'like').hide();
+            console.log($('#like' + tweetID))
+
+        }
     });
 }
 
 const unlikePost = (tweetID, thisElement) => {
     $.get(("/unlike/" + tweetID)).then((response) => {
-        $(thisElement).text(response);
+
+        if (response == 'Like') {
+            console.log(response);
+            $('#like' + tweetID).attr('onclick', 'likePost(\'' + tweetID + '\');');
+            $('#like' + tweetID + 'like').show();
+            $('#like' + tweetID + 'unlike').hide();
+            console.log($('#like' + tweetID))
+        }
     });
 }
 
@@ -136,6 +151,19 @@ const getRetweetsUsers = (tweetID, thisElement) => {
 const followUser = (username, thisElement) => {
     $.get(("/follow/" + username)).then((response) => {
         $(thisElement).text(response);
+        $(thisElement).attr('href', '/unfollow/' + username);
+    });
+}
+
+/**
+ * Makes a AJAX get request to unfollow a user
+ * @param {String} username Username of the user to follow
+ * @param {this} thisElement A clone of the button from which it called
+ */
+const unfollowUser = (username, thisElement) => {
+    $.get(("/follow/" + username)).then((response) => {
+        $(thisElement).replace('Unfollow', response);
+        $(thisElement).attr('href', '/follow/' + username);
     });
 }
 
