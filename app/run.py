@@ -88,11 +88,14 @@ def home():
     # if not visiting another persons profile
     user = session_user.get_json_user()
     tweets = session_user.get_timeline_posts()
+    # train_data = train_model("train8.csv")
+    
     for tweet in tweets:
         tweet[1]['likers'] = get_tweet_likes_usernames(tweet[1]['id'])
         tweet[1]['retweeters'] = get_tweet_retweets_usernames(tweet[1]['id'])
         tweet[1]['likebtnactive'] = session['username'] in tweet[1]['likers']
         tweet[1]['retweetbtnactive'] = session['username'] in tweet[1]['retweeters']
+        # tweet[1]['topic'] = get_topics(tweet[1]['tweet'], train_data)
 
     friend_suggestions = session_user.get_recommended_users()
 
