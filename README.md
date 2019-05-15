@@ -36,8 +36,8 @@ Get your Api Key from creating a Sendgrid account [here](https://signup.sendgrid
 And then and then replace **'YOUR_API_KEY'** bellow with the newly obtained api key.
 ```bash
 $ echo "export SENDGRID_API_KEY='YOUR_API_KEY'" >> venv/bin/activate
-$ echo "export SALT=ThisIsASecretSaltStringURLSafeTimedSerializerURLSafeTimedSerializer" >> venv/bin/activate
-$ echo "export SECRET_KEY=3d6f45a5fc12445dbac2f59c3b6c7cb1" >> venv/bin/activate
+$ echo "export SALT='SERIALIZING SALT'" >> venv/bin/activate
+$ echo "export SECRET_KEY='THE SECRET KEY' >> venv/bin/activate
 $ echo "export DB_USERNAME='THE DB USERNAME'" >> venv/bin/activate
 $ echo "export DB_PASSWORD='THE DB PASSWORD'" >> venv/bin/activate
 $ echo "export DB_HOST_PORT='THE DB HOST PORT'" >> venv/bin/activate
