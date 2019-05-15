@@ -569,12 +569,12 @@ def get_tweets_by_hashtag(user, hashtag):
     """
     #limit can be removed, take out the following if its not needed for 8a.
     query = '''
-    MATCH (:User)-[:FOLLOWING]->(users:User)-[:PUBLISHED]->(posts:Post)<-[:HASHTAG]-(tags:Tag {name: {hashtag}})
+    MATCH (:User {username: {user}})-[:FOLLOWING]->(users:User)-[:PUBLISHED]->(posts:Post)<-[:HASHTAG]-(tags:Tag {name: {hashtag}})
     RETURN tags, posts, users
     ORDER BY posts.timestamp DESC
     LIMIT 20 
     '''
-    queryresults = graph.run(query, user=user, hashtag = hashtag)
+    queryresults = graph.run(query, user=user, hashtag=hashtag)
     return [[results['users'], results['posts']] for results in queryresults]
 
 
