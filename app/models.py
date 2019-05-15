@@ -550,10 +550,36 @@ def get_tweet_retweets_usernames(postid):
 
 
 
-def get_tweets_with_hashtag(user, hashtag):
+def get_tweets_by_hashtag(user, hashtag):
+    """
+    Be able to select a particular hashtag, and see tweets with this hashtag
+    (ordered by time)
+    returns all the posts correspoinding to the given hashtag.
+    """
+    #limit can be removed, take out the following if its not needed for 8a.
     query = '''
-    MATCH (:User {user})-[:FOLLOWING]->(users:User)-[:PUBLISHED]->(posts:Post)<-[HASHTAG]-(tag:Tag {hastag})
+    MATCH (:User)-[:FOLLOWING]->(users:User)-[:PUBLISHED]->(posts:Post)<-[:HASHTAG]-(tags:Tag {name: {hashtag}})
+    RETURN tags, posts, users
+    ORDER BY posts.timestamp DESC
+    LIMIT 20 
     '''
+    queryresults = graph.run(query, user=user, hashtag = hashtag)
+    return [[results['users'], results['posts']] for results in queryresults]
+
+
+def get_trending_hashtags_for_user(user):
+    """
+    This gets the top 5 hashtags ordered by likes and occurences
+    """
+    query = '''
+    MATCH (:User {username: {user}})-[:FOLLOWING]->(:User)-[:PUBLISHED]->(posts:Post)<-[:HASHTAG]-(tags:Tag)
+    RETURN tags.name, count(tags) as t, sum(posts.likes) as p
+    ORDER BY p DESC, t DESC
+    LIMIT 5
+    '''
+    queryresults = graph.run(query, user=user)
+    return [results['tags.name'] for results in queryresults]
+
     
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Test client for models. [NOTE used during development stage]

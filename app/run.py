@@ -43,7 +43,7 @@ def view_user_bio(username):
         user = session_user = User(username)
     else:
         user, session_user = User(username), User(session['username'])
-
+    u = session_user.get_user_name()
     following = user.get_user_following()
     vfollowing = session_user.get_user_following()
     followers = user.get_user_followers()
@@ -51,7 +51,8 @@ def view_user_bio(username):
     activeunfollow = True if session['username'] == username else False
     unfollowthisuser = session_user.is_following(username)
     friend_suggestions = session_user.get_recommended_users()
-
+    trending = get_trending_hashtags_for_user(u)
+    
     for tweet in tweets:
         tweet['likers'] = get_tweet_likes_usernames(tweet['id'])
         tweet['retweeters'] = get_tweet_retweets_usernames(tweet['id'])
@@ -65,7 +66,8 @@ def view_user_bio(username):
         session_user=session_user.get_json_user(),
         user=user.get_json_user(),
         tweets=mock_tweets,
-        treading=mock_treading,
+        #treading=mock_treading,
+        treading=trending,
         fsuggestions=friend_suggestions,
         following=following,
         followers=followers,
@@ -84,9 +86,11 @@ def home():
 
     # Must always be there
     session_user = User(session['username'])
+    u = session_user.get_user_name()
 
     # if not visiting another persons profile
     user = session_user.get_json_user()
+    trending = get_trending_hashtags_for_user(u)
     tweets = session_user.get_timeline_posts()
     for tweet in tweets:
         tweet[1]['likers'] = get_tweet_likes_usernames(tweet[1]['id'])
@@ -104,7 +108,8 @@ def home():
         session_user=session_user.get_json_user(),
         user=user,
         tweets=tweets,
-        treading=mock_treading,
+        #treading=mock_treading,
+        treading=trending,
         fsuggestions=friend_suggestions,
         message=msg,
         alert=alert
@@ -156,6 +161,8 @@ def account():
     template = env.get_template("account.html")
     session_user = User(session['username'])
     user = session_user.get_json_user()
+    u = session_user.get_user_name()
+    trending=get_trending_hashtags_for_user(u)
     tweets = session_user.get_timeline_posts()
     friend_suggestions = session_user.get_recommended_users()
 
@@ -175,23 +182,61 @@ def account():
         user=user,
         tweets=tweets,
         # topics=topics,
-        treading=mock_treading,
+        #treading=mock_treading,
+        treading=trending,
         fsuggestions=friend_suggestions,
         message=get_message(),
         alert=get_type()
     )
 
 
-@app.route('/tag')
-def tag():
-    template = env.get_template("tag.html")
-    user = User(session['username']).get_json_user()
-    return template.render(
+@app.route('/tag/<hashtag>')
+def tag(hashtag):
+    """
+    Gets the top 5 trendiing hashtags from a users followers
+    @params user the username of the user
+    """
+    if is_logged_in() == False:
+        set_message("Please Login to like tweets", "danger")
+        return redirect('/login', '302')
+
+    # Must always be there
+    session_user = User(session['username'])
+    u = session_user.get_user_name()
+    # if not visiting another persons profile
+    user = session_user.get_json_user()
+    tweets = get_tweets_by_hashtag(u, hashtag)
+    for tweet in tweets:
+        tweet[1]['likers'] = get_tweet_likes_usernames(tweet[1]['id'])
+        tweet[1]['retweeters'] = get_tweet_retweets_usernames(tweet[1]['id'])
+        tweet[1]['likebtnactive'] = session['username'] in tweet[1]['likers']
+        tweet[1]['retweetbtnactive'] = session['username'] in tweet[1]['retweeters']
+
+    friend_suggestions = session_user.get_recommended_users()
+    trending_hashtags = get_trending_hashtags_for_user(u) #username?
+
+    msg = get_message()
+    alert = get_type()
+
+    return render_template(
+        'hashtag_search.html',
+        session_user=session_user.get_json_user(),
         user=user,
-        tweets=mock_tweets,
-        treading=mock_treading,
-        fsuggestions=mock_fsuggestions
+        tweets=tweets,
+        treading=trending_hashtags,
+        fsuggestions=friend_suggestions,
+        message=msg,
+        alert=alert
     )
+   # template = env.get_template("tag.html")
+   # user = User(session['username']).get_json_user()
+   # return template.render(
+   #     user=user,
+   #     tweets=mock_tweets,
+   #     treading=mock_treading,
+   #     fsuggestions=mock_fsuggestions
+   # )
+   
 
 
 @app.route('/logout')
@@ -462,6 +507,7 @@ def unlike_post(postid):
     if request.method == 'GET':
         User(session['username']).unlike_tweet(postid)
         return 'Like'
+
 
 
 if __name__ == '__main__':
