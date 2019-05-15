@@ -27,8 +27,8 @@ const openNav = () => {
 }
 // used to make hashtags anchor tag in order to access page display all posts containing the hashtag
 // used to make @'s of users anchor tags to view users profile
-const hashtag = /(\#\w+)/g;
-const atUser = /(\@\w+)/g;
+const hashtag = /(\#\w+(?:'|\-\w+)?'?)/g;
+const atUser = /(\@\w+(?:'|\-\w+)?'?)/g;
 const timestamp = /(\d*\.\d*)/;
 $(document.body).ready(function () {
 
