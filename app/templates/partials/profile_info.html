@@ -16,21 +16,19 @@
         class="fa fa-user w3-button w3-theme-d1 w3-margin-bottom" title="Profile Activity"> View Profile
     </a>
     <a href="/account" style="width: 100%;" class="fa fa-cog w3-button w3-theme-d1 w3-margin-bottom"
-        title="Profile Activity"> 
+        title="Profile Activity">
         Account Settings
     </a>
     {% else %}
-        {% if unfollowthisuser == true %}
-            <a href="/unfollow/{{ user['username'] }}" style="width: 100%;" class="fa fa-cog w3-button w3-theme-d1 w3-margin-bottom"
-                title="unfollow user"> 
-                unfollow
-            </a>
-        {% else %}
-            <a href="/follow/{{ user['username'] }}" style="width: 100%;" class="fa fa-cog w3-button w3-theme-d1 w3-margin-bottom"
-                title="follow user"> 
-                follow
-            </a>
-        {% endif %}
+    {% if unfollowthisuser == true %}
+    <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"
+        onclick='unfollowUser("{{ user['username'] | safe}}", this);'><i class="fa fa-user"></i>
+        Unfollow</button>
+    {% else %}
+    <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"
+        onclick='followUser("{{ user['username'] | safe}}", this);'><i class="fa fa-user"></i>
+        Follow</button>
+    {% endif %}
     {% endif %}
 </div>
 <br>
