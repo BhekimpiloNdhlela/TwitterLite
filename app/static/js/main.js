@@ -99,7 +99,6 @@ const likePost = (tweetID, thisElement) => {
         $('#like' + tweetID).attr('onclick', 'unlikePost(\'' + tweetID + '\');');
         $('#like' + tweetID + 'unlike').show();
         $('#like' + tweetID + 'like').hide();
-        console.log(response)
         $('#like' + tweetID + 'value').text(response['likes']);
 
     });
@@ -111,7 +110,7 @@ const unlikePost = (tweetID, thisElement) => {
         $('#like' + tweetID).attr('onclick', 'likePost(\'' + tweetID + '\');');
         $('#like' + tweetID + 'like').show();
         $('#like' + tweetID + 'unlike').hide();
-        // }
+
     });
 }
 
@@ -147,7 +146,6 @@ $('#search').keyup(() => {
     $.get(("/search/" + $('#search').val())).then((users) => {
         $('#searchDropdown').empty();
         users['username'].forEach(username => {
-            console.log(username)
             $('#searchDropdown').append('<a href="/profile/' + username + '" class="w3-bar w3-button">' + username + '</a>');
         })
     });
