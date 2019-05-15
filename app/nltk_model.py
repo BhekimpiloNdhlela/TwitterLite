@@ -66,21 +66,18 @@ def get_topics(tweet, train_data):
     dictionary = corpora.Dictionary(train_data)
     tokens = prepare_tweet(tweet)
     corpus = [dictionary.doc2bow(tokens)]
-    pickle.dump(corpus, open('corpus.pkl', 'wb'))
-    dictionary.save('dictionary.gensim')
+    # pickle.dump(corpus, open('corpus.pkl', 'wb'))
+    # dictionary.save('dictionary.gensim')
 
     NUM_TOPICS = 3
     ldamodel = gensim.models.ldamodel.LdaModel(corpus, num_topics = NUM_TOPICS, id2word=dictionary, passes=0)
-    ldamodel.save('model5.gensim')
+    # ldamodel.save('model5.gensim')
 
     prob_topics = ldamodel.print_topics(num_words=4)
     topics = []
     for i in prob_topics:
         split = i[1].split("\"")
         topics.append(split[1])
-        topics.append(split[3])
-        topics.append(split[5])
-        # print(split[1])
     return unique(topics)
 
 def train_model(text):
@@ -89,7 +86,6 @@ def train_model(text):
         for line in f:
             tokens = prepare_text_for_lda(line)
             if random.random() > .99:
-                # print(tokens)
                 train_data.append(tokens)
     return train_data
 
