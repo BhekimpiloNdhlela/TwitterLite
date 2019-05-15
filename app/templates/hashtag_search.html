@@ -1,0 +1,76 @@
+{% extends 'base.html' %} {% block content %}
+
+{% for tweet in tweets %}
+<div class="w3-container w3-card w3-white w3-round w3-margin">
+    <br />
+    <img src="{{ tweet[0]['useravatar'] }}" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px" />
+    <span class="w3-right w3-opacity timestamp">{{
+        tweet[1]["date"]
+    }}</span>
+    <h3>
+        <a href="/profile/{{ tweet[0]['username'] }}" style="text-decoration: none;">@{{ tweet[0]["username"] }}</a>
+    </h3>
+    <hr class="w3-clear" />
+    <p>{{ tweet[1]["tweet"] }}</p>
+
+    <div class="w3-row-padding" style="margin:0 -16px">
+        {% for photo in tweet[1]['photos'] %}
+        <div class="w3-half">
+            <img src="/static/img/photos/{{ photo }}" style="width:100%" alt="Northern Lights"
+                class="w3-margin-bottom" />
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="w3-dropdown-hover w3-hide-small">
+        <button class="w3-button w3-padding-small" title="Notifications"></button>
+        <i class="fa fa-heart" id="like{{ tweet[1]['id'] | safe }}value">{{ tweet[1]["likes"] }} </i>
+        </button>
+        <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:auto;">
+            {% for liker in tweet[1]['likers'] %}
+            <a href="/profile/{{ liker }}" class="w3-bar w3-button">{{ liker }}</a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="w3-dropdown-hover w3-hide-small">
+        <button class="w3-button w3-padding-small" title="Notifications"></button>
+        <i class="fa fa-retweet" id="retweet{{ tweet[1]['id'] | safe }}value">{{ tweet[1]["retweets"] }}</i>
+        </button>
+        <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:auto;">
+            {% for retweeter in tweet[1]['retweeters'] %}
+            <a href="/profile/{{ retweeter }}" class="w3-bar w3-button">{{ retweeter }}</a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <br /><br />
+    {% if tweet[1]['likebtnactive'] == false %}
+    <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"
+        onclick="likePost('{{ tweet[1]['id'] | safe }}', this);" id="like{{ tweet[1]['id'] | safe }}"
+        title="Like Tweet">
+        <span id="like{{ tweet[1]['id'] | safe }}like"><i class="fa fa-thumbs-up"></i> Like</span>
+        <span id="like{{ tweet[1]['id'] | safe }}unlike" style="display:none;"><i class="fa fa-thumbs-down like"></i>
+            Unlike</span>
+    </button>
+    {% else %}
+    <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"
+        onclick="unlikePost('{{ tweet[1]['id'] | safe }}', this);" title="Like Tweet">
+        <span id="like{{ tweet[1]['id'] | safe }}like" style="display:none;"><i class="fa fa-thumbs-up"></i> Like</span>
+        <span id="like{{ tweet[1]['id'] | safe }}unlike"><i class="fa fa-thumbs-down like"></i>
+            Unlike</span>
+    </button>
+    {% endif %}
+
+    {% if tweet[1]['retweetbtnactive'] == false %}
+    <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom" title="Retweet">
+        <i class="fa fa-retweet"></i> Retweet
+    </button>
+    {% else %}
+    <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom" title="Retweet">
+        <i class="fa fa-retweet"></i> Unretweet
+    </button>
+    {% endif %}
+
+</div>
+{% endfor %} {% endblock %}
