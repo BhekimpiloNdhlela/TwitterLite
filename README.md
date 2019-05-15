@@ -37,7 +37,7 @@ And then and then replace **'YOUR_API_KEY'** bellow with the newly obtained api 
 ```bash
 $ echo "export SENDGRID_API_KEY='YOUR_API_KEY'" >> venv/bin/activate
 $ echo "export SALT='SERIALIZING SALT'" >> venv/bin/activate
-$ echo "export SECRET_KEY='THE SECRET KEY' >> venv/bin/activate
+$ echo "export SECRET_KEY='THE SECRET KEY'" >> venv/bin/activate
 $ echo "export DB_USERNAME='THE DB USERNAME'" >> venv/bin/activate
 $ echo "export DB_PASSWORD='THE DB PASSWORD'" >> venv/bin/activate
 $ echo "export DB_HOST_PORT='THE DB HOST PORT'" >> venv/bin/activate
