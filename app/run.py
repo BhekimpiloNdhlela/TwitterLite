@@ -95,10 +95,9 @@ def home():
         tweet[1]['retweeters'] = get_tweet_retweets_usernames(tweet[1]['id'])
         tweet[1]['likebtnactive'] = session['username'] in tweet[1]['likers']
         tweet[1]['retweetbtnactive'] = session['username'] in tweet[1]['retweeters']
-        # tweet[1]['topic'] = get_topics(tweet[1]['tweet'], train_data)
+        # tweet[1]['topic'] = get_topics(tweet[1]['tweet'], "train_data")
 
     friend_suggestions = session_user.get_recommended_users()
-
     msg = get_message()
     alert = get_type()
 
