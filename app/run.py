@@ -291,7 +291,9 @@ def forgot_password():
 @app.route('/update-user-profile', methods=['POST'])
 def update_user_profile():
     """
-    sumary_line
+    used to update the use profile credentials. if no values are renewed this
+    still updates the database with the update user account form default values
+    which in this case are the users currant credentials.
     """
     if request.method == 'POST' and is_logged_in():
         newlastname = request.form['lastname']
@@ -321,7 +323,8 @@ def update_user_profile():
 @app.route('/set-new-password', methods=['POST'])
 def set_new_password():
     """
-    doc-string
+    used to set a new password in the user account settings section
+    this updates the user password hash which is stored in the database
     """
     if is_logged_in() == False:
         set_message("Please Login", "danger")
@@ -350,7 +353,8 @@ def set_new_password():
 @app.route('/search', methods=['POST'])
 def search_user():
     """
-    doc - string
+    used for searching for a user from the database. this should be a valid user name
+    or a user not found message will be displayed
     """
     if is_logged_in() == False:
         set_message("Please Login", "danger")
@@ -370,10 +374,10 @@ def search_user():
 @app.route('/search/<string>', methods=['GET'])
 def search(string):
     """
-
+    used for searching the database for users that match the {string}
+    this uses a substring search to achieve the outcome
     """
-    users = User('klensch_the_machine').search(string)
-    return jsonify(username=users)
+    return jsonify(username=search_users(string))
 
 
 @app.route('/likers/<postid>', methods=['GET'])
@@ -391,6 +395,9 @@ def get_likers(postid):
 
 @app.route('/retweeters/<postid>', methods=['GET'])
 def get_retweeters(postid):
+    """
+    used to obtain the usernames of users that have retweeted a post
+    """
     if request.method == 'GET':
         if False == is_logged_in():
             flash('Login to retweet a post')
@@ -428,6 +435,7 @@ def unfollow_user(username):
 def retweet_post(postid):
     """
     used to retweet a tweet
+    @params postid Postid of the post to retweet
     """
     if False == is_logged_in():
         set_message("Login to retweet a post", "danger")
@@ -439,7 +447,8 @@ def retweet_post(postid):
 @app.route('/unretweet/<postid>', methods=['GET'])
 def unretweet_post(postid):
     """
-    used to retweet a tweet
+    used to unretweet a tweet
+    @params postid Postid of the post to unretweet
     """
     if False == is_logged_in():
         set_message("Login to retweet a post", "danger")
@@ -451,7 +460,7 @@ def unretweet_post(postid):
 @app.route('/like/<postid>', methods=['GET'])
 def like_post(postid):
     """
-    Likes a users post
+    like a users post
     @params postid Postid of the post to like
     """
     if is_logged_in() == False:
@@ -466,8 +475,8 @@ def like_post(postid):
 @app.route('/unlike/<postid>', methods=['GET'])
 def unlike_post(postid):
     """
-    Likes a users post
-    @params postid Postid of the post to like
+    unlike a users post
+    @params postid Postid of the post to unlike
     """
     if is_logged_in() == False:
         set_message("Please Login to like tweets", "danger")
@@ -479,46 +488,20 @@ def unlike_post(postid):
 
 @app.route('/usernetwork', methods=['GET'])
 def usernetwork():
-    d3data = get_user_network()
-    data = {}
-    data['nodes'] = []
-    for key in d3data:
-        data['nodes'].append(
-            {
-                "username": key,
-                "postlikes": d3data[key][1]
-            }
-        )
-    data['links'] = []
-    for key in d3data:
-        following = d3data[key][0]
-        for user in following:
-            data['links'].append(
-                {
-                    "source": key,
-                    "target": user,
-                    "type": "FOLLOWING"
-                }
-            )
-
-    import json
-
-    with open("static/miserables.json", 'w') as f:
-        json_data = json.dump(data, f)
-
+    """
+    used for the tab that enables the visualisation of a D3js visualization of
+    application wide user network of users, with follow relationships indicated,
+    and each user also labelled by username and total number of likes of tweets
+    """
     if is_logged_in() == False:
         return redirect('/login', '302')
-
+    dump_user_network()
     template = env.get_template("user-networkD3.html")
-    session_user = User(session['username'])
-    user = session_user.get_json_user()
-
+    session_user_json = User(session['username']).get_json_user()
     return template.render(
-        session_user=session_user.get_json_user(),
-        user=user
+        session_user=session_user_json,
+        user=session_user_json
     )
-
-
 
 
 if __name__ == '__main__':
