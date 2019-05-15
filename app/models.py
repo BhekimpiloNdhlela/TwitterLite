@@ -370,6 +370,12 @@ class User:
         RETURN users, posts
         ORDER BY posts.timestamp DESC, posts.likes DESC
         LIMIT 20
+        UNION 
+        MATCH (user:User)-[:PUBLISHED]-(posts:Post)
+        WHERE user.username = {username}
+        RETURN user as users, posts
+        ORDER BY posts.timestamp DESC, posts.likes DESC
+        LIMIT 20
         '''
         queryresults = graph.run(
             query,

@@ -145,8 +145,10 @@ const unfollowUser = (username, thisElement) => {
  */
 $('#search').keyup(() => {
     $.get(("/search/" + $('#search').val())).then((users) => {
+        $('#searchDropdown').empty();
         users['username'].forEach(username => {
             console.log(username)
+            $('#searchDropdown').append('<a href="/profile/' + username + '" class="w3-bar w3-button">' + username + '</a>');
         })
     });
 });
