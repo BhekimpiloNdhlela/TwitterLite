@@ -89,7 +89,7 @@ def home():
     user = session_user.get_json_user()
     tweets = session_user.get_timeline_posts()
     # train_data = train_model("train8.csv")
-    
+
     for tweet in tweets:
         tweet[1]['likers'] = get_tweet_likes_usernames(tweet[1]['id'])
         tweet[1]['retweeters'] = get_tweet_retweets_usernames(tweet[1]['id'])
@@ -456,7 +456,7 @@ def like_post(postid):
     """
     if is_logged_in() == False:
         set_message("Please Login to like tweets", "danger")
-        return redirect('/login', '302')
+        return "login"
     if request.method == 'GET':
         likes = User(session['username']).like_post(postid)
         print(likes)
@@ -475,6 +475,50 @@ def unlike_post(postid):
     if request.method == 'GET':
         User(session['username']).unlike_tweet(postid)
         return 'Like'
+
+
+@app.route('/usernetwork', methods=['GET'])
+def usernetwork():
+    d3data = get_user_network()
+    data = {}
+    data['nodes'] = []
+    for key in d3data:
+        data['nodes'].append(
+            {
+                "username": key,
+                "postlikes": d3data[key][1]
+            }
+        )
+    data['links'] = []
+    for key in d3data:
+        following = d3data[key][0]
+        for user in following:
+            data['links'].append(
+                {
+                    "source": key,
+                    "target": user,
+                    "type": "FOLLOWING"
+                }
+            )
+
+    import json
+
+    with open("static/miserables.json", 'w') as f:
+        json_data = json.dump(data, f)
+
+    if is_logged_in() == False:
+        return redirect('/login', '302')
+
+    template = env.get_template("user-networkD3.html")
+    session_user = User(session['username'])
+    user = session_user.get_json_user()
+
+    return template.render(
+        session_user=session_user.get_json_user(),
+        user=user
+    )
+
+
 
 
 if __name__ == '__main__':

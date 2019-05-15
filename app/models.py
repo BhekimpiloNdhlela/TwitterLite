@@ -365,17 +365,22 @@ class User:
         @return posts An Array of the posts
         """
         query = '''
-        MATCH (user:User)-[:FOLLOWING]->(users:User)-[:PUBLISHED]->(posts:Post)
-        WHERE user.username = {username}
-        RETURN users, posts
-        ORDER BY posts.timestamp DESC, posts.likes DESC
-        LIMIT 20
-        UNION 
-        MATCH (user:User)-[:PUBLISHED]-(posts:Post)
-        WHERE user.username = {username}
-        RETURN user as users, posts
-        ORDER BY posts.timestamp DESC, posts.likes DESC
-        LIMIT 20
+        MATCH (:User {username: {username}})-[:FOLLOWING]->(u:User)-[:PUBLISHED]->(p:Post) 
+        WITH collect({user: u, post: p}) AS R1
+
+        MATCH (user:User {username: {username}})-[:PUBLISHED]->(post:Post)
+        WITH R1 + collect({user: user, post: post}) AS R2
+
+        MATCH (user)-[:RETWEETED]->(rpost:Post)
+        WITH R2 + collect({user: user, post: rpost}) AS R3
+
+        MATCH (user)-[:FOLLOWING]->(rruser:User)-[:RETWEETED]->(rrpost:Post)
+        WITH R3 + collect({user: rruser, post: rrpost}) AS R4
+
+        UNWIND R4 AS row
+        RETURN row.user AS users, row.post AS posts
+        ORDER BY posts.date DESC
+        LIMIT 50
         '''
         queryresults = graph.run(
             query,
@@ -569,16 +574,88 @@ def get_tweet_retweets_usernames(postid):
     return set([result['user.username'] for result in queryresults])
 
 
+def get_user_network():
+    """
+
+    """
+
+    # get all the usernames from the database, this is neccessary because i
+    # dont want to skip users that dont have posts of that are not being followed
+    # or following any one. Hence this query gets all the users regardless of their
+    # status in the application.
+    query = '''
+    MATCH (u:User)-[:PUBLISHED]->(p:Post)
+    RETURN u.username AS username, SUM(p.likes) AS totallikes
+    UNION
+    MATCH (a:User)
+    RETURN a.username AS username, 0 AS totallikes
+    '''
+    # initialise the D3 data that should be converted to JSON format
+    D3dict = dict((key['username'], [set(), key['totallikes']]) for key in graph.run(query))
+
+    # get the tweet like data of users
+    query = '''
+    MATCH (u:User)-[:PUBLISHED]->(p:Post)
+    RETURN u.username AS username, SUM(p.likes) AS totallikes
+    '''
+    for likedata in graph.run(query):
+        D3dict[likedata['username']][1] = likedata['totallikes']
+
+    # need to obtain the users that are following a user in the D3_data key
+    for key in D3dict:
+        D3dict[key][0] = __get_following_usernames(key)
+    return D3dict
+
+def __get_following_usernames(username):
+    """
+    doc-string
+    """
+    query = '''
+    MATCH (user:User)-[FOLLOWING]->(following:User)
+    WHERE user.username = {username}
+    RETURN following.username AS username
+    '''
+    return set(user['username'] for user in graph.run(query, username=username))
+
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Test client for models. [NOTE used during development stage]
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if __name__ == '__main__':
 
-    
+    d3data = get_user_network()
+    data = {}
+    data['nodes'] = []
+    for key in d3data:
+        data['nodes'].append(
+            {
+                "username": key,
+                "postlikes": d3data[key][1]
+            }
+        )
+    data['links'] = []
+    for key in d3data:
+        following = d3data[key][0]
+        for user in following:
+            data['links'].append(
+                {
+                    "source": key,
+                    "target": user,
+                    "type": "FOLLOWING"
+                }
+            )
+
+    import json
+
+    with open("static/miserables.json", 'w') as f:
+        json_data = json.dump(data, f)
+
+    #help(json)
+    """
     User('keanudamon123').retweet_post('27f017b8-32a0-4b0b-a301-dcc3bba8c57f')
     User('nish').retweet_post('27f017b8-32a0-4b0b-a301-dcc3bba8c57f')
     User('keanud').retweet_post('27f017b8-32a0-4b0b-a301-dcc3bba8c57f')
-    
+    """
     """
     print("Retweeting")
     # test retweeting, make Corban retweet the post
@@ -623,7 +700,7 @@ if __name__ == '__main__':
     print("\ALL MY POSTS ID")
     user_recent_posts = User('HexDEADBEEF').get_user_posts()
     [print(post['hashtags']) for post in user_recent_posts]
-   
+
     # get the users that are following HexDEADBEEF
     print("\n\nUSERS THAT I AM FOLLOWING")
     user_following_users = User('HexDEADBEEF').get_user_following()

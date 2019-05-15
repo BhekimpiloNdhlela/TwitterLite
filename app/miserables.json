@@ -1,0 +1,51 @@
+{
+  "nodes": [
+    {
+      "username": "Peter",
+      "postlikes": "5"
+    },
+    {
+      "username": "Michael",
+      "postlikes": "2"
+    },
+    {
+      "username": "Neo4j",
+      "postlikes": "7"
+    },
+    {
+      "username": "Graph",
+      "postlikes": "10"
+    },
+    {
+      "username": "Wayne",
+      "postlikes": "10"
+    }
+  ],
+  "links": [
+    {
+      "source": "Peter",
+      "target": "Michael",
+      "type": "FOLLOWING"
+    },
+    {
+      "source": "Michael",
+      "target": "Peter",
+      "type": "FOLLOWING"
+    },
+    {
+      "source": "Peter",
+      "target": "Neo4j",
+      "type": "FOLLOWING"
+    },
+    {
+      "source": "Peter",
+      "target": "Graph",
+      "type": "FOLLOWING"
+    },
+    {
+      "source": "Neo4j",
+      "target": "Graph",
+      "type": "FOLLOWING"
+    }
+  ]
+}
