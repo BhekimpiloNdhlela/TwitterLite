@@ -52,7 +52,7 @@ def view_user_bio(username):
     unfollowthisuser = session_user.is_following(username)
     friend_suggestions = session_user.get_recommended_users()
     trending = get_trending_hashtags_for_user(u)
-    
+
     for tweet in tweets:
         tweet['likers'] = get_tweet_likes_usernames(tweet['id'])
         tweet['retweeters'] = get_tweet_retweets_usernames(tweet['id'])
@@ -66,7 +66,7 @@ def view_user_bio(username):
         session_user=session_user.get_json_user(),
         user=user.get_json_user(),
         tweets=mock_tweets,
-        #treading=mock_treading,
+        # treading=mock_treading,
         treading=trending,
         fsuggestions=friend_suggestions,
         following=following,
@@ -110,7 +110,7 @@ def home():
         session_user=session_user.get_json_user(),
         user=user,
         tweets=tweets,
-        #treading=mock_treading,
+        # treading=mock_treading,
         treading=trending,
         fsuggestions=friend_suggestions,
         message=msg,
@@ -164,7 +164,7 @@ def account():
     session_user = User(session['username'])
     user = session_user.get_json_user()
     u = session_user.get_user_name()
-    trending=get_trending_hashtags_for_user(u)
+    trending = get_trending_hashtags_for_user(u)
     tweets = session_user.get_timeline_posts()
     friend_suggestions = session_user.get_recommended_users()
 
@@ -184,13 +184,12 @@ def account():
         user=user,
         tweets=tweets,
         # topics=topics,
-        #treading=mock_treading,
+        # treading=mock_treading,
         treading=trending,
         fsuggestions=friend_suggestions,
         message=get_message(),
         alert=get_type()
     )
-
 
 @app.route('/tag/<hashtag>')
 def tag(hashtag):
@@ -208,18 +207,31 @@ def tag(hashtag):
     # if not visiting another persons profile
     user = session_user.get_json_user()
     tweets = get_tweets_by_hashtag(u, hashtag)
+    friend_suggestions = session_user.get_recommended_users()
+    trending_hashtags = get_trending_hashtags_for_user(u) #username?
+
+    msg = get_message()
+    alert = get_type()
+    
+    if not tweets:
+    	return render_template(
+        'hashtag_no_tweets.html',
+        session_user=session_user.get_json_user(),
+        user=user,
+        tweets=tweets,
+        treading=trending_hashtags,
+        fsuggestions=friend_suggestions,
+        message=msg,
+        alert=alert
+    )
+    	
     for tweet in tweets:
         tweet[1]['likers'] = get_tweet_likes_usernames(tweet[1]['id'])
         tweet[1]['retweeters'] = get_tweet_retweets_usernames(tweet[1]['id'])
         tweet[1]['likebtnactive'] = session['username'] in tweet[1]['likers']
         tweet[1]['retweetbtnactive'] = session['username'] in tweet[1]['retweeters']
 
-    friend_suggestions = session_user.get_recommended_users()
-    trending_hashtags = get_trending_hashtags_for_user(u) #username?
-
-    msg = get_message()
-    alert = get_type()
-
+    
     return render_template(
         'hashtag_search.html',
         session_user=session_user.get_json_user(),
@@ -503,8 +515,7 @@ def like_post(postid):
         return "login"
     if request.method == 'GET':
         likes = User(session['username']).like_post(postid)
-        print(likes)
-        # return jsonify(likes=likes)
+        return "Unlike"
 
 
 @app.route('/unlike/<postid>', methods=['GET'])
@@ -540,4 +551,4 @@ def usernetwork():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+app.run(debug=True)
