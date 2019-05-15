@@ -113,20 +113,20 @@ const unlikePost = (tweetID, thisElement) => {
     });
 }
 const retweet = (tweetID, thisElement) => {
-    $.get(("/unlike/" + tweetID)).then((response) => {
+    $.get(("/retweet/" + tweetID)).then((response) => {
 
         $('#retweet' + tweetID).attr('onclick', 'unretweet(\'' + tweetID + '\');');
-        $('#retweet' + tweetID + 're').show();
-        $('#retweet' + tweetID + 'unre').hide();
+        $('#retweet' + tweetID + 'unre').show();
+        $('#retweet' + tweetID + 're').hide();
     });
 }
 
 const unretweet = (tweetID, thisElement) => {
-    $.get(("/unlike/" + tweetID)).then((response) => {
+    $.get(("/unretweet/" + tweetID)).then((response) => {
 
         $('#retweet' + tweetID).attr('onclick', 'retweet(\'' + tweetID + '\');');
-        $('#retweet' + tweetID + 'unre').show();
-        $('#retweet' + tweetID + 're').hide();
+        $('#retweet' + tweetID + 're').show();
+        $('#retweet' + tweetID + 'unre').hide();
     });
 }
 /**
