@@ -86,7 +86,7 @@
             </button>
             {% endif %}
 
-            {% if tweet['retweetbtnactive'] == false %}
+            {% if tweet['retweetbtnactive'] == true %}
             <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"
                 onclick="retweet('{{ tweet['id'] | safe }}', this);" title="Retweet">
                 <span id="retweet{{ tweet['id'] | safe }}re" style="display:none;"><i class="fa fa-retweet"></i>

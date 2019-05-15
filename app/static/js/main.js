@@ -120,6 +120,7 @@ const retweet = (tweetID, thisElement) => {
         $('#retweet' + tweetID + 'unre').hide();
     });
 }
+
 const unretweet = (tweetID, thisElement) => {
     $.get(("/unlike/" + tweetID)).then((response) => {
 
