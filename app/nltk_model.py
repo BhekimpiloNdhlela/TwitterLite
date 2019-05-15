@@ -69,16 +69,16 @@ def get_topics(tweet, train_data):
     # pickle.dump(corpus, open('corpus.pkl', 'wb'))
     # dictionary.save('dictionary.gensim')
 
-    NUM_TOPICS = 3
+    NUM_TOPICS = 4
     ldamodel = gensim.models.ldamodel.LdaModel(corpus, num_topics = NUM_TOPICS, id2word=dictionary, passes=0)
     # ldamodel.save('model5.gensim')
 
-    prob_topics = ldamodel.print_topics(num_words=4)
+    prob_topics = ldamodel.print_topics(num_words=3)
     topics = []
     for i in prob_topics:
         split = i[1].split("\"")
         topics.append(split[1])
-    return unique(topics)
+    return topics
 
 def train_model(text):
     train_data = []
@@ -91,7 +91,9 @@ def train_model(text):
 
 
 # USE pyLDAvis
-# topics = get_topics("test", train_model("test"))
+# topics = get_topics("test tweet about world", train_model("train8.csv"))
+# for topic in topics:
+#     print(topic[1])
 
 # ldamodel = gensim.models.ldamodel.LdaModel(corpus, num_topics = 3, id2word=dictionary, passes=15)
 # ldamodel.save('model3.gensim')
