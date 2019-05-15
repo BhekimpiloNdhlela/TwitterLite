@@ -49,7 +49,7 @@
 
     <div class="w3-dropdown-hover w3-hide-small">
         <button class="w3-button w3-padding-small" title="Notifications"></button>
-        <i class="fa fa-heart"> {{ tweet[1]["likes"] }} </i>
+        <i class="fa fa-heart" id="like{{ tweet[1]['id'] | safe }}value">{{ tweet[1]["likes"] }} </i>
         </button>
         <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:auto;">
             {% for liker in tweet[1]['likers'] %}
@@ -60,7 +60,7 @@
 
     <div class="w3-dropdown-hover w3-hide-small">
         <button class="w3-button w3-padding-small" title="Notifications"></button>
-        <i class="fa fa-retweet"> {{ tweet[1]["retweets"] }}</i>
+        <i class="fa fa-retweet" id="retweet{{ tweet[1]['id'] | safe }}value">{{ tweet[1]["retweets"] }}</i>
         </button>
         <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:auto;">
             {% for retweeter in tweet[1]['retweeters'] %}

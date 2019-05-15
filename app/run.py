@@ -367,6 +367,15 @@ def search_user():
     return "nothing"
 
 
+@app.route('/search/<string>', methods=['GET'])
+def search(string):
+    """
+
+    """
+    users = User('klensch_the_machine').search(string)
+    return jsonify(username=users)
+
+
 @app.route('/likers/<postid>', methods=['GET'])
 def get_likers(postid):
     """
@@ -449,8 +458,9 @@ def like_post(postid):
         set_message("Please Login to like tweets", "danger")
         return redirect('/login', '302')
     if request.method == 'GET':
-        User(session['username']).like_post(postid)
-        return 'Unlike'
+        likes = User(session['username']).like_post(postid)
+        print(likes)
+        # return jsonify(likes=likes)
 
 
 @app.route('/unlike/<postid>', methods=['GET'])
