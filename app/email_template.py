@@ -30,7 +30,7 @@ def get_email_template(link):
 						<tr>
 							<td align="center" valign="top" bgcolor="#00aced">
 		<h1 style="font-family: Georgia, Times, serif; font-size: 48px; font-weight: normal; line-height: 48px; margin-top: 20px; margin-right: 20px; margin-bottom: 20px; margin-left: 20px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-right: 0;">
-		<img src="https://github.com/BhekimpiloNdhlela/405-Found/blob/master/app/static/img/logo.png" height="55px" width="55px"> Bootleg Twitter
+		Bootleg Twitter
 		</h1>
 
 							</td>
