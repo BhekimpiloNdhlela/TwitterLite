@@ -89,7 +89,7 @@ def home():
     user = session_user.get_json_user()
     tweets = session_user.get_timeline_posts()
     # train_data = train_model("train8.csv")
-    
+
     for tweet in tweets:
         tweet[1]['likers'] = get_tweet_likes_usernames(tweet[1]['id'])
         tweet[1]['retweeters'] = get_tweet_retweets_usernames(tweet[1]['id'])
@@ -456,7 +456,7 @@ def like_post(postid):
     """
     if is_logged_in() == False:
         set_message("Please Login to like tweets", "danger")
-        return redirect('/login', '302')
+        return "login"
     if request.method == 'GET':
         likes = User(session['username']).like_post(postid)
         print(likes)

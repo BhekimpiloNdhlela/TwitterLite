@@ -365,17 +365,22 @@ class User:
         @return posts An Array of the posts
         """
         query = '''
-        MATCH (user:User)-[:FOLLOWING]->(users:User)-[:PUBLISHED]->(posts:Post)
-        WHERE user.username = {username}
-        RETURN users, posts
-        ORDER BY posts.timestamp DESC, posts.likes DESC
-        LIMIT 20
-        UNION 
-        MATCH (user:User)-[:PUBLISHED]-(posts:Post)
-        WHERE user.username = {username}
-        RETURN user as users, posts
-        ORDER BY posts.timestamp DESC, posts.likes DESC
-        LIMIT 20
+        MATCH (:User {username: {username}})-[:FOLLOWING]->(u:User)-[:PUBLISHED]->(p:Post) 
+        WITH collect({user: u, post: p}) AS R1
+
+        MATCH (user:User {username: {username}})-[:PUBLISHED]->(post:Post)
+        WITH R1 + collect({user: user, post: post}) AS R2
+
+        MATCH (user)-[:RETWEETED]->(rpost:Post)
+        WITH R2 + collect({user: user, post: rpost}) AS R3
+
+        MATCH (user)-[:FOLLOWING]->(rruser:User)-[:RETWEETED]->(rrpost:Post)
+        WITH R3 + collect({user: rruser, post: rrpost}) AS R4
+
+        UNWIND R4 AS row
+        RETURN row.user AS users, row.post AS posts
+        ORDER BY posts.date DESC
+        LIMIT 50
         '''
         queryresults = graph.run(
             query,
