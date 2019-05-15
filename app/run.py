@@ -208,7 +208,7 @@ def tag(hashtag):
     user = session_user.get_json_user()
     tweets = get_tweets_by_hashtag(u, hashtag)
     friend_suggestions = session_user.get_recommended_users()
-    trending_hashtags = get_trending_hashtags_for_user(u) #username?
+    trending_hashtags = get_trending_hashtags_for_user(u)  # username?
 
     msg = get_message()
     alert = get_type()
@@ -242,7 +242,7 @@ def tag(hashtag):
         message=msg,
         alert=alert
     )
-   
+
 
 @app.route('/logout')
 def logout():
