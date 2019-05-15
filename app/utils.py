@@ -128,7 +128,6 @@ def send_forgot_password_email(toemail, token, fromemail='forgotpassword@bootleg
         verification_link)
     __send_email(fromemail, toemail, subject, htmlcontent)
 
-
 def send_account_verification_email(to_email, token, from_email='verifyaccount@bootlegtwitter.com'):
     """
     used to send account verification email to the user. this function is used only once,
@@ -136,20 +135,15 @@ def send_account_verification_email(to_email, token, from_email='verifyaccount@b
     """
     verification_link = 'http://localhost:5000/confirm-email/'+token
     subject = 'Account Verification'
-    htmlcontent = '<h2>The Following is your account verification link From BootlegTwitter:<h2><br>'
-    htmlcontent += '<strong>Please Click the following link to verify your account</strong><br>'
-    htmlcontent += '<a href=\"{}\">Click to verify your email address</a>'.format(
-        verification_link)
+    from email_template import get_email_template
+
+    htmlcontent = get_email_template(verification_link)
+    
     __send_email(from_email, to_email, subject, htmlcontent)
 
 
 def __send_email(fromemail, toemail, subject, htmlcontent):
-    """
-    [private/ helper] function to send emails, to the user at hand. This helper
-    function can be used to send account verification, password reset and forgot
-    password emails. NOTE: this function is never called directly hence the
-    {__send_email} notation.
-    """
+  
     msg = Mail(
         from_email=fromemail,
         to_emails=toemail,

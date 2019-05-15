@@ -1,11 +1,12 @@
-        <div class="w3-top">
+  
+  <div class="w3-top">
             <div class="w3-bar w3-blue w3-left-align w3-large">
                 <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-theme-d2"
                     href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
                 <a href="/" class="w3-bar-item w3-button w3-padding-large w3-theme-d4"><img src="/static/img/logo.png"
                         alt="Logo" style="max-height: 1.5em;"> 405 Found</a>
-                <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="News"><i
-                        class="fa fa-globe"></i></a>
+                <a href="/usernetwork" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="News"><i
+                        class="fa fa-area-chart"></i></a>
                 <a href="/profile/{{ session_user['username'] }}"
                     class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Profile"><i
                         class="fa fa-user"></i></a>
@@ -19,11 +20,16 @@
                         {% endfor %}
                     </div>
                 </div>
-                <form class="w3-bar-item" action="/search" method="POST" style="line-height: 10px">
-                    <input class="w3-padding-small" type="text" placeholder="Search 405-Found.." name="search">
-                    <button type="submit" class="w3-hide-small w3-padding-small w3-button w3-theme-d4 "><i
-                            class="fa fa-search"></i></button>
-                </form>
+                <div class="w3-dropdown-hover">
+                    <form class="w3-bar-item w3-display-middle" action="/search" method="POST"
+                        style="line-height: 10px; display: inline-block">   
+                        <input class="w3-padding-small" style="border-radius: 5px 0 0 5px;" type="text" autocomplete="off" placeholder="Search 405-Found.." name="search" required id="search">
+                        <i class="fa fa-search"></i>
+                        <div 
+                            class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:81%;" id="searchDropdown">
+                        </div>
+                    </form>
+                </div>
                 <a href="/logout" class="w3-bar-item w3-button w3-hide-small w3-right w3-padding-large w3-hover-white"
                     title="Signout"><i class="fa fa-sign-out"></i></a>
                 <a href="/account" class="w3-bar-item w3-button w3-hide-small w3-right w3-padding-large w3-hover-white"

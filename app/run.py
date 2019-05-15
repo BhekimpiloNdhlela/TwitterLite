@@ -92,14 +92,16 @@ def home():
     user = session_user.get_json_user()
     trending = get_trending_hashtags_for_user(u)
     tweets = session_user.get_timeline_posts()
+    # train_data = train_model("train8.csv")
+
     for tweet in tweets:
         tweet[1]['likers'] = get_tweet_likes_usernames(tweet[1]['id'])
         tweet[1]['retweeters'] = get_tweet_retweets_usernames(tweet[1]['id'])
         tweet[1]['likebtnactive'] = session['username'] in tweet[1]['likers']
         tweet[1]['retweetbtnactive'] = session['username'] in tweet[1]['retweeters']
+        # tweet[1]['topic'] = get_topics(tweet[1]['tweet'], "train_data")
 
     friend_suggestions = session_user.get_recommended_users()
-
     msg = get_message()
     alert = get_type()
 
@@ -228,16 +230,7 @@ def tag(hashtag):
         message=msg,
         alert=alert
     )
-   # template = env.get_template("tag.html")
-   # user = User(session['username']).get_json_user()
-   # return template.render(
-   #     user=user,
-   #     tweets=mock_tweets,
-   #     treading=mock_treading,
-   #     fsuggestions=mock_fsuggestions
-   # )
    
-
 
 @app.route('/logout')
 def logout():
@@ -333,7 +326,9 @@ def forgot_password():
 @app.route('/update-user-profile', methods=['POST'])
 def update_user_profile():
     """
-    sumary_line
+    used to update the use profile credentials. if no values are renewed this
+    still updates the database with the update user account form default values
+    which in this case are the users currant credentials.
     """
     if request.method == 'POST' and is_logged_in():
         newlastname = request.form['lastname']
@@ -363,7 +358,8 @@ def update_user_profile():
 @app.route('/set-new-password', methods=['POST'])
 def set_new_password():
     """
-    doc-string
+    used to set a new password in the user account settings section
+    this updates the user password hash which is stored in the database
     """
     if is_logged_in() == False:
         set_message("Please Login", "danger")
@@ -392,7 +388,8 @@ def set_new_password():
 @app.route('/search', methods=['POST'])
 def search_user():
     """
-    doc - string
+    used for searching for a user from the database. this should be a valid user name
+    or a user not found message will be displayed
     """
     if is_logged_in() == False:
         set_message("Please Login", "danger")
@@ -407,6 +404,15 @@ def search_user():
             return view_user_bio(request.form['search'])
         return "user not found"
     return "nothing"
+
+
+@app.route('/search/<string>', methods=['GET'])
+def search(string):
+    """
+    used for searching the database for users that match the {string}
+    this uses a substring search to achieve the outcome
+    """
+    return jsonify(username=search_users(string))
 
 
 @app.route('/likers/<postid>', methods=['GET'])
@@ -424,6 +430,9 @@ def get_likers(postid):
 
 @app.route('/retweeters/<postid>', methods=['GET'])
 def get_retweeters(postid):
+    """
+    used to obtain the usernames of users that have retweeted a post
+    """
     if request.method == 'GET':
         if False == is_logged_in():
             flash('Login to retweet a post')
@@ -461,6 +470,7 @@ def unfollow_user(username):
 def retweet_post(postid):
     """
     used to retweet a tweet
+    @params postid Postid of the post to retweet
     """
     if False == is_logged_in():
         set_message("Login to retweet a post", "danger")
@@ -472,7 +482,8 @@ def retweet_post(postid):
 @app.route('/unretweet/<postid>', methods=['GET'])
 def unretweet_post(postid):
     """
-    used to retweet a tweet
+    used to unretweet a tweet
+    @params postid Postid of the post to unretweet
     """
     if False == is_logged_in():
         set_message("Login to retweet a post", "danger")
@@ -484,22 +495,23 @@ def unretweet_post(postid):
 @app.route('/like/<postid>', methods=['GET'])
 def like_post(postid):
     """
-    Likes a users post
+    like a users post
     @params postid Postid of the post to like
     """
     if is_logged_in() == False:
         set_message("Please Login to like tweets", "danger")
-        return redirect('/login', '302')
+        return "login"
     if request.method == 'GET':
-        User(session['username']).like_post(postid)
-        return 'Unlike'
+        likes = User(session['username']).like_post(postid)
+        print(likes)
+        # return jsonify(likes=likes)
 
 
 @app.route('/unlike/<postid>', methods=['GET'])
 def unlike_post(postid):
     """
-    Likes a users post
-    @params postid Postid of the post to like
+    unlike a users post
+    @params postid Postid of the post to unlike
     """
     if is_logged_in() == False:
         set_message("Please Login to like tweets", "danger")
@@ -508,6 +520,23 @@ def unlike_post(postid):
         User(session['username']).unlike_tweet(postid)
         return 'Like'
 
+
+@app.route('/usernetwork', methods=['GET'])
+def usernetwork():
+    """
+    used for the tab that enables the visualisation of a D3js visualization of
+    application wide user network of users, with follow relationships indicated,
+    and each user also labelled by username and total number of likes of tweets
+    """
+    if is_logged_in() == False:
+        return redirect('/login', '302')
+    dump_user_network()
+    template = env.get_template("user-networkD3.html")
+    session_user_json = User(session['username']).get_json_user()
+    return template.render(
+        session_user=session_user_json,
+        user=session_user_json
+    )
 
 
 if __name__ == '__main__':

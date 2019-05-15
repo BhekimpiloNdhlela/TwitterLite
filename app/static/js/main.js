@@ -27,8 +27,8 @@ const openNav = () => {
 }
 // used to make hashtags anchor tag in order to access page display all posts containing the hashtag
 // used to make @'s of users anchor tags to view users profile
-const hashtag = /(\#\w+)/g;
-const atUser = /(\@\w+)/g;
+const hashtag = /(\#\w+(?:'|\-\w+)?'?)/g;
+const atUser = /(\@\w+(?:'|\-\w+)?'?)/g;
 const timestamp = /(\d*\.\d*)/;
 $(document.body).ready(function () {
 
@@ -45,10 +45,6 @@ $(document.body).ready(function () {
 
     $(".timestamp").html(function (_, html) {
         return html.replace(html, moment(moment(html)).twitterLong());
-    });
-
-    $(".tweetbox").on("change", (e) => {
-        console.log(e);
     });
 
     $(document.body).ready(function () {
@@ -100,39 +96,22 @@ $("#imageUpload").click(function () {
 const likePost = (tweetID, thisElement) => {
     $.get(("/like/" + tweetID)).then((response) => {
 
-        if (response == 'Unlike') {
-            $(thisElement).text('Unlike');
-            $(thisElement).attr('onclick', 'unlikePost("' + tweetID + '")');
-        }
-        console.log($(thisElement))
+        $('#like' + tweetID).attr('onclick', 'unlikePost(\'' + tweetID + '\');');
+        $('#like' + tweetID + 'unlike').show();
+        $('#like' + tweetID + 'like').hide();
+        console.log(response)
+        $('#like' + tweetID + 'value').text(response['likes']);
+
     });
 }
 
 const unlikePost = (tweetID, thisElement) => {
     $.get(("/unlike/" + tweetID)).then((response) => {
-        if (response == 'Like') {
-            $(thisElement).text('Like');
-            $(thisElement).attr('onclick', 'likePost("' + tweetID + '")');
-        }
-    });
-}
 
-
-const getLikes = (tweetID, thisElement) => {
-    $.get(("/likers/" + tweetID)).then((response) => {
-
-        response['users'].forEach(element => {
-            console.log(element);
-        });
-    });
-}
-
-const getRetweetsUsers = (tweetID, thisElement) => {
-    $.get(("/retweeters/" + tweetID)).then((response) => {
-
-        response['users'].forEach(element => {
-            console.log(element);
-        });
+        $('#like' + tweetID).attr('onclick', 'likePost(\'' + tweetID + '\');');
+        $('#like' + tweetID + 'like').show();
+        $('#like' + tweetID + 'unlike').hide();
+        // }
     });
 }
 
@@ -143,7 +122,7 @@ const getRetweetsUsers = (tweetID, thisElement) => {
  */
 const followUser = (username, thisElement) => {
     $.get(("/follow/" + username)).then((response) => {
-        $(thisElement).replace('Follow', response);
+        $(thisElement).text(response);
         $(thisElement).attr('href', '/unfollow/' + username);
     });
 }
@@ -159,6 +138,20 @@ const unfollowUser = (username, thisElement) => {
         $(thisElement).attr('href', '/follow/' + username);
     });
 }
+
+
+/**
+ * Makes a AJAX get search results
+ */
+$('#search').keyup(() => {
+    $.get(("/search/" + $('#search').val())).then((users) => {
+        $('#searchDropdown').empty();
+        users['username'].forEach(username => {
+            console.log(username)
+            $('#searchDropdown').append('<a href="/profile/' + username + '" class="w3-bar w3-button">' + username + '</a>');
+        })
+    });
+});
 
 /**
  * Switches a tab in a tabbed environment
