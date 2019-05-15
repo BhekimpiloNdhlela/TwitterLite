@@ -29,8 +29,7 @@
         {% for tweet in personaltweets %}
         <div class="w3-container w3-card w3-white w3-round w3-margin">
             <br>
-            <img src="{{ user['avatar'] }}" alt="Avatar" class="w3-left w3-circle w3-margin-right"
-                style="width:60px">
+            <img src="{{ user['avatar'] }}" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
             <span class="w3-right w3-opacity timestamp">{{ tweet['date'] }}</span>
             <h3>
                 <a href="/profile/{{ user['username'] }}" style="text-decoration: none;">@{{ user['username'] }}</a>
@@ -47,7 +46,7 @@
             </div>
             <div class="w3-dropdown-hover w3-hide-small">
                 <button class="w3-button w3-padding-small" title="Notifications"></button>
-                    <i class="fa fa-heart"> {{ tweet["likes"] }} </i>
+                <i class="fa fa-heart"> {{ tweet["likes"] }} </i>
                 </button>
                 <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:auto;">
                     {% for liker in tweet['likers'] %}
@@ -58,7 +57,7 @@
 
             <div class="w3-dropdown-hover w3-hide-small">
                 <button class="w3-button w3-padding-small" title="Notifications"></button>
-                    <i class="fa fa-retweet"> {{ tweet["retweets"] }}</i>
+                <i class="fa fa-retweet"> {{ tweet["retweets"] }}</i>
                 </button>
                 <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:auto;">
                     {% for retweeter in tweet['retweeters'] %}
@@ -69,27 +68,41 @@
             <br><br>
 
             {% if tweet['likebtnactive'] == false %}
-                <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"
-                onclick="window.location.href='/like/{{ tweet['id'] }}'" title="Like Tweet">
-                    <i class="fa fa-thumbs-up"></i> like
-                </button>
+            <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"
+                onclick="likePost('{{ tweet['id'] | safe }}', this);" id="like{{ tweet['id'] | safe }}"
+                title="Like Tweet">
+                <span id="like{{ tweet['id'] | safe }}like"><i class="fa fa-thumbs-up"></i> Like</span>
+                <span id="like{{ tweet['id'] | safe }}unlike" style="display:none;"><i
+                        class="fa fa-thumbs-down like"></i>
+                    Unlike</span>
+            </button>
             {% else %}
-                <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"
-                onclick="window.location.href='/unlike/{{ tweet['id'] }}'" title="Unlike Tweet">
-                    <i class="fa fa-thumbs-down"></i> unlike
-                </button>
+            <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"
+                onclick="unlikePost('{{ tweet['id'] | safe }}', this);" title="Like Tweet">
+                <span id="like{{ tweet['id'] | safe }}like" style="display:none;"><i class="fa fa-thumbs-up"></i>
+                    Like</span>
+                <span id="like{{ tweet['id'] | safe }}unlike"><i class="fa fa-thumbs-down like"></i>
+                    Unlike</span>
+            </button>
             {% endif %}
 
             {% if tweet['retweetbtnactive'] == false %}
-                <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom" 
-                onclick="window.location.href='/retweet/{{ tweet['id'] }}'" title="Retweet">
-                    <i class="fa fa-retweet"></i> retweet
-                </button>
+            <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"
+                onclick="retweet('{{ tweet['id'] | safe }}', this);" title="Retweet">
+                <span id="retweet{{ tweet['id'] | safe }}re" style="display:none;"><i class="fa fa-retweet"></i>
+                    Retweet</span>
+                <span id="retweet{{ tweet['id'] | safe }}unre"><i class="fa fa-retweet"></i>
+                    Unretweet</span>
+            </button>
             {% else %}
-                <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom" 
-                onclick="window.location.href='/unretweet/{{ tweet['id'] }}'" title="Unretweet">
-                    <i class="fa fa-retweet"></i> unretweet
-                </button>
+            <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"
+                onclick="retweet('{{ tweet['id'] | safe }}', this);" title="Retweet">
+                <span id="retweet{{ tweet['id'] | safe }}re"><i class="fa fa-retweet"></i>
+                    Retweet</span>
+                <span id="retweet{{ tweet['id'] | safe }}unre" style="display:none;""><i class=" fa fa-retweet"></i>
+                    Unretweet</span>
+            </button>
+
             {% endif %}
             <hr class="w3-clear">
         </div>
@@ -98,38 +111,40 @@
 
     <div id="Following" class="w3-container tab" style="display:none">
         {% for follow in following %}
-            <br>
-            <img src="{{ follow['useravatar'] }}" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
-            <h3><a href="/profile/{{ follow['username'] }}" style="text-decoration: none;">@{{ follow['username'] }}</a>
-            </h3>
-            {% if activeunfollow == True %}
-                <h4>
-                    <a href="/unfollow/{{ follow['username'] }}" class="fa fa-user w3-button w3-theme-d1 w3-right" style="font-size: 0.8rem;"title="unfollow user"> 
-                        unfollow
-                    </a>
-                </h4>
-            {% endif %}
-            <h4>{{ follow['firstname'] }} {{ follow['lastname']}}</h4>
-            <hr class="w3-clear">
+        <br>
+        <img src="{{ follow['useravatar'] }}" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
+        <h3><a href="/profile/{{ follow['username'] }}" style="text-decoration: none;">@{{ follow['username'] }}</a>
+        </h3>
+        {% if activeunfollow == True %}
+        <h4>
+            <a href="/unfollow/{{ follow['username'] }}" class="fa fa-user w3-button w3-theme-d1 w3-right"
+                style="font-size: 0.8rem;" title="unfollow user">
+                unfollow
+            </a>
+        </h4>
+        {% endif %}
+        <h4>{{ follow['firstname'] }} {{ follow['lastname']}}</h4>
+        <hr class="w3-clear">
         {% endfor %}
     </div>
 
     <div id="Followers" class="w3-container tab" style="display:none">
         {% for follow in followers %}
-            <br>
-            <img src="{{ follow['useravatar'] }}" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
-            <h3>
-                <a href="/profile/{{ follow['username'] }}" style="text-decoration: none;">@{{ follow['username'] }}</a>
-            </h3>
-            {% if follow['following'] == False %}
-                <h4>
-                    <a href="/follow/{{ follow['username'] }}" class="fa fa-user w3-button w3-theme-d1 w3-right" style="font-size: 0.8rem;"title="unfollow user"> 
-                        follow
-                    </a>
-                </h4>
-            {% endif %}
-            <h4>{{ follow['firstname'] }} {{ follow['lastname']}}</h4>
-            <hr class="w3-clear">
+        <br>
+        <img src="{{ follow['useravatar'] }}" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
+        <h3>
+            <a href="/profile/{{ follow['username'] }}" style="text-decoration: none;">@{{ follow['username'] }}</a>
+        </h3>
+        {% if follow['following'] == False %}
+        <h4>
+            <a href="/follow/{{ follow['username'] }}" class="fa fa-user w3-button w3-theme-d1 w3-right"
+                style="font-size: 0.8rem;" title="unfollow user">
+                follow
+            </a>
+        </h4>
+        {% endif %}
+        <h4>{{ follow['firstname'] }} {{ follow['lastname']}}</h4>
+        <hr class="w3-clear">
         {% endfor %}
     </div>
     <br>

@@ -110,10 +110,24 @@ const unlikePost = (tweetID, thisElement) => {
         $('#like' + tweetID).attr('onclick', 'likePost(\'' + tweetID + '\');');
         $('#like' + tweetID + 'like').show();
         $('#like' + tweetID + 'unlike').hide();
-
     });
 }
+const retweet = (tweetID, thisElement) => {
+    $.get(("/unlike/" + tweetID)).then((response) => {
 
+        $('#retweet' + tweetID).attr('onclick', 'unretweet(\'' + tweetID + '\');');
+        $('#retweet' + tweetID + 're').show();
+        $('#retweet' + tweetID + 'unre').hide();
+    });
+}
+const unretweet = (tweetID, thisElement) => {
+    $.get(("/unlike/" + tweetID)).then((response) => {
+
+        $('#retweet' + tweetID).attr('onclick', 'retweet(\'' + tweetID + '\');');
+        $('#retweet' + tweetID + 'unre').show();
+        $('#retweet' + tweetID + 're').hide();
+    });
+}
 /**
  * Makes a AJAX get request to follow a user
  * @param {String} username Username of the user to follow
