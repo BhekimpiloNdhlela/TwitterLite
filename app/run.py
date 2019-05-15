@@ -5,7 +5,6 @@ from itsdangerous import URLSafeTimedSerializer
 from itsdangerous.exc import SignatureExpired
 from jinja2 import Environment, select_autoescape, FileSystemLoader
 from werkzeug.utils import secure_filename
-from mock_data import *
 from models import *
 # from nltk_model import *
 import os
@@ -110,7 +109,6 @@ def home():
         session_user=session_user.get_json_user(),
         user=user,
         tweets=tweets,
-        # treading=mock_treading,
         treading=trending,
         fsuggestions=friend_suggestions,
         message=msg,
@@ -184,7 +182,6 @@ def account():
         user=user,
         tweets=tweets,
         # topics=topics,
-        # treading=mock_treading,
         treading=trending,
         fsuggestions=friend_suggestions,
         message=get_message(),
@@ -348,7 +345,6 @@ def update_user_profile():
         newdob = request.form['dob']
         newtitle = request.form['title']
         newbio = request.form['bio']
-
         user = User(session['username'])
         user.update_user_details(
             newfirstname,
