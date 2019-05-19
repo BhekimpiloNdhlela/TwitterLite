@@ -65,7 +65,6 @@ def view_user_bio(username):
         session_user=session_user.get_json_user(),
         user=user.get_json_user(),
         tweets=mock_tweets,
-        # treading=mock_treading,
         treading=trending,
         fsuggestions=friend_suggestions,
         following=following,
