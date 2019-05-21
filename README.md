@@ -11,10 +11,6 @@
 | **@gmail.com**       | Nishaat       | Laher        |
 | **@gmail.com**       | Tahir         | Rhoda        |
 
-## TODOS:
-[follow this link to view the todos](https://github.com/BhekimpiloNdhlela/405-Found/blob/master/TODO.md)
-
-
 ## Setup Instructions
 To get up and running follow the following steps. If I get time I will probably write a python
 script for this. However, for now this is what we have to do to get started with a functional development environment.
