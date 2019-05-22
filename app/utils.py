@@ -1,18 +1,17 @@
 #!usr/bin/python
 """
 """
-import os
-import re
 from passlib.hash import sha512_crypt
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from itsdangerous import URLSafeTimedSerializer
 from datetime import date, datetime
-
+from .email_template import get_email_template
+import os
+import re
 
 MESSAGE = ''
 TYPE = ''
-
 
 def set_message(message, message_type):
     """
@@ -135,15 +134,12 @@ def send_account_verification_email(to_email, token, from_email='verifyaccount@b
     """
     verification_link = 'http://localhost:5000/confirm-email/'+token
     subject = 'Account Verification'
-    from email_template import get_email_template
 
     htmlcontent = get_email_template(verification_link)
-    
     __send_email(from_email, to_email, subject, htmlcontent)
 
 
 def __send_email(fromemail, toemail, subject, htmlcontent):
-  
     msg = Mail(
         from_email=fromemail,
         to_emails=toemail,

@@ -1,6 +1,6 @@
 import uuid
 from py2neo import authenticate, Graph, Node, Relationship
-from utils import get_time_stamp, get_password_hash, get_time_stamp, get_password_verification
+from .utils import get_time_stamp, get_password_hash, get_time_stamp, get_password_verification
 import os
 import json
 
@@ -67,24 +67,24 @@ class User:
         # else add the user to the db and return True
         usernode = Node(
             'User',
-            username=self.username,
-            useremail=email,
-            firstname=firstname,
-            lastname=lastname,
-            gender=gender,
-            passwordhash=passwordhash,
-            dob=dob,
-            useravatar=DEFAULT_AVATAR,
-            accountverrified=False,
-            bio='Hi I just started using Bootleg Twitter!',
-            title='Title not set.',
-            createdate=get_time_stamp(),
-            notifications=[
+            username         = self.username,
+            useremail        = email,
+            firstname        = firstname,
+            lastname         = lastname,
+            gender           = gender,
+            passwordhash     = passwordhash,
+            dob              = dob,
+            useravatar       = DEFAULT_AVATAR,
+            accountverrified = False,
+            bio              = 'Hi I just started using Bootleg Twitter!',
+            title            = 'Title not set.',
+            createdate       = get_time_stamp(),
+            notification     = 2,
+            notifications    = [
                 'welcome to bootleg twitter, enjoy.',
                 'edit your details',
                 'enjoy the stay'
-            ],
-            notification=2
+            ]
         )
         graph.create(usernode)
         return True
@@ -254,23 +254,6 @@ class User:
         return this['avatar']
 
 
-    def get_json_post(self, postid):
-        """
-        used to return a posts details in jason format, this is unnecessary but
-        Klensch insisted i do this.
-        """
-        post = graph.find_one('Post', 'id', postid)
-        return {
-            'id'        : post['id'],
-            'tweet'     : post['tweet'],
-            'timestamp' : post['timestamp'],
-            'date'      : post['date'],
-            'retweets'  : post['retweets'],
-            'likes'     : post['likes'],
-            'photos'    : post['photos']
-        }
-
-
     def add_post(self, tweet, hashtags, taggedusers):
         """
         add post to the graph and create a published relationship between the
@@ -278,16 +261,16 @@ class User:
         """
         user = self.get_this_user_data()
         post = Node(
-                    'Post',
-                    id=str(uuid.uuid4()),
-                    tweet=tweet,
-                    date=get_time_stamp(),
-                    hashtags=hashtags,
-                    taggedusers=taggedusers,
-                    retweets=0,
-                    likes=0,
-                    comments=0,
-                    photos=[]
+                'Post',
+                id          = str(uuid.uuid4()),
+                tweet       = tweet,
+                date        = get_time_stamp(),
+                hashtags    = hashtags,
+                taggedusers = taggedusers,
+                retweets    = 0,
+                likes       = 0,
+                comments    = 0,
+                photos      = []
         )
         rel = Relationship(user, 'PUBLISHED', post)
         graph.create(rel)
@@ -572,7 +555,7 @@ def get_tweets_by_hashtag(user, hashtag):
     MATCH (:User {username: {user}})-[:FOLLOWING]->(users:User)-[:PUBLISHED]->(posts:Post)<-[:HASHTAG]-(tags:Tag {name: {hashtag}})
     RETURN tags, posts, users
     ORDER BY posts.timestamp DESC
-    LIMIT 20 
+    LIMIT 20
     '''
     queryresults = graph.run(query, user=user, hashtag=hashtag)
     return [[results['users'], results['posts']] for results in queryresults]
@@ -591,7 +574,7 @@ def get_trending_hashtags_for_user(user):
     queryresults = graph.run(query, user=user)
     return [results['tags.name'] for results in queryresults]
 
-    
+
 def search_users(string):
     """
     return recommend users for the logged in user
@@ -653,7 +636,7 @@ def dump_user_network():
                     "type": "FOLLOWING"
                 }
             )
-    with open("static/miserables.json", 'w') as f:
+    with open(os.path.abspath('app/static/miserables.json'), 'w') as f:
         json_data = json.dump(data, f)
 
 def __get_following_usernames(username):
@@ -752,18 +735,3 @@ if __name__ == '__main__':
     print("\n\nPOST RETWEETERS")
     postretweeters = get_tweet_retweets_usernames('250f2a79-59ee-4700-aa1e-b2c7594cedb2')
     [print(postretweeter) for postretweeter in postretweeters]
-    """
-    #KLENSCH!!! THIS AINT WORKING LAD!!!
-    query = '''
-    MATCH (u:User)-[:PUBLISHED]->(p:Post)
-    RETURN u.username AS username, SUM(p.likes) AS totallikes
-    UNION
-    MATCH (a:User)
-    RETURN a.username AS username, 0 AS totallikes
-    '''
-    # initialise the D3 data that should be converted to JSON format
-    D3dict = dict((key['username'], [set(), key['totallikes']]) for key in graph.run(query))
-
-    for i in D3dict:
-        print(D3dict[i])
-    """
