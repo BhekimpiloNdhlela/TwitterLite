@@ -13,9 +13,11 @@ source venv/bin/activate
 pip3 install -r requirements.txt
 ```
 
-#### Setting Up Sendgrid API_KEY:
+#### First Time Setup
 Assuming you in **TwitterLite/** folder Get your Api Key from creating a Sendgrid account [here]
-(https://signup.sendgrid.com/) And then and then replace **'YOUR_API_KEY'** bellow with the newly obtained api key.
+(https://signup.sendgrid.com/) And then and then replace **'YOUR_API_KEY'** bellow with the newly obtained api key. Also
+make sure to set up the correct values for **'SERIALIZING SALT'**, **'THE SECRET KEY'**, **'THE DB USERNAME'**, 
+**'THE DB PASSWORD'** and **'THE DB HOST PORT'**
 ```bash
 echo "export SENDGRID_API_KEY='YOUR_API_KEY'" >> venv/bin/activate
 echo "export SALT='SERIALIZING SALT'" >> venv/bin/activate
@@ -37,7 +39,6 @@ visit: [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
 
 
 #### Deactivating The Virtual Enviroment
-Assuming you in the Virtual enviroment **TwitterLite/** folder
 ```
 deactivate
 ```
@@ -58,7 +59,7 @@ python3 run.py
 ├── app
 │   ├── static               
 │   ├── templates
-|   ├── .editorconfig.py
+|   ├── .editorconfig
 │   ├── views.py
 |   ├── models.py
 │   └── utils.py             
