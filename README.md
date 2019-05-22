@@ -1,16 +1,5 @@
 # TwitterLite
 
-## Contributers:
-
-| Emails             | Names         | Surname      |
-| ------------------ | ------------- | ------------ |
-| **@gmail.com**       | Bhekimpilo    | Ndhlela      |
-| **@gmail.com**       | David         | Williams     |
-| **@gmail.com**       | Keanu         | Damon        |
-| **@gmail.com**       | Klensch       | Lucas        |
-| **@gmail.com**       | Nishaat       | Laher        |
-| **@gmail.com**       | Tahir         | Rhoda        |
-
 ## Setup Instructions
 To get up and running follow the following steps. If I get time I will probably write a python
 script for this. However, for now this is what we have to do to get started with a functional development environment.
@@ -75,3 +64,15 @@ $ source venv/bin/activate
 ├── README.md
 └── requirements.txt
 ```
+
+
+## Contributers:
+
+| Names         | Surname      |
+| ------------- | ------------ |
+| Bhekimpilo    | Ndhlela      |
+| David         | Williams     |
+| Keanu         | Damon        |
+| Klensch       | Lucas        |
+| Nishaat       | Laher        |
+| Tahir         | Rhoda        |
