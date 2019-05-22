@@ -4,19 +4,17 @@ from itsdangerous import URLSafeTimedSerializer
 from itsdangerous.exc import SignatureExpired
 from jinja2 import Environment, select_autoescape, FileSystemLoader
 from werkzeug.utils import secure_filename
-from .models import *
-from .utils import *
+import .models
+import .utils
 # from nltk_model import *
 import os
 
 app = Flask(__name__)
-salt = URLSafeTimedSerializer(os.environ.get('SALT'))
-
-
 UPLOAD_FOLDER = '/static/img/useravatar/'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+salt = URLSafeTimedSerializer(os.environ.get('SALT'))
 
 def is_logged_in():
     """
@@ -138,7 +136,11 @@ def login():
         elif login_status == True:
             session['username'] = username
             return redirect('/', 302)
-    return render_template('login.html', message=get_message(), alert=get_type())
+    return render_template(
+            'login.html',
+            message=get_message(),
+            alert=get_type()
+    )
 
 
 @app.route('/about')
@@ -171,7 +173,7 @@ def account():
                 fsuggestions=friend_suggestions,
                 message=get_message(),
                 alert=get_type()
-            )
+    )
 
 @app.route('/tag/<hashtag>')
 def tag(hashtag):

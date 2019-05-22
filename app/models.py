@@ -1,23 +1,24 @@
 import uuid
 from py2neo import authenticate, Graph, Node, Relationship
-from .utils import get_time_stamp, get_password_hash, get_time_stamp, get_password_verification
+from .utils import get_password_hash, get_time_stamp, get_password_verification
 import os
 import json
 
-DB_USERNAME = os.environ.get('DB_USERNAME')
-DB_PASSWORD = os.environ.get('DB_PASSWORD')
-DB_HOST_PORT = os.environ.get('DB_HOST_PORT')
-DB_HTTP_PORT, DB_HTTPS_PORT = 24789, 24780
+DB_USERNAME   = os.environ.get('DB_USERNAME')
+DB_PASSWORD   = os.environ.get('DB_PASSWORD')
+DB_HOST_PORT  = os.environ.get('DB_HOST_PORT')
+DB_HTTP_PORT  = 24789
+DB_HTTPS_PORT = 24780
 
 # authenticate before creating the Graph instance
 authenticate(DB_HOST_PORT, DB_USERNAME, DB_PASSWORD)
 # if authenticated create a Graph instance
 graph = Graph(
     'https://'+DB_HOST_PORT+'/db/data/',
-    bolt=False,
-    secure=True,
-    http_port=DB_HTTP_PORT,
-    https_port=DB_HTTPS_PORT
+    bolt      = False,
+    secure    = True,
+    http_port = DB_HTTP_PORT,
+    https_port= DB_HTTPS_PORT
 )
 DEFAULT_AVATAR = "/static/img/default.png"
 
