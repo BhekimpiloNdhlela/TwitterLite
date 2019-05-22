@@ -70,9 +70,9 @@ python3 run.py
 
 
 ## Contributers:
-#### [Bheki](https://github.com/BhekimpiloNdhlela)
-#### [David](https://github.com/Davidpcw)
-#### [Keanu](https://github.com/keanuDamon)
-#### [Klensch](https://github.com/KlenschLucas)
-#### [Nishaat](https://github.com/stress-princess)
-#### [Tahir](https://github.com/Hououin47)
+* [Bheki](https://github.com/BhekimpiloNdhlela)
+* [David](https://github.com/Davidpcw)
+* [Keanu](https://github.com/keanuDamon)
+* [Klensch](https://github.com/KlenschLucas)
+* [Nishaat](https://github.com/stress-princess)
+* [Tahir](https://github.com/Hououin47)
