@@ -4,34 +4,25 @@ from itsdangerous import URLSafeTimedSerializer
 from itsdangerous.exc import SignatureExpired
 from jinja2 import Environment, select_autoescape, FileSystemLoader
 from werkzeug.utils import secure_filename
-import .models
-import .utils
+from .models import *
+from .utils import *
 # from nltk_model import *
 import os
 
-app = Flask(__name__)
-UPLOAD_FOLDER = '/static/img/useravatar/'
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+app                         = Flask(__name__)
+UPLOAD_FOLDER               = '/static/img/useravatar/'
+ALLOWED_EXTENSIONS          = set(['png', 'jpg', 'jpeg', 'gif'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-salt = URLSafeTimedSerializer(os.environ.get('SALT'))
-
-def is_logged_in():
-    """
-    Checks if user is logged in
-    @return bool True if logged in and false if not
-    """
-    return bool(session.get('username'))
+salt                        = URLSafeTimedSerializer(os.environ.get('SALT'))
 
 
 @app.route('/profile/<username>')
 def view_user_bio(username):
     """ sumary_line """
-    if is_logged_in() == False:
+    if bool(session.get('username')) == False:
         set_message("Please Login", "danger")
         return redirect('/login', '302')
 
-    # NOTE: KINDA SHITY WAY OF DOING IT FIX THIS
     if username == session['username']:
         user = session_user = User(username)
     else:
@@ -71,9 +62,8 @@ def view_user_bio(username):
 
 
 @app.route('/',  methods=['GET', 'POST'])
-@app.route('/home',  methods=['GET', 'POST'])
 def home():
-    if is_logged_in() == False:
+    if bool(session.get('username')) == False:
         set_message("Please Login", "danger")
         return redirect('/login', '302')
 
@@ -111,31 +101,27 @@ def home():
 
 
 @app.route('/login', methods=['GET', 'POST'])
-@app.route('/signin', methods=['GET', 'POST'])
 def login():
     """ sumary_line """
     # Redirect User if the user is logged already
-    if is_logged_in():
-        set_message("Please Login", "danger")
+    if bool(session.get('username')):
+        set_message('User already Logged in', 'warning')
         return redirect('/', 302)
     if request.method == 'POST':
         # TODO: user regualr expression to validate user input
         username = request.form['username']
         password = request.form['password']
-        user = User(username)
-        login_status = user.user_login(password)
+        login_status = User(username).user_login(password)
         if login_status == -1:
-            set_message(
-                'Invalid user account please check your username', 'danger')
+            set_message('Invalid username please check your username', 'danger')
         elif login_status == -2:
-            set_message(
-                'Account not verified, please check your email', 'warning')
+            set_message('Account not verified, please check your email', 'warning')
         elif login_status == False:
-            set_message(
-                'Wrong password, Please try signing in again.', 'danger')
+            set_message('Wrong password, Please try signing in again.', 'danger')
         elif login_status == True:
             session['username'] = username
             return redirect('/', 302)
+        return redirect('/login', 302)
     return render_template(
             'login.html',
             message=get_message(),
@@ -143,19 +129,12 @@ def login():
     )
 
 
-@app.route('/about')
-def about():
-    """ sumary_line """
-    template = env.get_template("about.html")
-    return template.render()
-
-
 @app.route('/account')
 def account():
     """ sumary_line """
-    if is_logged_in() == False:
+    if bool(session.get('username')) == False:
+        set_message("Please Login", "danger")
         return redirect('/login', '302')
-
     session_user = User(session['username'])
     user = session_user.get_json_user()
     u = session_user.get_user_name()
@@ -181,7 +160,7 @@ def tag(hashtag):
     Gets the top 5 trendiing hashtags from a users followers
     @params user the username of the user
     """
-    if is_logged_in() == False:
+    if bool(session.get('username')) == False:
         set_message("Please Login to like tweets", "danger")
         return redirect('/login', '302')
 
@@ -199,13 +178,13 @@ def tag(hashtag):
     if not tweets:
     	return render_template(
             'hashtag_no_tweets.html',
-            session_user=session_user.get_json_user(),
-            user=user,
-            tweets=tweets,
-            treading=trending_hashtags,
-            fsuggestions=friend_suggestions,
-            message=msg,
-            alert=alert
+            session_user = session_user.get_json_user(),
+            user         = user,
+            tweets       = tweets,
+            treading     = trending_hashtags,
+            fsuggestions = friend_suggestions,
+            message      = msg,
+            alert        = alert
         )
     for tweet in tweets:
         tweet[1]['likers'] = get_tweet_likes_usernames(tweet[1]['id'])
@@ -231,13 +210,15 @@ def logout():
     functionality used to log out/ sigout a user, the existing session token/
     id attached to the user is deleted.
     """
+    if bool(session.get('username')) == False:
+        set_message("This Session does not exist", "danger")
+        return redirect('/login', 302)
     session.pop('username', None)
     set_message('Logged out', 'primary')
     return redirect('/login')
 
 
 @app.route('/signup', methods=['GET', 'POST'])
-@app.route('/register', methods=['GET', 'POST'])
 def register():
     """ sumary_line """
     if request.method == 'POST':
@@ -251,9 +232,11 @@ def register():
         password0 = request.form['password']
         password1 = request.form['password1']
         if password0 != password1:
-            return ('passwords do not match')
+            set_message('passwords do not match', 'danger')
+            return redirect('/register', 302)
         if not validate_password(password0):
-            return ('Password should be at least 9 chars, A-Za-z0-9 with atleast one special char.')
+            set_message('Password should be at least 9 chars, [A-Za-z0-9@#$%^&+!=.]', 'warning')
+            return redirect('/register', 302)
         user = User(username)
         if not user.get_this_user_data():
             user.add_user(
@@ -267,19 +250,19 @@ def register():
             token = salt.dumps(username, salt='email-confirm')
             send_account_verification_email(email, token)
             set_message('a verification Email Has been sent please check you email inbox', 'success')
-            return redirect('/login', '302')
+            return redirect('/login', 302)
         else:
             set_message('This username already exits please select a new user name', 'warning')
-            return redirect('/register', '302')
+            return redirect('/register', 302)
     return render_template("register.html")
 
 
 @app.route('/post', methods=['POST'])
 def add_tweet():
-    if is_logged_in() == False:
+    if bool(session.get('username')) == False:
         set_message("Please Login to post", "danger")
         return redirect('/login', '302')
-    if request.method == 'POST' and is_logged_in():
+    if request.method == 'POST' and bool(session.get('username')):
         tweet = request.form['tweet']
         hashtags, taggedusers = get_hashtags(tweet),  get_tagged(tweet)
         User(session['username']).add_post(tweet, hashtags, taggedusers)
@@ -319,7 +302,7 @@ def update_user_profile():
     still updates the database with the update user account form default values
     which in this case are the users currant credentials.
     """
-    if request.method == 'POST' and is_logged_in():
+    if request.method == 'POST' and bool(session.get('username')):
         newlastname = request.form['lastname']
         newfirstname = request.form['firstname']
         newdob = request.form['dob']
@@ -349,7 +332,7 @@ def set_new_password():
     used to set a new password in the user account settings section
     this updates the user password hash which is stored in the database
     """
-    if is_logged_in() == False:
+    if bool(session.get('username')) == False:
         set_message("Please Login", "danger")
         return redirect('/login', '302')
     if request.method == 'POST':
@@ -374,7 +357,7 @@ def search_user():
     used for searching for a user from the database. this should be a valid user name
     or a user not found message will be displayed
     """
-    if is_logged_in() == False:
+    if bool(session.get('username')) == False:
         set_message("Please Login", "danger")
         return redirect('/login', '302')
 
@@ -404,7 +387,7 @@ def get_likers(postid):
     Likes a users post
     @params postid Postid of the post to like
     """
-    if is_logged_in() == False:
+    if bool(session.get('username')) == False:
         set_message("Please Login", "danger")
         return redirect('/login', '302')
     if request.method == 'GET':
@@ -417,9 +400,9 @@ def get_retweeters(postid):
     used to obtain the usernames of users that have retweeted a post
     """
     if request.method == 'GET':
-        if False == is_logged_in():
-            flash('Login to retweet a post')
-            return render_template('login.html')
+        if False == bool(session.get('username')):
+            set_message("Please Login", "danger")
+            return redirect('/login', '302')
         return jsonify(users=get_tweet_retweets_usernames(postid))
 
 
@@ -429,7 +412,7 @@ def follow_user(username):
     follow a user
     @params username Username of the user to follow
     """
-    if False == is_logged_in():
+    if False == bool(session.get('username')):
         set_message("you should be loged in to follow a user", "danger")
         return redirect('/login', 302)
     User(session['username']).follow_user(username)
@@ -442,7 +425,7 @@ def unfollow_user(username):
     Unfollow a user
     @params username Username of the user to follow
     """
-    if False == is_logged_in():
+    if False == bool(session.get('username')):
         set_message("you should be logged in to unfollow a user", "danger")
         return redirect('/login', 302)
     User(session['username']).unfollow_user(username)
@@ -455,7 +438,7 @@ def retweet_post(postid):
     used to retweet a tweet
     @params postid Postid of the post to retweet
     """
-    if False == is_logged_in():
+    if False == bool(session.get('username')):
         set_message("Login to retweet a post", "danger")
         return redirect('/login', 302)
     User(session['username']).retweet_post(postid)
@@ -468,7 +451,7 @@ def unretweet_post(postid):
     used to unretweet a tweet
     @params postid Postid of the post to unretweet
     """
-    if False == is_logged_in():
+    if False == bool(session.get('username')):
         set_message("Login to retweet a post", "danger")
         return redirect('/login', 302)
     User(session['username']).unretweet_tweet(postid)
@@ -481,9 +464,9 @@ def like_post(postid):
     like a users post
     @params postid Postid of the post to like
     """
-    if is_logged_in() == False:
+    if bool(session.get('username')) == False:
         set_message("Please Login to like tweets", "danger")
-        return "login"
+        return redirect('/login', '302')
     if request.method == 'GET':
         likes = User(session['username']).like_post(postid)
         return "Unlike"
@@ -495,7 +478,7 @@ def unlike_post(postid):
     unlike a users post
     @params postid Postid of the post to unlike
     """
-    if is_logged_in() == False:
+    if bool(session.get('username')) == False:
         set_message("Please Login to like tweets", "danger")
         return redirect('/login', '302')
     if request.method == 'GET':
@@ -510,7 +493,8 @@ def usernetwork():
     application wide user network of users, with follow relationships indicated,
     and each user also labelled by username and total number of likes of tweets
     """
-    if is_logged_in() == False:
+    if bool(session.get('username')) == False:
+        set_message("Please Login", "danger")
         return redirect('/login', '302')
     dump_user_network()
     session_user_json = User(session['username']).get_json_user()

@@ -81,18 +81,13 @@
     <div id="Tab 3" class="w3-container tab" style="display:none">
         <br>
         <h3 style="text-align: center;">Top topics</h3>
-        
         {% for topic in topics %}
         <div class="w3-container w3-card w3-white w3-round w3-margin" style="text-align: center;">
             <br>
             <p>{{ topic }}</p>
         </div>
         {% endfor %}
-
-
-
     </div>
-
 
     <script>
         function openCity(evt, cityName) {
@@ -109,7 +104,6 @@
             evt.currentTarget.firstElementChild.className += " w3-border-blue";
         }
     </script>
-
     <br>
 </div>
 <script src="/static/js/upload.js"></script>
