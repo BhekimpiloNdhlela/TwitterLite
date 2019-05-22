@@ -3,19 +3,13 @@ User
     Surname            String
     Username           String                           Unique
     Email              String                           Unique
-    Created_At         Timestamp
     DOB                String  (YYYY - MM - DD)
     Title              String
-    Location           Floats
     Hash               String
     Avatar             String
     Account_Verrified  Boolean
-    Posts              Array of Ref - Posts
-    Friends            Array of Ref - Users
-    Friend_Request     Array of Ref - Users 
-    Notifications      Array of Ref - Notifications 
-    Messages           Array of Ref - Message 
-
+    Notifications      Array of Ref - Notifications
+    
 Posts
     Username           Ref - User
     Content            String
@@ -24,18 +18,6 @@ Posts
     Likes              Number
     Comments           Array of Ref - Comments
 
-Comments
-    Created_At         Timestamp
-    Username           Ref - User
-    Content            String 
-
-Notifications
-    Created_At         Timestamp
-    Username           Ref User
-    Type               Enum
-    Content            String
-
-Messages
-    Created_At         Timestamp
-    Username           Ref - User 
-    Content            String
+Hashtags
+    id                 String                           unique
+    name               string                           unique
