@@ -286,9 +286,10 @@ def reset_password(token):
         if request.form['newpassword0'] == request.form['newpassword1']:
             if validate_password(request.form['newpassword0']):
                 user = User(username)
-                newpasswordhash = get_password_hash(request.form['newpassword1'])
-                user.update_password_hash(newpasswordhash)
-                send_reset_password_email(user.get_user_email())
+                user_details = user.get_user_details()
+                newhash = get_password_hash(request.form['newpassword1'])
+                user.update_password_hash(newhash)
+                send_reset_password_email(user_details['email'])
                 message = 'Password updated'
                 alert = 'success'
                 return render_template('/login.html', message=message, alert=alert)
@@ -366,10 +367,11 @@ def set_new_password():
             if validate_password(request.form['newpassword0']):
                 oldpassword = request.form['oldpassword']
                 user = User(session['username'])
-                if get_password_verification(user.get_password_hash(), oldpassword):
-                    newpasswordhash = get_password_hash(request.form['newpassword1'])
-                    user.update_password_hash(newpasswordhash)
-                    send_reset_password_email(user.get_user_email())
+                user_details = user.get_user_details()
+                if get_password_verification(user_details['passwordhash'], oldpassword):
+                    newhash = get_password_hash(request.form['newpassword1'])
+                    user.update_password_hash(newhash)
+                    send_reset_password_email(user_details['email'])
                     set_message("Password updated", "primary")
                 set_message('Wrong password, please try again.', 'warning')
             set_message(
@@ -464,7 +466,12 @@ def add_tweet():
         hashtags = get_hashtags(tweet)
         taggedusers = get_tagged(tweet)
         sentiment = get_tweet_sentiment(tweet)
-        User(session['username']).add_post(tweet, hashtags, taggedusers, sentiment)
+        User(session['username']).add_post(
+            tweet,
+            hashtags,
+            taggedusers,
+            sentiment
+        )
         set_message('Post posted', 'primary')
     return redirect('/', 302)
 
