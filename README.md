@@ -31,6 +31,8 @@ source venv/bin/activate
 #### Running The Application on Local Server
 Make sure you successfully completed the **First Time Setup** steps before runing the application.
 ```bash
+# we need to install some NLTK corpora using following command:
+python3 -m textblob.download_corpora
 python3 run.py
 ```
 visit: [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
@@ -54,12 +56,12 @@ python3 run.py
 ```
 .
 ├── app
-│   ├── static               
+│   ├── static
 │   ├── templates
-|   ├── .editorconfig
+│   ├── .editorconfig
 │   ├── views.py
-|   ├── models.py
-│   └── utils.py             
+│   ├── models.py
+│   └── utils.py
 ├── .gitignore
 ├── README.md
 ├── run.py

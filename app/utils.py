@@ -6,7 +6,8 @@ from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from itsdangerous import URLSafeTimedSerializer
 from datetime import date, datetime
-from .email_template import get_email_template
+from .email_template import *
+from textblob import TextBlob
 import os
 import re
 
@@ -101,16 +102,14 @@ def get_password_verification(passwordhash, password):
     return sha512_crypt.verify(password, passwordhash)
 
 
-def send_resset_password_email(toemail, fromemail='resetpassword@bootlegtwitter.com'):
+def send_reset_password_email(toemail, fromemail='resetpassword@bootlegtwitter.com'):
     """
     used when the user is loging in or when the user is attemping to change the
     password. this function should be used by any function that wants to verify
     a user password given a user password hash
     """
     subject = 'Password Changed'
-    htmlcontent = '<h2>BootlegTwitter Password changed Notification<h2><br>'
-    htmlcontent += '<strong>The password for the following account has been changed</strong><br>'
-    htmlcontent += '<p>Account: {}</p>'.format(toemail)
+    htmlcontent  = get_reset_password_email_content()
     __send_email(fromemail, toemail, subject, htmlcontent)
 
 
@@ -121,10 +120,7 @@ def send_forgot_password_email(toemail, token, fromemail='forgotpassword@bootleg
     """
     verification_link = 'http://localhost:5000/set-new-password/'+token
     subject = 'Forgot Password'
-    htmlcontent = '<h2>The Following is your Password Reset link From BootlegTwitter:<h2><br>'
-    htmlcontent += '<strong>Please Click the following link to Change Your Password</strong><br>'
-    htmlcontent += '<a href=\"{}\">Click to Reset password</a>'.format(
-        verification_link)
+    htmlcontent = get_forgot_password_email_content(verification_link)
     __send_email(fromemail, toemail, subject, htmlcontent)
 
 def send_account_verification_email(to_email, token, from_email='verifyaccount@bootlegtwitter.com'):
@@ -134,8 +130,7 @@ def send_account_verification_email(to_email, token, from_email='verifyaccount@b
     """
     verification_link = 'http://localhost:5000/confirm-email/'+token
     subject = 'Account Verification'
-
-    htmlcontent = get_email_template(verification_link)
+    htmlcontent = get_verification_email_content(verification_link)
     __send_email(from_email, to_email, subject, htmlcontent)
 
 
@@ -184,6 +179,26 @@ def get_tagged(rawstring):
     return set(pattern.findall(rawstring))
 
 
+def __clean_tweet(rawstring):
+    """
+    function to clean tweet text by removing links and special characters
+    with the aid of regular expression.
+    """
+    pattern = '(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])(\w+:\/\/\S+)'
+    return ' '.join(re.sub(pattern, ' ', rawstring).split())
+
+
+def get_tweet_sentiment(tweet):
+    """
+    function to classify the sentiment of tweet using TextBlob's sentiment
+    polarity method
+    """
+    analysis = TextBlob(__clean_tweet(tweet))
+    if   analysis.sentiment.polarity > 0: return 'positive'
+    elif analysis.sentiment.polarity < 0: return 'negative'
+    return 'neutral'
+
+
 def validate_date(formInput):
     """ uses regular expression to validate password strength """
     return True
@@ -213,15 +228,6 @@ def process_picture(forminput, status):
 Test client for models. [NOTE used during development stage]
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if __name__ == '__main__':
-    print('PASSWORD VALIDATOR ')
-    print("Bhesdafsdfasdfki", validate_password("Bhesdafsdfasdfki"))  # false
-    print("B1jfd!", validate_password("B1jfd!"))  # false
-    print("B@1jfd!sd", validate_password("B@1jfd!sd"))  # true
-    print("Bhek1jhfd#i", validate_password("Bhek1jhfd#i"))  # true
-
-    hashtags0 = '#his #cool-kid dhsbhasjbf #cool-kid sadkjfsjkadf kdjsfhakjf\n\
-                #kjhf dsakjfh\n dsjkafh dsajfh    hdskjafhjk\t #ndsjfhsd#kjsouthafric'
-    hashtags1 = "Hey # guys! #sta3ckoverflow really #rocks #ro_cks #announ!cement"
 
     tagged0 = "The House of Bonang @seeandbe_seen  30m30 minutes ago More #UthandoNesthembu\
                 fuck the matters of the heart I'd marry Musa Mseleku kusizani badikhalisa\
@@ -233,6 +239,26 @@ if __name__ == '__main__':
                 is known to dissolve teeth, metal N it can eat away your liver.\
                 (@incarceratedbob) Drinking beer actually helps strengthen your bones and\
                 teeth because it gives you a healthy dose of silicon. (@UberFacts)"
+
+    print(get_tweet_sentiment("Hello I love"))      # positive
+    print(get_tweet_sentiment("Hello I Hate"))      # negative
+    print(get_tweet_sentiment("Hello I Love/Hate")) # neutral
+
+    print(get_tweet_sentiment(tagged0))
+    print(get_tweet_sentiment(tagged1))
+    print(get_tweet_sentiment(tagged2))
+
+    print('PASSWORD VALIDATOR ')
+    print("Bhesdafsdfasdfki", validate_password("Bhesdafsdfasdfki"))  # false
+    print("B1jfd!", validate_password("B1jfd!"))  # false
+    print("B@1jfd!sd", validate_password("B@1jfd!sd"))  # true
+    print("Bhek1jhfd#i", validate_password("Bhek1jhfd#i"))  # true
+
+    hashtags0 = '#his #cool-kid dhsbhasjbf #cool-kid sadkjfsjkadf kdjsfhakjf\n\
+                #kjhf dsakjfh\n dsjkafh dsajfh    hdskjafhjk\t #ndsjfhsd#kjsouthafric'
+    hashtags1 = "Hey # guys! #sta3ckoverflow really #rocks #ro_cks #announ!cement"
+
+
     print("TAGGED USERS")
     print(get_tagged(tagged0))
     print(get_tagged(tagged1))
