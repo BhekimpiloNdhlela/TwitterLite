@@ -80,7 +80,7 @@ class User:
             bio              = 'Hi I just started using Bootleg Twitter!',
             title            = 'Title not set.',
             createdate       = get_time_stamp(),
-            notification     = 2,
+            notification     = 3,
             notifications    = [
                 'welcome to bootleg twitter, enjoy.',
                 'edit your details',
@@ -119,7 +119,7 @@ class User:
         graph.merge(this)
         this['firstname'] = firstname
         this['lastname']  = lastname
-        this['newdob']    = dob
+        this['dob']       = dob
         this['title']     = title
         this['bio']       = bio
         this.push()
@@ -145,88 +145,7 @@ class User:
         this.push()
 
 
-    def get_account_veriffication_status(self):
-        """
-        used to obtain a users account status False if not verified and the
-        oposite holds true
-        """
-        this = self.get_user_details()
-        return this['accountverrified']
-
-
-    def get_password_hash(self):
-        """
-        used to obtain a users password hash, this is for password verification
-        reasons.
-        """
-        this = self.get_user_details()
-        return this['passwordhash']
-
-
-    def get_user_name(self):
-        """
-        gets the user name of the user that this object's instance was created
-        for
-        """
-        this = self.get_user_details()
-        return this['username']
-
-
-    def get_user_firstname(self):
-        """
-        gets the user first name of the user that this object's instance
-        was created for
-        """
-        this = self.get_user_details()
-        return this['firstname']
-
-
-    def get_user_lastname(self):
-        """
-        gets the user last name of the user that this object's instance was
-        created for
-        """
-        this = self.get_user_details()
-        return this['lastname']
-
-
-    def get_user_email(self):
-        """
-        gets the user email of the user that this object's instance was
-        created for
-        """
-        this = self.get_user_details()
-        return this['useremail']
-
-
-    def get_user_DOB(self):
-        """
-        gets the user date of birth of the user that this object's instance
-        was created for
-        """
-        this = self.get_user_details()
-        return this['dob']
-
-
-    def get_user_bio(self):
-        """
-        gets the user biography or status of the user that this object's
-        instance was created for
-        """
-        this = self.get_user_details()
-        return this['bio']
-
-
-    def get_user_avatar(self):
-        """
-        gets the user avatar/ profile picture  of the user that this object's
-        instance was created for
-        """
-        this = self.get_user_details()
-        return this['avatar']
-
-
-    def add_post(self, tweet, hashtags, taggedusers):
+    def add_post(self, tweet, hashtags, taggedusers, sentiment):
         """
         add post to the graph and create a published relationship between the
         user and the post as well as the post and its tags
@@ -237,15 +156,12 @@ class User:
                 id          = str(uuid.uuid4()),
                 tweet       = tweet,
                 date        = get_time_stamp(),
-                hashtags    = hashtags,
-                taggedusers = taggedusers,
                 retweets    = 0,
                 likes       = 0,
                 comments    = 0,
-                sentiment   = 0
+                sentiment   = sentiment
         )
-        rel = Relationship(user, 'PUBLISHED', post)
-        graph.create(rel)
+        graph.create(Relationship(user, 'PUBLISHED', post))
 
         # build TAG relationship
         for hashtag in hashtags:

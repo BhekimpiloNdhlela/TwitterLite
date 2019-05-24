@@ -461,8 +461,10 @@ def add_tweet():
         return redirect('/login', 302)
     if request.method == 'POST' and bool(session.get('username')):
         tweet = request.form['tweet']
-        hashtags, taggedusers = get_hashtags(tweet),  get_tagged(tweet)
-        User(session['username']).add_post(tweet, hashtags, taggedusers)
+        hashtags = get_hashtags(tweet)
+        taggedusers = get_tagged(tweet)
+        sentiment = get_tweet_sentiment(tweet)
+        User(session['username']).add_post(tweet, hashtags, taggedusers, sentiment)
         set_message('Post posted', 'primary')
     return redirect('/', 302)
 
