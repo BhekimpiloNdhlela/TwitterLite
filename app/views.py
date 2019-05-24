@@ -24,12 +24,12 @@ def view_user_bio(username):
     if username == session['username']:
         user      = session_user      = User(username)
         following = vfollowing        = user.get_user_following()
-        user_json = session_user_json = user.get_user_details()
+        user_data = session_user_data = user.get_user_details()
     else:
         user = User(username)
         session_user = User(session['username'])
-        user_json = user.get_user_details()
-        session_user_json = session_user.get_user_details()
+        user_data = user.get_user_details()
+        session_user_data = session_user.get_user_details()
         following = user.get_user_following()
         vfollowing = session_user.get_user_following()
 
@@ -52,8 +52,8 @@ def view_user_bio(username):
 
     return render_template(
         "friends.html",
-        session_user     = session_user_json,
-        user             = user_json,
+        session_user     = session_user_data,
+        user             = user_data,
         treading         = trending,
         fsuggestions     = friend_suggestions,
         following        = following,
@@ -74,7 +74,7 @@ def home():
     session_user = User(session['username'])
 
     # if not visiting another persons profile
-    user = session_user.get_user_details()
+    user_details = session_user.get_user_details()
     trending = get_trending_hashtags_for_user(session['username'])
     tweets = session_user.get_timeline_posts()
     # train_data = train_model("train8.csv")
@@ -88,8 +88,8 @@ def home():
 
     return render_template(
         'index.html',
-        session_user = user,
-        user         = user,
+        session_user = user_details,
+        user         = user_details,
         tweets       = tweets,
         treading     = trending,
         fsuggestions = session_user.get_recommended_users(),
@@ -130,19 +130,16 @@ def account():
     if bool(session.get('username')) == False:
         set_message("Please Login", "danger")
         return redirect('/login', '302')
-    session_user = User(session['username'])
-    user = session_user.get_user_details()
-    username = session_user.get_user_name()
-    trending = get_trending_hashtags_for_user(username)
-    tweets = session_user.get_timeline_posts()
-    friend_suggestions = session_user.get_recommended_users()
+
+    user = User(session['username'])
+    user_data = user.get_user_details()
     return render_template(
         "account.html",
-        session_user = user,
-        user         = user,
-        tweets       = tweets,
-        treading     = trending,
-        fsuggestions = friend_suggestions,
+        session_user = user_data,
+        user         = user_data,
+        tweets       = user.get_timeline_posts(),
+        treading     = get_trending_hashtags_for_user(session['username']),
+        fsuggestions = user.get_recommended_users(),
         message      = get_message(),
         alert        = get_type()
     )
@@ -159,11 +156,10 @@ def tag(hashtag):
         return redirect('/login', '302')
 
     # Must always be there
-    session_user = User(session['username'])
-    # if not visiting another persons profile
-    user = session_user.get_user_details()
+    user = User(session['username'])
+    user_data = user.get_user_details()
     tweets = get_tweets_by_hashtag(session['username'], hashtag)
-    friend_suggestions = session_user.get_recommended_users()
+    friend_suggestions = user.get_recommended_users()
     trending_hashtags = get_trending_hashtags_for_user(session['username'])
 
     msg = get_message()
@@ -171,8 +167,8 @@ def tag(hashtag):
     if not tweets:
     	return render_template(
             'hashtag_no_tweets.html',
-            session_user = user,
-            user         = user,
+            session_user = user_data,
+            user         = user_data,
             tweets       = tweets,
             treading     = trending_hashtags,
             fsuggestions = friend_suggestions,
@@ -187,8 +183,8 @@ def tag(hashtag):
 
     return render_template(
         'hashtag_search.html',
-        session_user = user,
-        user         = user,
+        session_user = user_data,
+        user         = user_data,
         tweets       = tweets,
         treading     = trending_hashtags,
         fsuggestions = friend_suggestions,
@@ -206,6 +202,7 @@ def logout():
     if bool(session.get('username')) == False:
         set_message("This Session does not exist", "danger")
         return redirect('/login', 302)
+
     session.pop('username', None)
     set_message('Logged out', 'primary')
     return redirect('/login')
@@ -520,9 +517,9 @@ def usernetwork():
         return redirect('/login', 302)
 
     dump_user_network()
-    session_user_json = User(session['username']).get_user_details()
+    session_user_data = User(session['username']).get_user_details()
     return render_template(
         "user-networkD3.html",
-        session_user = session_user_json,
-        user         = session_user_json
+        session_user = session_user_data,
+        user         = session_user_data
     )
