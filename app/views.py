@@ -2,7 +2,6 @@
 from flask import Flask, request, session, redirect, url_for, render_template, flash, jsonify
 from itsdangerous import URLSafeSerializer
 from itsdangerous.exc import BadSignature
-from jinja2 import Environment, select_autoescape, FileSystemLoader
 from werkzeug.utils import secure_filename
 from .models import *
 from .utils import *
@@ -277,6 +276,7 @@ def forgot_password():
         alert = 'danger'
     return render_template('forgot-password.html', message=message, alert=alert)
 
+
 @app.route('/set-new-password/<token>')
 def reset_password(token):
     """ sumary_line """
@@ -303,6 +303,7 @@ def reset_password(token):
         message = 'This token has been tempered with create a new account'
         alert = 'danger'
         return redirect('/login', 302)
+
 
 @app.route('/confirm-email/<token>')
 def confirm_email(token):

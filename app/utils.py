@@ -55,34 +55,6 @@ def get_time_stamp():
     return datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%f')
 
 
-def get_formated_date(formatingdate):
-    """
-    used to get todays date, this is done when a user is creating a post or when
-    the user is creating an account. Essentially this function is used for
-    anything that needs today's date.
-    """
-    return datetime.strptime(formatingdate, '%Y-%m-%d')
-
-
-def get_date_string():
-    """
-    used to get todays date, this is done when a user is creating a post or when
-    the user is creating an account. Essentially this function is used for anything
-    that needs today's date.
-    """
-    return date.today().strftime('%d-%m-%Y')
-
-
-def get_timestamp_seconds():
-    """
-    used to get the now's time stamp, this is done when a user is creating a post
-    or when the user is creating an account. Essentially this function is used
-    for anything that needs a now's timestamp.
-    """
-    delta = datetime.now() - datetime.utcfromtimestamp(0)
-    return delta.total_seconds()
-
-
 def get_password_hash(password, salt='THESALTISsaltyLi', rounds=99999):
     """
     used to obtain a users password hash, since password should not be stored in
@@ -135,10 +107,10 @@ def send_account_verification_email(to_email, token, from_email='verifyaccount@t
 
 def __send_email(fromemail, toemail, subject, htmlcontent):
     msg = Mail(
-        from_email=fromemail,
-        to_emails=toemail,
-        subject=subject,
-        html_content=htmlcontent
+        from_email   = fromemail,
+        to_emails    = toemail,
+        subject      = subject,
+        html_content = htmlcontent
     )
     try:
         sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
