@@ -4,7 +4,6 @@
 from passlib.hash import sha512_crypt
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
-from itsdangerous import URLSafeTimedSerializer
 from datetime import date, datetime
 from .email_template import *
 from textblob import TextBlob
@@ -102,7 +101,7 @@ def get_password_verification(passwordhash, password):
     return sha512_crypt.verify(password, passwordhash)
 
 
-def send_reset_password_email(toemail, fromemail='resetpassword@bootlegtwitter.com'):
+def send_reset_password_email(toemail, fromemail='resetpassword@twitterLite.com'):
     """
     used when the user is loging in or when the user is attemping to change the
     password. this function should be used by any function that wants to verify
@@ -113,17 +112,17 @@ def send_reset_password_email(toemail, fromemail='resetpassword@bootlegtwitter.c
     __send_email(fromemail, toemail, subject, htmlcontent)
 
 
-def send_forgot_password_email(toemail, token, fromemail='forgotpassword@bootlegtwitter.com'):
+def send_forgot_password_email(toemail, token, fromemail='forgotpassword@twitterLite.com'):
     """
-    used to send account verification email to the user. This function is call only when the user
-    needs to reset his/her password after loosing it.
+    used to send account verification email to the user. This function is call
+    only when the user needs to reset his/her password after loosing it.
     """
     verification_link = 'http://localhost:5000/set-new-password/'+token
     subject = 'Forgot Password'
     htmlcontent = get_forgot_password_email_content(verification_link)
     __send_email(fromemail, toemail, subject, htmlcontent)
 
-def send_account_verification_email(to_email, token, from_email='verifyaccount@bootlegtwitter.com'):
+def send_account_verification_email(to_email, token, from_email='verifyaccount@twitterLite.com'):
     """
     used to send account verification email to the user. this function is used only once,
     this is when a user is creating an account at BootlegTwitter for the first time.
@@ -228,42 +227,40 @@ def process_picture(forminput, status):
 Test client for models. [NOTE used during development stage]
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if __name__ == '__main__':
+    tagged0 = "The House of Bonang @seeandbe_seen  30m30 minutes ago More\
+                UthandoNesthembu fuck the matters of the heart I'd marry\
+                Musa Mseleku kusizani badikhalisa be poor labo fucken"
+    tagged1 = "How One Brand Switched A Million URLs & Lived To Tell About\
+               It: 5 Questions With @HomeAdvisor\ http://selnd.com/18WkBZg \
+               (@sengineland)"
+    tagged2 = "You are like dentures, because I could not smile without you \
+               @notseongyeol (@fakepcho91)#FACTS The acid in Coca Cola is \
+               called phosphoric acid which is known to dissolve teeth, metal\
+               N it can eat away your liver.(@incarceratedbob) Drinking beer \
+               actually helps strengthen your bones and teeth because it gives\
+               you a healthy dose of silicon. (@UberFacts)"
 
-    tagged0 = "The House of Bonang @seeandbe_seen  30m30 minutes ago More #UthandoNesthembu\
-                fuck the matters of the heart I'd marry Musa Mseleku kusizani badikhalisa\
-                be poor labo fucken"
-    tagged1 = "How One Brand Switched A Million URLs & Lived To Tell About It: 5 Questions\
-                With @HomeAdvisor\ http://selnd.com/18WkBZg (@sengineland)"
-    tagged2 = "You are like dentures, because I could not smile without you @notseongyeol\
-                (@fakepcho91)#FACTS The acid in Coca Cola is called phosphoric acid which\
-                is known to dissolve teeth, metal N it can eat away your liver.\
-                (@incarceratedbob) Drinking beer actually helps strengthen your bones and\
-                teeth because it gives you a healthy dose of silicon. (@UberFacts)"
+    hashtags0 = '#his #cool-kid dhsbhasjbf #cool-kid sadkjfsjkadf kdjsfhakjf\n\
+                #kjhf dsakjfh\n dsjkafh dsajfh    hdskjafhjk\t #ndsjfhsd\
+                #kjsouthafric'
+    hashtags1 = "Hey # guys! #sta3ckoverflow really #rocks #ro_cks \
+                 #announ!cement"
 
     print(get_tweet_sentiment("Hello I love"))      # positive
     print(get_tweet_sentiment("Hello I Hate"))      # negative
     print(get_tweet_sentiment("Hello I Love/Hate")) # neutral
-
     print(get_tweet_sentiment(tagged0))
     print(get_tweet_sentiment(tagged1))
     print(get_tweet_sentiment(tagged2))
-
     print('PASSWORD VALIDATOR ')
     print("Bhesdafsdfasdfki", validate_password("Bhesdafsdfasdfki"))  # false
     print("B1jfd!", validate_password("B1jfd!"))  # false
     print("B@1jfd!sd", validate_password("B@1jfd!sd"))  # true
     print("Bhek1jhfd#i", validate_password("Bhek1jhfd#i"))  # true
-
-    hashtags0 = '#his #cool-kid dhsbhasjbf #cool-kid sadkjfsjkadf kdjsfhakjf\n\
-                #kjhf dsakjfh\n dsjkafh dsajfh    hdskjafhjk\t #ndsjfhsd#kjsouthafric'
-    hashtags1 = "Hey # guys! #sta3ckoverflow really #rocks #ro_cks #announ!cement"
-
-
     print("TAGGED USERS")
     print(get_tagged(tagged0))
     print(get_tagged(tagged1))
     print(get_tagged(tagged2))
-
     print('HASHTAGS')
     print(get_hashtags(hashtags0))
     print(get_hashtags(hashtags1))

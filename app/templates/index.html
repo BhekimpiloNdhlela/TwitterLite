@@ -11,7 +11,11 @@
                     <div id="picturesDisplay" style="display: block"></div>
                 </div>
                 <br />
-                {% include 'partials/flash.html' %}
+                {% if message %}
+                <div class="w3-center alert alert-{{ alert }}" role=alert>
+                {{ message }}
+                </div>
+                {% endif %}
                 <div style="margin-top:1rem;">
                     <button type="submit" class="w3-button w3-theme" value="tweet">
                         <i class="fa fa-pencil"></i> Tweet

@@ -48,7 +48,7 @@ class User:
                    -2 : Account not verrified
         """
 
-        this = self.get_this_user_data()
+        this = self.get_user_details()
         if not this:
             return -1
         if this['accountverrified']:
@@ -91,36 +91,7 @@ class User:
         return True
 
 
-    def get_json_user(self):
-        """ Json data """
-        user = self.get_this_user_data()
-        return {
-            "name": user['firstname'],
-            "surname": user['lastname'],
-            "username": user['username'],
-            "picture": user['useravatar'],
-            "dob": user['dob'],
-            "title": user['title'],
-            "avatar": user['useravatar'],
-            "bio": user['bio'],
-            "gender": user['gender'],
-            "notification": user['notification'],
-            "notifications": user['notifications'],
-            "location": "Your mom's house",
-            "photos": [
-                    "1.jpg",
-                    "2.jpg",
-                    "3.jpg",
-                    "4.jpg",
-                    "5.jpg",
-                    "6.jpg",
-                    "8.jpg",
-                    "9.jpg"
-            ]
-        }
-
-
-    def get_this_user_data(self):
+    def get_user_details(self):
         """
         used to get me, the user that was created with the constructor of
         this instance.
@@ -134,7 +105,7 @@ class User:
         """
         used to update the users account verification status
         """
-        this = self.get_this_user_data()
+        this = self.get_user_details()
         graph.merge(this)
         this['accountverrified'] = True
         this.push()
@@ -144,7 +115,7 @@ class User:
         """
         used to update the users details: firstname, lastname, bio, title, dob
         """
-        this = self.get_this_user_data()
+        this = self.get_user_details()
         graph.merge(this)
         this['firstname'] = firstname
         this['lastname']  = lastname
@@ -158,7 +129,7 @@ class User:
         """
         used to update the users avatar or prifile picture
         """
-        this = self.get_this_user_data()
+        this = self.get_user_details()
         graph.merge(this)
         this['useravatar'] = newavatar
         this.push()
@@ -168,7 +139,7 @@ class User:
         """
         used to update the users password hash
         """
-        this = self.get_this_user_data()
+        this = self.get_user_details()
         graph.merge(this)
         this['passwordhash'] = newhash
         this.push()
@@ -179,7 +150,7 @@ class User:
         used to obtain a users account status False if not verified and the
         oposite holds true
         """
-        this = self.get_this_user_data()
+        this = self.get_user_details()
         return this['accountverrified']
 
 
@@ -188,7 +159,7 @@ class User:
         used to obtain a users password hash, this is for password verification
         reasons.
         """
-        this = self.get_this_user_data()
+        this = self.get_user_details()
         return this['passwordhash']
 
 
@@ -197,7 +168,7 @@ class User:
         gets the user name of the user that this object's instance was created
         for
         """
-        this = self.get_this_user_data()
+        this = self.get_user_details()
         return this['username']
 
 
@@ -206,7 +177,7 @@ class User:
         gets the user first name of the user that this object's instance
         was created for
         """
-        this = self.get_this_user_data()
+        this = self.get_user_details()
         return this['firstname']
 
 
@@ -215,7 +186,7 @@ class User:
         gets the user last name of the user that this object's instance was
         created for
         """
-        this = self.get_this_user_data()
+        this = self.get_user_details()
         return this['lastname']
 
 
@@ -224,7 +195,7 @@ class User:
         gets the user email of the user that this object's instance was
         created for
         """
-        this = self.get_this_user_data()
+        this = self.get_user_details()
         return this['useremail']
 
 
@@ -233,7 +204,7 @@ class User:
         gets the user date of birth of the user that this object's instance
         was created for
         """
-        this = self.get_this_user_data()
+        this = self.get_user_details()
         return this['dob']
 
 
@@ -242,7 +213,7 @@ class User:
         gets the user biography or status of the user that this object's
         instance was created for
         """
-        this = self.get_this_user_data()
+        this = self.get_user_details()
         return this['bio']
 
 
@@ -251,7 +222,7 @@ class User:
         gets the user avatar/ profile picture  of the user that this object's
         instance was created for
         """
-        this = self.get_this_user_data()
+        this = self.get_user_details()
         return this['avatar']
 
 
@@ -260,7 +231,7 @@ class User:
         add post to the graph and create a published relationship between the
         user and the post as well as the post and its tags
         """
-        user = self.get_this_user_data()
+        user = self.get_user_details()
         post = Node(
                 'Post',
                 id          = str(uuid.uuid4()),
@@ -271,7 +242,7 @@ class User:
                 retweets    = 0,
                 likes       = 0,
                 comments    = 0,
-                photos      = []
+                sentiment   = 0
         )
         rel = Relationship(user, 'PUBLISHED', post)
         graph.create(rel)
@@ -283,7 +254,7 @@ class User:
             graph.create(Relationship(tag, 'HASHTAG', post))
         # build TAGGED user relationship
         for taggeduser in taggedusers:
-            taggeduser = User(taggeduser).get_this_user_data()
+            taggeduser = User(taggeduser).get_user_details()
             if taggeduser:
                 graph.merge(taggeduser)
                 graph.create(Relationship(post, 'TAGGED', taggeduser))
@@ -367,10 +338,7 @@ class User:
         ORDER BY posts.date DESC
         LIMIT 50
         '''
-        queryresults = graph.run(
-            query,
-            username=self.username
-        )
+        queryresults = graph.run(query, username=self.username)
         return [[results['users'], results['posts']] for results in queryresults]
 
 
@@ -490,27 +458,6 @@ class User:
             fusername=username
         )
         return username in [res['following.username'] for res in queryresults]
-
-
-    def check_post_like(self, postid):
-        """
-        check if there is a user post LIKE relationship
-        """
-        pass
-
-
-    def check_post_retweet(self, postid):
-        """
-        check if there is a user post RETWEET relationship
-        """
-        pass
-
-
-    def get_user_suggestions(self):
-        """
-        doc-string
-        """
-        pass
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -638,7 +585,7 @@ def dump_user_network():
                 }
             )
     with open(os.path.abspath('app/static/miserables.json'), 'w') as f:
-        json_data = json.dump(data, f)
+        json.dump(data, f)
 
 def __get_following_usernames(username):
     """
@@ -716,14 +663,14 @@ if __name__ == '__main__':
     [print(recentpost) for recentpost in users_recent_posts]
 
     # make keanu follow me
-    user = User('Corban').follow_user('HexDEADBEEF')
-    user = User('klensch_the_machine').follow_user('HexDEADBEEF')
-    user = User('keanudamon123').follow_user('HexDEADBEEF')
-    user = User('nish').follow_user('HexDEADBEEF')
-    user = User('klensch_the_machine').follow_user('nish')
-    user = User('nish').follow_user('klensch_the_machine')
-    user = User('klensch_the_machine').follow_user('Corban')
-    user = User('keanudamon123').follow_user('klensch_the_machine')
+    User('Corban').follow_user('HexDEADBEEF')
+    User('klensch_the_machine').follow_user('HexDEADBEEF')
+    User('keanudamon123').follow_user('HexDEADBEEF')
+    User('nish').follow_user('HexDEADBEEF')
+    User('klensch_the_machine').follow_user('nish')
+    User('nish').follow_user('klensch_the_machine')
+    User('klensch_the_machine').follow_user('Corban')
+    User('keanudamon123').follow_user('klensch_the_machine')
 
     # get the usernames of people that like the post with post id:
     # '250f2a79-59ee-4700-aa1e-b2c7594cedb2'

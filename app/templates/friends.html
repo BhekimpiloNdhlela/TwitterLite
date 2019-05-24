@@ -29,21 +29,13 @@
         {% for tweet in personaltweets %}
         <div class="w3-container w3-card w3-white w3-round w3-margin">
             <br>
-            <img src="{{ user['avatar'] }}" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
+            <img src="{{ user['useravatar'] }}" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px">
             <span class="w3-right w3-opacity timestamp">{{ tweet['date'] }}</span>
             <h3>
                 <a href="/profile/{{ user['username'] }}" style="text-decoration: none;">@{{ user['username'] }}</a>
             </h3>
             <br>
             <p>{{ tweet['tweet'] }}</p>
-            <div class="w3-row-padding" style="margin:0 -16px">
-                {% for photo in tweet['photos'] %}
-                <div class="w3-half">
-                    <img src="/static/img/photos/{{ photo }}" style="width:100%" alt="Northern Lights"
-                        class="w3-margin-bottom">
-                </div>
-                {% endfor %}
-            </div>
             <div class="w3-dropdown-hover w3-hide-small">
                 <button class="w3-button w3-padding-small" title="Notifications"></button>
                 <i class="fa fa-heart"> {{ tweet["likes"] }} </i>

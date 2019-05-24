@@ -21,17 +21,20 @@
     <div id="Basic Details" class="w3-container tab" style="display: inherit;">
         <h2>Basic Details</h2>
         <br>
-        {% include 'partials/flash.html' %}
-
+        {% if message %}
+            <div class="w3-center alert alert-{{ alert }}" role=alert>
+                {{ message }}
+            </div>
+        {% endif %}
         <form action="/update-user-profile" method="post" enctype=multipart/form-data> <label for='name' class=''>
             Name</label>
             <input type="text" name="firstname" id="" class="w3-input w3-large w3-animate-input"
-                value={{ user['name'] }} placeholder='Name' required>
+                value={{ user['firstname'] }} placeholder='Name' required>
             <br><br>
 
             <label for='name' class=''>Surname</label>
             <input type="text" name="lastname" id="" class="w3-input w3-large w3-animate-input"
-                value={{ user['surname'] }} placeholder='Surname' required>
+                value={{ user['lastname'] }} placeholder='Surname' required>
             <br><br>
 
             <label for='Date of Birth' class=''>Date of Birth</label>
@@ -50,7 +53,7 @@
             <br><br>
             <label for='image' class=''>Profile Picture</label>
             <br>
-            <img src={{ user['avatar'] }} alt="" id="image" name="image" class="w3-image">
+            <img src={{ user['useravatar'] }} alt="" id="image" name="image" class="w3-image">
             <br>
             <input class="file-upload" type="file" class="w3-input w3-large w3-animate-input" id="picture" name="avatar"
                 onchange="upload()">
