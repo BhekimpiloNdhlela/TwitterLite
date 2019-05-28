@@ -1,37 +1,23 @@
 {% include 'partials/header.html' %}
-
 <body class="w3-theme-l5">
-
-    <!-- Navbar -->
     {% include '/partials/navbar.html' %}
-
-    <!-- Page Container -->
     <div class="w3-container w3-content main" style="max-width:1400px;margin-top:80px">
-        <!-- The Grid -->
         <div class="w3-row">
-            <!-- Left Column -->
             <div class="w3-col m3">
                 <!-- Profile -->
                 {% include 'partials/profile_info.html' %}
-
                 <!-- Accordion -->
                 {% include 'partials/accordion.html' %}
             </div>
-
             <!-- Middle Column -->
             <div class="w3-col m7">
                 {% block content %}{% endblock %}
             </div>
-
             <!-- Right Column -->
             <div class="w3-col m2">
-
                 {% include 'partials/friend_suggestions.html' %}
-
                 {% include 'partials/treading.html' %}
-
             </div>
-
             <!-- End Grid -->
         </div>
     </div>
@@ -42,5 +28,4 @@
     <script src="/static/js/moment-twitter.js"></script>
     <script src="/static/js/main.js"></script>
 </body>
-
 </html>

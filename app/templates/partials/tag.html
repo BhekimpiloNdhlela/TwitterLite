@@ -16,12 +16,25 @@
         </div>
         {% endfor %}
     </div>
-    <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-thumbs-up"></i>
-        Like</button>
-    <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-retweet"></i>
-        Retweet</button>
-    <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-comment"></i>
-        Comment</button>
+    <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom">
+        <i class="fa fa-thumbs-up"></i>Like
+    </button>
+    <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom">
+        <i class="fa fa-retweet"></i>Retweet
+    </button>
+    <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom">
+        <i class="fa fa-comment"></i>Comment
+    </button>
+
+    <span class="w3-right">
+        {% if tweet['sentiment'] == 'negative' %}
+            <i class="fa fa-frown-o"></i>
+        {% elif tweet['sentiment'] == 'positive' %}
+            <i class="fa fa-smile-o"></i>
+        {% else %}
+            <i class="fa fa-meh-o"></i>
+        {% endif %}
+    </span>
 </div>
 {% endfor %}
 {% endblock %}

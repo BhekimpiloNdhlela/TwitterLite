@@ -57,6 +57,17 @@
                     {% endfor %}
                 </div>
             </div>
+            <!-- displaying tweet sentiment icons based on parity -->
+            <span class="w3-right">
+                {% if tweet['sentiment'] == 'negative' %}
+                    <i class="fa fa-frown-o"></i>
+                {% elif tweet['sentiment'] == 'positive' %}
+                    <i class="fa fa-smile-o"></i>
+                {% else %}
+                    <i class="fa fa-meh-o"></i>
+                {% endif %}
+            </span>
+
             <br><br>
 
             {% if tweet['likebtnactive'] == false %}

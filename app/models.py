@@ -159,7 +159,8 @@ class User:
                 retweets    = 0,
                 likes       = 0,
                 comments    = 0,
-                sentiment   = sentiment
+                sentiment   = sentiment,
+                topics      = ['temp', 'temp']
         )
         graph.create(Relationship(user, 'PUBLISHED', post))
 
@@ -500,6 +501,7 @@ def dump_user_network():
                     "type": "FOLLOWING"
                 }
             )
+
     with open(os.path.abspath('app/static/miserables.json'), 'w') as f:
         json.dump(data, f)
 

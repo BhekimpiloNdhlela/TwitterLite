@@ -66,7 +66,7 @@ def view_user_bio(username):
 @app.route('/',  methods=['GET', 'POST'])
 def home():
     if bool(session.get('username')) == False:
-        set_message("Please Login", "danger")
+        set_message('Please Login', 'danger')
         return redirect('/login', 302)
 
     # Must always be there
@@ -253,7 +253,7 @@ def register():
                 'warning'
             )
             return redirect('/register', 302)
-    return render_template("register.html")
+    return render_template('register.html')
 
 
 @app.route('/forgot-password', methods=['GET', 'POST'])
@@ -277,7 +277,7 @@ def forgot_password():
     return render_template('forgot-password.html', message=message, alert=alert)
 
 
-@app.route('/set-new-password/<token>')
+@app.route('/reset-password/<token>')
 def reset_password(token):
     """ sumary_line """
     try:
