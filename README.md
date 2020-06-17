@@ -2,7 +2,7 @@
 
 ## Setup Instructions
 To get up and running follow the following steps. If I get time I will probably write a python
-script for this. However, for now this is what we have to do to get started with a functional development environment.
+script for this. However, for now this is what we have to do to get started with the development environment.
 
 #### First time Setup
 ```bash
@@ -13,7 +13,7 @@ source venv/bin/activate
 pip3 install -r requirements.txt
 ```
 
-Get your Api Key from creating a Sendgrid account [here](https://signup.sendgrid.com/) And then and then
+Get your Api Key from creating a Sendgrid account [here](https://signup.sendgrid.com/) and then
 replace **'YOUR_API_KEY'** bellow with the newly obtained api key. Also make sure to set up the correct
 values for **'SERIALIZING SALT'**, **'THE SECRET KEY'**, **'THE DB USERNAME'**, **'THE DB PASSWORD'**
 and **'THE DB HOST PORT'** for you development environment.
